@@ -239,6 +239,13 @@
       "prompt": "text"
     }
   },
+  "wiki_demo": {
+    "file_name": "med-text-pt.txt",
+    "file_sha1": "432f32b9c3618eb729ff92d4c310c628a3f63aa0",
+    "columns": {
+      "prompt": "text"
+    }
+  },
   "c4_demo": {
     "file_name": "c4_demo.json",
     "file_sha1": "a5a0c86759732f9a5238e447fecd74f28a66cca8",

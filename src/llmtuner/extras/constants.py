@@ -3,7 +3,7 @@ from collections import defaultdict, OrderedDict
 from typing import Dict, Optional
 
 
-CHOICES = ["A", "B", "C", "D"]
+CHOICES = ["A", "B", "C", "D", "E"]
 
 DEFAULT_MODULE = defaultdict(str)
 
@@ -28,7 +28,7 @@ METHODS = ["full", "freeze", "lora"]
 
 PEFT_METHODS = ["lora"]
 
-SUBJECTS = ["Average", "STEM", "Social Sciences", "Humanities", "Other"]
+SUBJECTS = ["Average", "STEM", "Social Sciences", "Humanities", "Other", "STEP-1", "STEP-2", "STEP-3"]
 
 SUPPORTED_MODELS = OrderedDict()
 
