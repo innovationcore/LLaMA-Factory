@@ -1,7 +1,7 @@
 import os
 from typing import TYPE_CHECKING, Any, Dict, List, Union
 
-from datasets import concatenate_datasets, interleave_datasets, load_dataset
+from datasets import concatenate_datasets, interleave_datasets, load_dataset, load_from_disk
 
 from llmtuner.data.utils import checksum
 from llmtuner.extras.constants import FILEEXT2TYPE
@@ -21,6 +21,13 @@ def get_dataset(
 ) -> Union["Dataset", "IterableDataset"]:
     max_samples = data_args.max_samples
     all_datasets: List[Union["Dataset", "IterableDataset"]] = [] # support multiple datasets
+
+    if data_args.cache_path is not None and os.path.exists(data_args.cache_path):
+        logger.warning("Loading dataset from disk will ignore other data arguments.")
+        dataset = load_from_disk(data_args.cache_path)
+        if data_args.streaming:
+            dataset = dataset.to_iterable_dataset()
+        return dataset
 
     for dataset_attr in data_args.dataset_list:
         logger.info("Loading dataset {}...".format(dataset_attr))
@@ -56,8 +63,8 @@ def get_dataset(
 
         if dataset_attr.load_from == "ms_hub":
             try:
-                from modelscope import MsDataset # type: ignore
-                from modelscope.utils.config_ds import MS_DATASETS_CACHE # type: ignore
+                from modelscope import MsDataset
+                from modelscope.utils.config_ds import MS_DATASETS_CACHE
 
                 cache_dir = model_args.cache_dir or MS_DATASETS_CACHE
                 dataset = MsDataset.load(
@@ -68,7 +75,7 @@ def get_dataset(
                     split=data_args.split,
                     cache_dir=cache_dir,
                     token=model_args.ms_hub_token,
-                    use_streaming=(data_args.streaming and (dataset_attr.load_from != "file")),
+                    use_streaming=(data_args.streaming and (dataset_attr.load_from != "file"))
                 ).to_hf_dataset()
             except ImportError:
                 raise ImportError("Please install modelscope via `pip install modelscope -U`")

@@ -1,5 +1,6 @@
 import math
 import torch
+import inspect
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Set, Tuple
 
 from transformers.utils import cached_file
@@ -7,6 +8,7 @@ from transformers.trainer import WEIGHTS_NAME, SAFE_WEIGHTS_NAME
 
 from llmtuner.extras.constants import LAYERNORM_NAMES
 from llmtuner.extras.logging import get_logger
+from llmtuner.extras.misc import get_current_device
 from llmtuner.hparams import ModelArguments, FinetuningArguments
 
 if TYPE_CHECKING:
@@ -19,8 +21,8 @@ logger = get_logger(__name__)
 
 def dispatch_model(model: "PreTrainedModel") -> "PreTrainedModel":
     r"""
-    Dispatches a pre-trained model to GPUs with balanced memory.
-    Borrowed from: https://github.com/huggingface/transformers/blob/v4.31.0/src/transformers/modeling_utils.py#L2803
+    Dispatches a pre-trained model to GPUs with balanced memory when the GPU is available.
+    Borrowed from: https://github.com/huggingface/transformers/blob/v4.36.2/src/transformers/modeling_utils.py#L3570
     """
     if getattr(model, "quantization_method", None): # already set on current device
         return model
@@ -32,14 +34,17 @@ def dispatch_model(model: "PreTrainedModel") -> "PreTrainedModel":
         if model._no_split_modules is None:
             raise ValueError("The model class needs to implement the `_no_split_modules` attribute.")
 
-        kwargs = {"dtype": model.dtype, "no_split_module_classes": model._no_split_modules}
+        kwargs = {"dtype": model.dtype, "no_split_module_classes": model._get_no_split_modules("auto")}
         max_memory = get_balanced_memory(model, **kwargs)
         # Make sure tied weights are tied before creating the device map.
         model.tie_weights()
         device_map = infer_auto_device_map(model, max_memory=max_memory, **kwargs)
-        return dispatch_model(model, device_map)
+        device_map_kwargs = {"device_map": device_map}
+        if "skip_keys" in inspect.signature(dispatch_model).parameters:
+            device_map_kwargs["skip_keys"] = model._skip_keys_device_placement
+        return dispatch_model(model, **device_map_kwargs)
     else:
-        return model.cuda()
+        return model.to(device=get_current_device())
 
 
 def find_all_linear_modules(model: "PreTrainedModel") -> List[str]:
