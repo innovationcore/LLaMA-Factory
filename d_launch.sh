@@ -3,6 +3,8 @@
 export MASTER_ADDR=$(scontrol show hostnames "$SLURM_JOB_NODELIST" | head -n 1)
 export MASTER_PORT=22222
 
+#
+
 export NCCL_DEBUG=warn
 export CUDA_LAUNCH_BLOCKING=0
 export NCCL_TREE_THRESHOLD=0
