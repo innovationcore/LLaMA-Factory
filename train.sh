@@ -3,13 +3,8 @@
 
 
 export PYTHONPATH=.
-RUN_NAME="Otter_MPT7B"
-#GPU=8
-#WORKERS=$((${GPU}*2))
+RUN_NAME="Training Distributed"
 
-WORKERS=1
-
-#echo "Using ${GPU} GPUs and ${WORKERS} workers"
 echo "Running ${RUN_NAME}"
 
 echo "MASTER_ADDR="$MASTER_ADDR
@@ -17,7 +12,6 @@ echo "MASTER_PORT="$MASTER_PORT
 echo "LOCAL_RANK="$LOCAL_RANK
 echo "RANK="$RANK
 echo "WORLD_SIZE="$WORLD_SIZE
-
 
 echo "NCCL_DEBUG="$NCCL_DEBUG
 echo "CUDA_LAUNCH_BLOCKING="$CUDA_LAUNCH_BLOCKING

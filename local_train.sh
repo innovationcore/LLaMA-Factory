@@ -2,7 +2,7 @@
 
 
 export PYTHONPATH=.
-RUN_NAME="Otter_MPT7B"
+RUN_NAME="Training"
 #GPU=8
 #WORKERS=$((${GPU}*2))
 
@@ -26,13 +26,14 @@ echo "NCCL_PROTO="$NCCL_PROTO
 echo "LD_PRELOAD="$LD_PRELOAD
 echo "NCCL_DEBUG="$NCCL_DEBUG
 
-export LORA_RANK=16
-export LORA_TARGET=q_proj,k_proj,v_proj,o_proj,gate_proj,up_proj,down_proj
+export LORA_RANK=8
+#export LORA_TARGET=q_proj,k_proj,v_proj,o_proj,gate_proj,up_proj,down_proj
+export LORA_TARGET=all
 
 echo "LORA_RANK="$LORA_RANK
 echo "LORA_TARGET="$LORA_TARGET
 
-export BATCH_SIZE=8
+export BATCH_SIZE=32
 echo "BATCH_SIZE="$BATCH_SIZE
 
 export GRADIENT_ACCUMULATION_STEPS=4
@@ -45,7 +46,7 @@ export MODEL=/workspace/basemodels/Mixtral-8x7B-Instruct-v0.1
 
 cd /workspace
 
-accelerate launch --main_process_port 25000 --config_file=/workspace/accelerate_config.yaml \
+accelerate launch --main_process_port 25000 --config_file=/workspace/config/accelerate_config.yaml \
     /workspace/src/train_bash.py \
     --stage sft \
     --model_name_or_path $MODEL \
@@ -69,5 +70,5 @@ accelerate launch --main_process_port 25000 --config_file=/workspace/accelerate_
     --learning_rate 5e-5 \
     --num_train_epochs 3.0 \
     --plot_loss \
-    --fp16
+    --bf16
 
