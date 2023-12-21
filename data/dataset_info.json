@@ -14,6 +14,12 @@
       "history": "history"
     }
   },
+  "medal_full": {
+    "file_name": "datasets/medal/medal_full.txt",
+    "columns": {
+      "prompt": "text"
+    }
+  },
   "alpaca_en": {
     "file_name": "alpaca_data_en_52k.json",
     "file_sha1": "607f94a7f581341e59685aef32f531095232cf23"
