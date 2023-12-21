@@ -1,6 +1,4 @@
-
 #!/bin/bash
-
 
 export PYTHONPATH=.
 RUN_NAME="Training Distributed"
@@ -21,13 +19,15 @@ echo "NCCL_PROTO="$NCCL_PROTO
 echo "LD_PRELOAD="$LD_PRELOAD
 echo "NCCL_DEBUG="$NCCL_DEBUG
 
-export LORA_RANK=256
-export LORA_ALPHA=256
+export LORA_RANK=8
+export LORA_ALPHA=8
+#export LORA_TARGET=all
 #export LORA_TARGET=q_proj,k_proj,v_proj,o_proj,gate_proj,up_proj,down_proj
-export LORA_TARGET=all
-#LORA_TARGET=q_proj,v_proj
+#export LORA_TARGET=k_proj,w2,o_proj,q_proj,w1,w3,gate,v_proj
+export LORA_TARGET=q_proj,v_proj
 
 echo "LORA_RANK="$LORA_RANK
+echo "LORA_RANK="$LORA_ALPHA
 echo "LORA_TARGET="$LORA_TARGET
 
 export BATCH_SIZE=32
@@ -88,4 +88,3 @@ accelerate launch --num_processes=$(( 8 * $WORLD_SIZE )) --num_machines $WORLD_S
     --num_train_epochs $EPOCH \
     --plot_loss \
     --bf16
-

@@ -1,14 +1,8 @@
 #!/bin/bash
 
-
 export PYTHONPATH=.
-RUN_NAME="Training"
-#GPU=8
-#WORKERS=$((${GPU}*2))
+RUN_NAME="Training Local"
 
-WORKERS=1
-
-#echo "Using ${GPU} GPUs and ${WORKERS} workers"
 echo "Running ${RUN_NAME}"
 
 echo "MASTER_ADDR="$MASTER_ADDR
@@ -16,7 +10,6 @@ echo "MASTER_PORT="$MASTER_PORT
 echo "LOCAL_RANK="$LOCAL_RANK
 echo "RANK="$RANK
 echo "WORLD_SIZE="$WORLD_SIZE
-
 
 echo "NCCL_DEBUG="$NCCL_DEBUG
 echo "CUDA_LAUNCH_BLOCKING="$CUDA_LAUNCH_BLOCKING
@@ -26,9 +19,19 @@ echo "NCCL_PROTO="$NCCL_PROTO
 echo "LD_PRELOAD="$LD_PRELOAD
 echo "NCCL_DEBUG="$NCCL_DEBUG
 
+#export NV_LIBNCCL_DEV_PACKAGE=libnccl-dev=2.19.3-1+cuda12.3
+#export NV_LIBNCCL_DEV_PACKAGE_NAME=libnccl-dev
+#export NV_LIBNCCL_PACKAGE=libnccl2=2.19.3-1+cuda12.3
+#export NV_LIBNCCL_PACKAGE_NAME=libnccl2
+#export NV_LIBNCCL_DEV_PACKAGE_VERSION=2.19.3-1
+#export NCCL_VERSION=2.19.3-1
+#export NV_LIBNCCL_PACKAGE_VERSION=2.19.3-1
+
 export LORA_RANK=8
+#export LORA_TARGET=all
 #export LORA_TARGET=q_proj,k_proj,v_proj,o_proj,gate_proj,up_proj,down_proj
-export LORA_TARGET=all
+#export LORA_TARGET=k_proj,w2,o_proj,q_proj,w1,w3,gate,v_proj
+export LORA_TARGET=q_proj,v_proj
 
 echo "LORA_RANK="$LORA_RANK
 echo "LORA_TARGET="$LORA_TARGET
@@ -71,4 +74,3 @@ accelerate launch --main_process_port 25000 --config_file=/workspace/config/acce
     --num_train_epochs 3.0 \
     --plot_loss \
     --bf16
-
