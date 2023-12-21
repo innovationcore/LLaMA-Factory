@@ -239,9 +239,9 @@
       "prompt": "text"
     }
   },
-  "wiki_demo": {
+  "med-text-pt": {
     "file_name": "med-text-pt.txt",
-    "file_sha1": "432f32b9c3618eb729ff92d4c310c628a3f63aa0",
+    "file_sha1": "2ca4bf954f01839a0c1946a5630a6cda6027d432",
     "columns": {
       "prompt": "text"
     }
