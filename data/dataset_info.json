@@ -1,4 +1,19 @@
 {
+  "uk-med-text": {
+    "file_name": "uk-med-text.txt",
+    "columns": {
+      "prompt": "text"
+    }
+  },
+  "uk-data-train": {
+    "file_name": "uk-data-train.json",
+    "columns": {
+      "prompt": "instruction",
+      "query": "input",
+      "response": "output",
+      "history": "history"
+    }
+  },
   "alpaca_en": {
     "file_name": "alpaca_data_en_52k.json",
     "file_sha1": "607f94a7f581341e59685aef32f531095232cf23"
@@ -235,13 +250,6 @@
   "wiki_demo": {
     "file_name": "wiki_demo.txt",
     "file_sha1": "e70375e28eda542a90c68213640cc371898ce181",
-    "columns": {
-      "prompt": "text"
-    }
-  },
-  "med-text-pt": {
-    "file_name": "med-text-pt.txt",
-    "file_sha1": "2ca4bf954f01839a0c1946a5630a6cda6027d432",
     "columns": {
       "prompt": "text"
     }
