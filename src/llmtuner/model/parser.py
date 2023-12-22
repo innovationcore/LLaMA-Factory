@@ -104,8 +104,7 @@ def get_train_args(args: Optional[Dict[str, Any]] = None) -> _TRAIN_CLS:
 
     # Setup logging
     if training_args.should_log:
-        log_level = training_args.get_process_log_level()
-        _set_transformers_logging(log_level)
+        _set_transformers_logging()
 
     # Check arguments
     data_args.init_for_training(training_args.seed)
@@ -130,6 +129,9 @@ def get_train_args(args: Optional[Dict[str, Any]] = None) -> _TRAIN_CLS:
 
     if finetuning_args.stage == "ppo" and model_args.shift_attn:
         raise ValueError("PPO training is incompatible with S^2-Attn.")
+
+    if finetuning_args.stage == "ppo" and finetuning_args.reward_model_type == "lora" and model_args.use_unsloth:
+        raise ValueError("Unsloth does not support lora reward model.")
 
     if training_args.max_steps == -1 and data_args.streaming:
         raise ValueError("Please specify `max_steps` in streaming mode.")
