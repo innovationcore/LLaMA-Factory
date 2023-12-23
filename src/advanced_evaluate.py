@@ -21,8 +21,8 @@ def main():
     combined_results = dict()
 
     #try base model
-    category_corrects, results = advanced_evaluator.eval()
-    combined_results['base'] = get_score(category_corrects)
+    #category_corrects, results = advanced_evaluator.eval()
+    #combined_results['base'] = get_score(category_corrects)
 
     #do new adapters
     adapter_to_merge = ['/workspace/models/adapters/uk-med-text-v1','/workspace/models/adapters/medal-v1']
@@ -31,7 +31,7 @@ def main():
 
     model = PeftModel.from_pretrained(advanced_evaluator.get_model(), adapter_to_merge[0], adapter_name="default")
     model.delete_adapter('default')
-    
+    #{'base': {'Average': 72.4, 'STEP-1': 67.06, 'STEP-2': 78.16, 'STEP-3': 71.96}, 'config_1': {'Average': 70.25, 'STEP-1': 67.06, 'STEP-2': 77.01, 'STEP-3': 67.29}}
     '''
     print('load base adapter time:', time.time() - time_stamp)
     model.load_adapter(adapter_to_merge[1], adapter_name="medal-v1")
