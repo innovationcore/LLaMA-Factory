@@ -51,7 +51,7 @@ class AdvancedEvaluator:
         choice_probs = torch.nn.functional.softmax(word_probs[:, self.choice_inputs], dim=-1).detach()
         return [chr(ord("A") + offset.item()) for offset in torch.argmax(choice_probs, dim=-1)]
 
-    def eval(self) -> Tuple[dict, Dict[str, dict]]:
+    def eval(self) -> Tuple[dict, Dict[str, dict], List[str]]:
         if "token" in inspect.signature(cached_file).parameters:
             kwargs = {"token": self.model_args.hf_hub_token}
         elif "use_auth_token" in inspect.signature(cached_file).parameters: # for transformers==4.31.0
@@ -108,15 +108,20 @@ class AdvancedEvaluator:
             results[subject] = {str(i): outputs[i] for i in range(len(outputs))}
 
         pbar.close()
-        self._save_results(category_corrects, results)
-        return category_corrects, results
+        score_data = self._save_results(category_corrects, results)
+        return category_corrects, results, score_data
 
-    def _save_results(self, category_corrects: Dict[str, np.ndarray], results: Dict[str, Dict[int, str]]) -> None:
+    def _save_results(self, category_corrects: Dict[str, np.ndarray], results: Dict[str, Dict[int, str]]) -> List[str]:
         score_info = "\n".join([
             "{:>15}: {:.2f}".format(category_name, 100 * np.mean(category_correct))
             for category_name, category_correct in category_corrects.items() if len(category_correct)
         ])
         print(score_info)
+
+        score_data = [
+            "{:>15}: {:.2f}".format(category_name, 100 * np.mean(category_correct))
+            for category_name, category_correct in category_corrects.items() if len(category_correct)
+        ]
 
         if self.eval_args.save_dir is not None:
             os.makedirs(self.eval_args.save_dir, exist_ok=False)
@@ -126,6 +131,7 @@ class AdvancedEvaluator:
             with open(os.path.join(self.eval_args.save_dir, "results.log"), "w", encoding="utf-8", newline="\n") as f:
                 f.write(score_info)
 
+        return score_data
 
 if __name__ == "__main__":
     evaluator = AdvancedEvaluator()

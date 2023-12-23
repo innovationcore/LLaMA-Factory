@@ -39,8 +39,8 @@ def main():
     model.eval()
     advanced_evaluator.set_model(model)
 
-    advanced_evaluator.eval()
-
+    category_corrects, results, score_data = advanced_evaluator.eval()
+    print(score_data)
 
 if __name__ == "__main__":
     main()
