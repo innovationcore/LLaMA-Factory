@@ -5,23 +5,25 @@ from peft import PeftModel, PeftConfig
 
 from llmtuner import AdvancedEvaluator
 
+def get_score(category_corrects):
+
+    score = dict()
+
+    for category_name, category_correct in category_corrects.items():
+        score[category_name] = round(100 * np.mean(category_correct),2)
+
+    return score
 
 def main():
     print('Advanced Evaluator')
     advanced_evaluator = AdvancedEvaluator()
 
-    #try base model
-    '''
-    category_corrects, results = advanced_evaluator.eval()
-    print('category_corrects')
-    print('type:',type(category_corrects))
-    print(category_corrects)
-    print('results')
-    print('type:', type(category_corrects))
-    print(results)
+    combined_results = dict()
 
-    exit()
-    '''
+    #try base model
+    category_corrects, results = advanced_evaluator.eval()
+    combined_results['base'] = get_score(category_corrects)
+
     #do new adapters
     adapter_to_merge = ['/workspace/models/adapters/uk-med-text-v1','/workspace/models/adapters/medal-v1']
 
@@ -41,9 +43,9 @@ def main():
     advanced_evaluator.set_model(model)
 
     category_corrects, results = advanced_evaluator.eval()
+    combined_results['config_1'] = get_score(category_corrects)
 
-    for category_name, category_correct in category_corrects.items():
-        print(category_name, 100 * np.mean(category_correct))
+    print(combined_results)
 
 if __name__ == "__main__":
     main()
