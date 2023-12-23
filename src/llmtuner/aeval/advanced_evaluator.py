@@ -17,7 +17,7 @@ from llmtuner.eval.template import get_eval_template
 from llmtuner.extras.constants import CHOICES
 from llmtuner.model import dispatch_model, get_eval_args, load_model_and_tokenizer
 
-SUBJECTS = ["STEP-1", "STEP-2", "STEP-3"]
+SUBJECTS = ["Average","STEP-1", "STEP-2", "STEP-3"]
 
 class AdvancedEvaluator:
 
