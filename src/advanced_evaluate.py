@@ -30,7 +30,9 @@ def main():
     time_stamp = time.time()
 
     model = PeftModel.from_pretrained(advanced_evaluator.get_model(), adapter_to_merge[0], adapter_name="default")
-
+    model.delete_adapter('default')
+    
+    '''
     print('load base adapter time:', time.time() - time_stamp)
     model.load_adapter(adapter_to_merge[1], adapter_name="medal-v1")
     print('load second adapter:', time.time() - time_stamp)
@@ -40,6 +42,7 @@ def main():
 
     model.set_adapter("combined")
     model.eval()
+    '''
     advanced_evaluator.set_model(model)
 
     category_corrects, results = advanced_evaluator.eval()
