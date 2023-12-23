@@ -35,6 +35,7 @@ class AdvancedEvaluator:
 
     def set_model(self,model):
         self.model = model
+        dispatch_model(self.model)
 
     def _encode_choices(self) -> List[int]:
         if isinstance(getattr(self.tokenizer, "tokenizer", None), tiktoken.Encoding): # for tiktoken tokenizer (Qwen)
