@@ -39,38 +39,28 @@ def main():
 
     advanced_evaluator.load_model()
     model = PeftModel.from_pretrained(advanced_evaluator.get_model(), adapter_to_merge[0], adapter_name="default")
-    print(model.active_adapters, model.active_adapter, model.peft_config)
-
-    #category_corrects, results = advanced_evaluator.eval()
-    #combined_results['default'] = get_score(category_corrects)
-
     model.load_adapter(adapter_to_merge[0], adapter_name="uk-med-text-v1")
-    model.set_adapter("uk-med-text-v1")
-    for param in filter(lambda p: p.requires_grad, model.parameters()):
-        param.data = param.data.to(torch.float32)
-    print(model.active_adapters, model.active_adapter, model.peft_config)
-
-    #category_corrects, results = advanced_evaluator.eval()
-    #combined_results['uk-med-text-v1'] = get_score(category_corrects)
-
     model.load_adapter(adapter_to_merge[1], adapter_name="medal-v1")
-    model.set_adapter("medal-v1")
-    for param in filter(lambda p: p.requires_grad, model.parameters()):
-        param.data = param.data.to(torch.float32)
-    print(model.active_adapters, model.active_adapter, model.peft_config)
-
-    #category_corrects, results = advanced_evaluator.eval()
-    #combined_results["medal-v1"] = get_score(category_corrects)
-
-
     model.add_weighted_adapter(adapters=['medal-v1', 'uk-med-text-v1'], weights=[5.0, 5.0], adapter_name="combined", combination_type="linear")
-    model.set_adapter("combined")
-    for param in filter(lambda p: p.requires_grad, model.parameters()):
-        param.data = param.data.to(torch.float32)
     print(model.active_adapters, model.active_adapter, model.peft_config)
 
-    #category_corrects, results = advanced_evaluator.eval()
-    #combined_results["combined"] = get_score(category_corrects)
+    model.set_adapter("combined")
+    print(model.active_adapters, model.active_adapter, model.peft_config)
+    category_corrects, results = advanced_evaluator.eval()
+    combined_results["combined"] = get_score(category_corrects)
+    model.delete_adapter("combined")
+
+    model.set_adapter("uk-med-text-v1")
+    category_corrects, results = advanced_evaluator.eval()
+    combined_results['uk-med-text-v1'] = get_score(category_corrects)
+
+    model.set_adapter("medal-v1")
+    category_corrects, results = advanced_evaluator.eval()
+    combined_results["medal-v1"] = get_score(category_corrects)
+
+    model.disable_adapter()
+    category_corrects, results = advanced_evaluator.eval()
+    combined_results["base"] = get_score(category_corrects)
 
     print(combined_results)
     exit()
