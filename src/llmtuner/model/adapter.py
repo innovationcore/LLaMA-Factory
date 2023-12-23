@@ -78,7 +78,6 @@ def init_adapter(
                 adapter_to_merge = model_args.adapter_name_or_path
 
             for adapter in adapter_to_merge:
-                print('merging:',adapter_to_merge)
                 model = PeftModel.from_pretrained(model, adapter)
                 model = model.merge_and_unload()
 
