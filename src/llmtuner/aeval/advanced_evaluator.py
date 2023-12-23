@@ -25,18 +25,24 @@ class AdvancedEvaluator:
         self.model_args, self.data_args, self.eval_args, self.finetuning_args = get_eval_args(args)
         self.model = None
         self.tokenizer = None
+        self.template = None
+        self.eval_template = None
+        self.choice_inputs = None
         #self.model, self.tokenizer = load_model_and_tokenizer(self.model_args, finetuning_args)
         #self.tokenizer.padding_side = "right" # avoid overflow issue in batched inference for llama2
         #self.model = dispatch_model(self.model)
-        self.template = get_template_and_fix_tokenizer(self.data_args.template, self.tokenizer)
-        self.eval_template = get_eval_template(self.eval_args.lang)
-        self.choice_inputs = self._encode_choices()
+        #self.template = get_template_and_fix_tokenizer(self.data_args.template, self.tokenizer)
+        #self.eval_template = get_eval_template(self.eval_args.lang)
+        #self.choice_inputs = self._encode_choices()
 
     def load_model(self):
 
         self.model, self.tokenizer = load_model_and_tokenizer(self.model_args, self.finetuning_args)
         self.tokenizer.padding_side = "right" # avoid overflow issue in batched inference for llama2
         self.model = dispatch_model(self.model)
+        self.template = get_template_and_fix_tokenizer(self.data_args.template, self.tokenizer)
+        self.eval_template = get_eval_template(self.eval_args.lang)
+        self.choice_inputs = self._encode_choices()
 
     def unload_model(self):
 
