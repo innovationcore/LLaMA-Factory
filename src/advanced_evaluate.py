@@ -10,6 +10,7 @@ def main():
     advanced_evaluator = AdvancedEvaluator()
 
     #try base model
+    '''
     category_corrects, results = advanced_evaluator.eval()
     print('category_corrects')
     print('type:',type(category_corrects))
@@ -19,6 +20,7 @@ def main():
     print(results)
 
     exit()
+    '''
     #do new adapters
     adapter_to_merge = ['/workspace/models/adapters/uk-med-text-v1','/workspace/models/adapters/medal-v1']
 
@@ -28,7 +30,7 @@ def main():
     print('load base adapter time:', time.time() - time_stamp)
     model.load_adapter(adapter_to_merge[1], adapter_name="medal-v1")
     print('load second adapter:', time.time() - time_stamp)
-    model.add_weighted_adapter(adapters=['default', 'medal-v1'], weights=[0.25, 0.75], adapter_name="combined",combination_type="linear")
+    model.add_weighted_adapter(adapters=['default', 'medal-v1'], weights=[0.5, 0.5], adapter_name="combined",combination_type="linear")
     print('add_weights:', time.time() - time_stamp)
     model.set_adapter("combined")
     print('merge time:', time.time() - time_stamp)
