@@ -83,7 +83,7 @@ def init_adapter(
             model.add_weighted_adapter(adapters=['medal-v1', 'uk-med-text-v1'], weights=[0.2, 0.2], adapter_name="combined", combination_type="cat")
             print(model.active_adapters, model.active_adapter, model.peft_config)
             model.set_adapter("combined")
-            model.enable_adapters()
+            #model.enable_adapters()
             #model = model.merge_and_unload()
 
             #for adapter in adapter_to_merge:
