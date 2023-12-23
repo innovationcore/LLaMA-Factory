@@ -80,7 +80,7 @@ def init_adapter(
             model = PeftModel.from_pretrained(model, adapter_to_merge[0])
             model.load_adapter(adapter_to_merge[0], adapter_name="medal-v1")
             model.load_adapter(adapter_to_merge[1], adapter_name="uk-med-text-v1")
-            model.add_weighted_adapter(adapters=['medal-v1', 'uk-med-text-v1'], weights=[0.75, 0.25], adapter_name="combined", combination_type="cat")
+            model.add_weighted_adapter(adapters=['medal-v1', 'uk-med-text-v1'], weights=[0.75, 0.25], adapter_name="combined", combination_type="linear")
             print(model.active_adapters, model.active_adapter, model.peft_config)
             model.set_adapter("combined")
             #model.enable_adapters()
