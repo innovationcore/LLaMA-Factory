@@ -23,6 +23,8 @@ class AdvancedEvaluator:
 
     def __init__(self, args: Optional[Dict[str, Any]] = None) -> None:
         self.model_args, self.data_args, self.eval_args, self.finetuning_args = get_eval_args(args)
+        self.model = None
+        self.tokenizer = None
         #self.model, self.tokenizer = load_model_and_tokenizer(self.model_args, finetuning_args)
         #self.tokenizer.padding_side = "right" # avoid overflow issue in batched inference for llama2
         #self.model = dispatch_model(self.model)
