@@ -21,6 +21,14 @@ def main():
 
     combined_results = dict()
 
+    advanced_evaluator.load_model()
+    category_corrects, results = advanced_evaluator.eval()
+    combined_results['base'] = get_score(category_corrects)
+
+    print(combined_results)
+    
+    exit()
+
     #try base model
     '''
     advanced_evaluator.load_model()
@@ -34,6 +42,8 @@ def main():
     # {'medal-v1': {'Average': 73.84, 'STEP-1': 71.76, 'STEP-2': 77.01, 'STEP-3': 72.9}, 'medal-v1_uk-med-text-v1': {'Average': 70.61, 'STEP-1': 70.59, 'STEP-2': 73.56, 'STEP-3': 68.22}}
     #{'base': {'Average': 73.84, 'STEP-1': 70.59, 'STEP-2': 78.16, 'STEP-3': 72.9}, 'medal-v1': {'Average': 70.25, 'STEP-1': 69.41, 'STEP-2': 73.56, 'STEP-3': 68.22}, 'medal-v1_uk-med-text-v1': {'Average': 59.86, 'STEP-1': 58.82, 'STEP-2': 68.97, 'STEP-3': 53.27}}
     #{'default': {'Average': 73.12, 'STEP-1': 68.24, 'STEP-2': 79.31, 'STEP-3': 71.96}, 'uk-med-text-v1': {'Average': 70.97, 'STEP-1': 68.24, 'STEP-2': 75.86, 'STEP-3': 69.16}, 'medal-v1': {'Average': 71.68, 'STEP-1': 70.59, 'STEP-2': 74.71, 'STEP-3': 70.09}, 'combined': {'Average': 59.5, 'STEP-1': 58.82, 'STEP-2': 63.22, 'STEP-3': 57.01}}
+    #{'combined': {'Average': 60.93, 'STEP-1': 60.0, 'STEP-2': 67.82, 'STEP-3': 56.07}, 'uk-med-text-v1': {'Average': 69.89, 'STEP-1': 67.06, 'STEP-2': 74.71, 'STEP-3': 68.22}, 'medal-v1': {'Average': 71.33, 'STEP-1': 69.41, 'STEP-2': 74.71, 'STEP-3': 70.09}, 'base': {'Average': 70.25, 'STEP-1': 67.06, 'STEP-2': 74.71, 'STEP-3': 69.16}}
+
 
     adapter_to_merge = ['/workspace/models/adapters/uk-med-text-v1', '/workspace/models/adapters/medal-v1']
 

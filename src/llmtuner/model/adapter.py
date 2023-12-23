@@ -77,6 +77,9 @@ def init_adapter(
             else:
                 adapter_to_merge = model_args.adapter_name_or_path
 
+            adapter_1 = '/workspace/models/adapters/medal-v1'
+            model = PeftModel.from_pretrained(model, adapter_1)
+
             for adapter in adapter_to_merge:
                 model = PeftModel.from_pretrained(model, adapter)
                 model = model.merge_and_unload()
