@@ -10,8 +10,15 @@ def main():
     advanced_evaluator = AdvancedEvaluator()
 
     #try base model
-    advanced_evaluator.eval()
+    category_corrects, results = advanced_evaluator.eval()
+    print('category_corrects')
+    print('type:',type(category_corrects))
+    print(category_corrects)
+    print('results')
+    print('type:', type(category_corrects))
+    print(results)
 
+    exit()
     #do new adapters
     adapter_to_merge = ['/workspace/models/adapters/uk-med-text-v1','/workspace/models/adapters/medal-v1']
 

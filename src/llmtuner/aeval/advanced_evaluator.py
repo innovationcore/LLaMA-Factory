@@ -7,7 +7,7 @@ import inspect
 import tiktoken
 import numpy as np
 from tqdm import tqdm, trange
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 from datasets import load_dataset
 from transformers.utils import cached_file
@@ -51,7 +51,7 @@ class AdvancedEvaluator:
         choice_probs = torch.nn.functional.softmax(word_probs[:, self.choice_inputs], dim=-1).detach()
         return [chr(ord("A") + offset.item()) for offset in torch.argmax(choice_probs, dim=-1)]
 
-    def eval(self) -> None:
+    def eval(self) -> Tuple[dict, Dict[str, dict]]:
         if "token" in inspect.signature(cached_file).parameters:
             kwargs = {"token": self.model_args.hf_hub_token}
         elif "use_auth_token" in inspect.signature(cached_file).parameters: # for transformers==4.31.0
@@ -109,6 +109,7 @@ class AdvancedEvaluator:
 
         pbar.close()
         self._save_results(category_corrects, results)
+        return category_corrects, results
 
     def _save_results(self, category_corrects: Dict[str, np.ndarray], results: Dict[str, Dict[int, str]]) -> None:
         score_info = "\n".join([
@@ -116,6 +117,7 @@ class AdvancedEvaluator:
             for category_name, category_correct in category_corrects.items() if len(category_correct)
         ])
         print(score_info)
+
         if self.eval_args.save_dir is not None:
             os.makedirs(self.eval_args.save_dir, exist_ok=False)
             with open(os.path.join(self.eval_args.save_dir, "results.json"), "w", encoding="utf-8", newline="\n") as f:
