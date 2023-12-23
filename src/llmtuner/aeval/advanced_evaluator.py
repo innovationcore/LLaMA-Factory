@@ -52,7 +52,7 @@ class AdvancedEvaluator:
         choice_probs = torch.nn.functional.softmax(word_probs[:, self.choice_inputs], dim=-1).detach()
         return [chr(ord("A") + offset.item()) for offset in torch.argmax(choice_probs, dim=-1)]
 
-    def eval(self) -> Tuple[dict, Dict[str, dict], List[str]]:
+    def eval(self) -> Tuple[dict, Dict[str, dict]]:
         if "token" in inspect.signature(cached_file).parameters:
             kwargs = {"token": self.model_args.hf_hub_token}
         elif "use_auth_token" in inspect.signature(cached_file).parameters: # for transformers==4.31.0
