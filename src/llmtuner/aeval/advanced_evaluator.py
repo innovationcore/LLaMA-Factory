@@ -14,9 +14,10 @@ from transformers.utils import cached_file
 
 from llmtuner.data.template import get_template_and_fix_tokenizer
 from llmtuner.eval.template import get_eval_template
-from llmtuner.extras.constants import CHOICES, SUBJECTS
+from llmtuner.extras.constants import CHOICES
 from llmtuner.model import dispatch_model, get_eval_args, load_model_and_tokenizer
 
+SUBJECTS = ["STEP-1", "STEP-2", "STEP-3"]
 
 class AdvancedEvaluator:
 
@@ -116,13 +117,6 @@ class AdvancedEvaluator:
             "{:>15}: {:.2f}".format(category_name, 100 * np.mean(category_correct))
             for category_name, category_correct in category_corrects.items() if len(category_correct)
         ])
-        print(score_info)
-
-        score_data = [
-            "{:>15}: {:.2f}".format(category_name, 100 * np.mean(category_correct))
-            for category_name, category_correct in category_corrects.items() if len(category_correct)
-        ]
-        #['        Average: 74.19', '         STEP-1: 71.76', '         STEP-2: 77.01', '         STEP-3: 73.83']
 
         if self.eval_args.save_dir is not None:
             os.makedirs(self.eval_args.save_dir, exist_ok=False)
@@ -131,8 +125,6 @@ class AdvancedEvaluator:
 
             with open(os.path.join(self.eval_args.save_dir, "results.log"), "w", encoding="utf-8", newline="\n") as f:
                 f.write(score_info)
-
-        return score_data
 
 if __name__ == "__main__":
     evaluator = AdvancedEvaluator()

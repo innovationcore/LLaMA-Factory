@@ -40,9 +40,8 @@ def main():
     model.eval()
     advanced_evaluator.set_model(model)
 
-    category_corrects, results, score_data = advanced_evaluator.eval()
-    print(score_data)
-    print(category_corrects)
+    category_corrects, results = advanced_evaluator.eval()
+
     for category_name, category_correct in category_corrects.items():
         print(category_name, 100 * np.mean(category_correct))
 
