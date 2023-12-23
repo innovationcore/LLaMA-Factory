@@ -122,6 +122,7 @@ class AdvancedEvaluator:
             "{:>15}: {:.2f}".format(category_name, 100 * np.mean(category_correct))
             for category_name, category_correct in category_corrects.items() if len(category_correct)
         ]
+        #['        Average: 74.19', '         STEP-1: 71.76', '         STEP-2: 77.01', '         STEP-3: 73.83']
 
         if self.eval_args.save_dir is not None:
             os.makedirs(self.eval_args.save_dir, exist_ok=False)

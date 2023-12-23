@@ -1,5 +1,6 @@
 import time
 
+import numpy as np
 from peft import PeftModel, PeftConfig
 
 from llmtuner import AdvancedEvaluator
@@ -41,6 +42,9 @@ def main():
 
     category_corrects, results, score_data = advanced_evaluator.eval()
     print(score_data)
+    print(category_corrects)
+    for category_name, category_correct in category_corrects.items():
+        print(category_name, 100 * np.mean(category_correct))
 
 if __name__ == "__main__":
     main()
