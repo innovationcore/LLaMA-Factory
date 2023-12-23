@@ -31,7 +31,7 @@ def main():
     print('load base adapter time:', time.time() - time_stamp)
     model.load_adapter(adapter_to_merge[1], adapter_name="medal-v1")
     print('load second adapter:', time.time() - time_stamp)
-    model.add_weighted_adapter(adapters=['default', 'medal-v1'], weights=[0.5, 0.5], adapter_name="combined",combination_type="linear")
+    model.add_weighted_adapter(adapters=['default', 'medal-v1'], weights=[0.1, 0.9], adapter_name="combined",combination_type="linear")
     print('add_weights:', time.time() - time_stamp)
     print('merge time:', time.time() - time_stamp)
 
