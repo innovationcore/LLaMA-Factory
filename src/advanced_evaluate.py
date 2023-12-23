@@ -26,7 +26,7 @@ def main():
     combined_results['base'] = get_score(category_corrects)
 
     print(combined_results)
-    
+
     exit()
 
     #try base model
