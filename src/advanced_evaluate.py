@@ -44,6 +44,7 @@ def main():
     #{'default': {'Average': 73.12, 'STEP-1': 68.24, 'STEP-2': 79.31, 'STEP-3': 71.96}, 'uk-med-text-v1': {'Average': 70.97, 'STEP-1': 68.24, 'STEP-2': 75.86, 'STEP-3': 69.16}, 'medal-v1': {'Average': 71.68, 'STEP-1': 70.59, 'STEP-2': 74.71, 'STEP-3': 70.09}, 'combined': {'Average': 59.5, 'STEP-1': 58.82, 'STEP-2': 63.22, 'STEP-3': 57.01}}
     #{'combined': {'Average': 60.93, 'STEP-1': 60.0, 'STEP-2': 67.82, 'STEP-3': 56.07}, 'uk-med-text-v1': {'Average': 69.89, 'STEP-1': 67.06, 'STEP-2': 74.71, 'STEP-3': 68.22}, 'medal-v1': {'Average': 71.33, 'STEP-1': 69.41, 'STEP-2': 74.71, 'STEP-3': 70.09}, 'base': {'Average': 70.25, 'STEP-1': 67.06, 'STEP-2': 74.71, 'STEP-3': 69.16}}
     #{'base': {'Average': 73.84, 'STEP-1': 70.59, 'STEP-2': 78.16, 'STEP-3': 72.9}}
+    #{'base': {'Average': 74.19, 'STEP-1': 71.76, 'STEP-2': 77.01, 'STEP-3': 73.83}}
 
     adapter_to_merge = ['/workspace/models/adapters/uk-med-text-v1', '/workspace/models/adapters/medal-v1']
 
@@ -53,7 +54,7 @@ def main():
     #model = PeftModel.from_pretrained(advanced_evaluator.get_model(), adapter_to_merge[0], adapter_name="default")
     model.load_adapter(adapter_to_merge[0], adapter_name="uk-med-text-v1")
     model.load_adapter(adapter_to_merge[1], adapter_name="medal-v1")
-    model.add_weighted_adapter(adapters=['medal-v1', 'uk-med-text-v1'], weights=[0.5, 0.5], adapter_name="combined", combination_type="linear")
+    model.add_weighted_adapter(adapters=['medal-v1', 'uk-med-text-v1'], weights=[0.75, 0.25], adapter_name="combined", combination_type="linear")
     print(model.active_adapters, model.active_adapter, model.peft_config)
 
     model.set_adapter("combined")
