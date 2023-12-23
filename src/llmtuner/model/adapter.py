@@ -78,17 +78,17 @@ def init_adapter(
                 adapter_to_merge = model_args.adapter_name_or_path
 
             model = PeftModel.from_pretrained(model, adapter_to_merge[0])
+            model.enable_adapters(True)
             model.load_adapter(adapter_to_merge[0], adapter_name="medal-v1")
             model.load_adapter(adapter_to_merge[1], adapter_name="uk-med-text-v1")
-            model.merge_adapter("medal-v1","uk-med-text-v1")
-            #model.add_weighted_adapter(adapters=['medal-v1', 'uk-med-text-v1'],adapter_name="combined", combination_type="cat")
+            model.add_weighted_adapter(adapters=['medal-v1', 'uk-med-text-v1'], weights=[0.2, 0.2], adapter_name="combined", combination_type="cat")
             print(model.active_adapters, model.active_adapter, model.peft_config)
             model.set_adapter("combined")
-            model = model.merge_and_unload()
+            #model = model.merge_and_unload()
 
-            for adapter in adapter_to_merge:
-                model = PeftModel.from_pretrained(model, adapter)
-                model = model.merge_and_unload()
+            #for adapter in adapter_to_merge:
+            #    model = PeftModel.from_pretrained(model, adapter)
+            #    model = model.merge_and_unload()
 
             if len(adapter_to_merge) > 0:
                 logger.info("Merged {} adapter(s).".format(len(adapter_to_merge)))
