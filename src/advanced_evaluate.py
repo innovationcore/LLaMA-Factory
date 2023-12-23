@@ -21,9 +21,13 @@ def main():
     combined_results = dict()
 
     #try base model
+    advanced_evaluator.load_model()
     category_corrects, results = advanced_evaluator.eval()
     combined_results['base'] = get_score(category_corrects)
-    
+    advanced_evaluator.unload_model()
+    time.sleep(15)
+
+    exit(0)
     #do new adapters
     # {'base': {'Average': 72.4, 'STEP-1': 67.06, 'STEP-2': 78.16, 'STEP-3': 71.96}, 'config_1': {'Average': 70.25, 'STEP-1': 67.06, 'STEP-2': 77.01, 'STEP-3': 67.29}}
     # {'medal-v1': {'Average': 73.84, 'STEP-1': 71.76, 'STEP-2': 77.01, 'STEP-3': 72.9}, 'medal-v1_uk-med-text-v1': {'Average': 69.53, 'STEP-1': 68.24, 'STEP-2': 74.71, 'STEP-3': 66.36}}

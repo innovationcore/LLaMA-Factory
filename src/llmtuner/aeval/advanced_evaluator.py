@@ -22,13 +22,30 @@ SUBJECTS = ["Average","STEP-1", "STEP-2", "STEP-3"]
 class AdvancedEvaluator:
 
     def __init__(self, args: Optional[Dict[str, Any]] = None) -> None:
-        self.model_args, self.data_args, self.eval_args, finetuning_args = get_eval_args(args)
-        self.model, self.tokenizer = load_model_and_tokenizer(self.model_args, finetuning_args)
-        self.tokenizer.padding_side = "right" # avoid overflow issue in batched inference for llama2
-        self.model = dispatch_model(self.model)
+        self.model_args, self.data_args, self.eval_args, self.finetuning_args = get_eval_args(args)
+        #self.model, self.tokenizer = load_model_and_tokenizer(self.model_args, finetuning_args)
+        #self.tokenizer.padding_side = "right" # avoid overflow issue in batched inference for llama2
+        #self.model = dispatch_model(self.model)
         self.template = get_template_and_fix_tokenizer(self.data_args.template, self.tokenizer)
         self.eval_template = get_eval_template(self.eval_args.lang)
         self.choice_inputs = self._encode_choices()
+
+    def load_model(self):
+
+        self.model, self.tokenizer = load_model_and_tokenizer(self.model_args, self.finetuning_args)
+        self.tokenizer.padding_side = "right" # avoid overflow issue in batched inference for llama2
+        self.model = dispatch_model(self.model)
+
+    def unload_model(self):
+
+        del self.model  # deleting the model
+        del self.tokenizer #delete token
+
+        # model will still be on cache until its place is taken by other objects so also execute the below lines
+        import gc  # garbage collect library
+        gc.collect()
+        torch.cuda.empty_cache()
+
 
     def get_model(self):
         return self.model
