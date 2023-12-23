@@ -29,6 +29,12 @@ class AdvancedEvaluator:
         self.eval_template = get_eval_template(self.eval_args.lang)
         self.choice_inputs = self._encode_choices()
 
+    def get_model(self):
+        return self.model
+
+    def set_model(self,model):
+        self.model = model
+
     def _encode_choices(self) -> List[int]:
         if isinstance(getattr(self.tokenizer, "tokenizer", None), tiktoken.Encoding): # for tiktoken tokenizer (Qwen)
             kwargs = dict(allowed_special="all")
