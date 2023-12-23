@@ -86,6 +86,7 @@ def init_adapter(
                                        adapter_name="combined", combination_type="linear")
             print(model.active_adapters, model.active_adapter, model.peft_config)
             model.set_adapter("combined")
+            model = model.merge_and_unload()
 
             for adapter in adapter_to_merge:
                 model = PeftModel.from_pretrained(model, adapter)
