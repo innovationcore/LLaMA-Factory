@@ -109,8 +109,8 @@ class AdvancedEvaluator:
             results[subject] = {str(i): outputs[i] for i in range(len(outputs))}
 
         pbar.close()
-        score_data = self._save_results(category_corrects, results)
-        return category_corrects, results, score_data
+        #self._save_results(category_corrects, results)
+        return category_corrects, results
 
     def _save_results(self, category_corrects: Dict[str, np.ndarray], results: Dict[str, Dict[int, str]]) -> List[str]:
         score_info = "\n".join([
