@@ -1,6 +1,7 @@
 import time
 
 import numpy as np
+import torch
 from peft import PeftModel, PeftConfig
 
 from llmtuner import AdvancedEvaluator
@@ -42,12 +43,16 @@ def main():
 
     model.load_adapter(adapter_to_merge[0], adapter_name="uk-med-text-v1")
     model.set_adapter("uk-med-text-v1")
+    for param in filter(lambda p: p.requires_grad, model.parameters()):
+        param.data = param.data.to(torch.float32)
     print(model.active_adapters, model.active_adapter)
     category_corrects, results = advanced_evaluator.eval()
     combined_results['uk-med-text-v1'] = get_score(category_corrects)
 
     model.load_adapter(adapter_to_merge[1], adapter_name="medal-v1")
     model.set_adapter("medal-v1")
+    for param in filter(lambda p: p.requires_grad, model.parameters()):
+        param.data = param.data.to(torch.float32)
     print(model.active_adapters, model.active_adapter)
     category_corrects, results = advanced_evaluator.eval()
     combined_results["medal-v1"] = get_score(category_corrects)
@@ -56,6 +61,8 @@ def main():
     model.add_weighted_adapter(adapters=['medal-v1', 'uk-med-text-v1'], weights=[5.0, 5.0], adapter_name="combined",
                                combination_type="linear")
     model.set_adapter("combined")
+    for param in filter(lambda p: p.requires_grad, model.parameters()):
+        param.data = param.data.to(torch.float32)
     print(model.active_adapters, model.active_adapter)
     category_corrects, results = advanced_evaluator.eval()
     combined_results["combined"] = get_score(category_corrects)
