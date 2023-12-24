@@ -60,13 +60,13 @@ export MODEL=/workspace/basemodels/Mixtral-8x7B-Instruct-v0.1
 #export ADAPTER=/workspace/basemodels/Mixtral-8x7B-Instruct-v0.1_adapters/med-text-pt
 #export ADAPTER=/workspace/outputmodels/med-text-128
 
-#export STAGE=pt
-export STAGE=sft
+export STAGE=pt
+#export STAGE=sft
 
 #export DATASET=c4_demo
 #export DATASET=wiki_demo
-#export DATASET=uk-med-text
-export DATASET=uk-data-train
+export DATASET=uk-med-text
+#export DATASET=uk-data-train
 #export DATASET=medal_full
 
 cd /workspace
