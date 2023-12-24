@@ -43,9 +43,9 @@ def main():
     gc.collect()
     torch.cuda.empty_cache()
 
-    advanced_evaluator2 = AdvancedEvaluator()
-    category_corrects, results = advanced_evaluator2.eval()
-    combined_results['base-2'] = get_score(category_corrects)
+    #advanced_evaluator2 = AdvancedEvaluator()
+    #category_corrects, results = advanced_evaluator2.eval()
+    #combined_results['base-2'] = get_score(category_corrects)
 
     print(combined_results)
 
