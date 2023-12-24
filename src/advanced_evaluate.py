@@ -31,9 +31,9 @@ def main():
     model.load_adapter(adapter_to_merge[1], adapter_name="uk-med-text-v1")
     model.add_weighted_adapter(adapters=['medal-v1', 'uk-med-text-v1'], weights=[1.0, 1.0], adapter_name="combined", combination_type="linear")
     model.set_adapter("combined")
-    model.delete_adapter("medal-v1")
-    model.delete_adapter("uk-med-text-v1")
-    model = model.merge_and_unload()
+    #model.delete_adapter("medal-v1")
+    #model.delete_adapter("uk-med-text-v1")
+    #model = model.merge_and_unload()
     advanced_evaluator.set_model(model)
 
     print(model.active_adapters, model.active_adapter, model.peft_config)
