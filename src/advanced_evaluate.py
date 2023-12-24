@@ -21,7 +21,7 @@ def main():
 
     combined_results = dict()
 
-    adapter_to_merge = ['/workspace/models/adapters/uk-med-text-v1', '/workspace/models/adapters/medal-v1']
+    adapter_to_merge = ['/workspace/models/adapters/uk-med-v2', '/workspace/models/adapters/uk-med-text-v1']
 
     #{'combined': {'Average': 73.84, 'STEP-1': 70.59, 'STEP-2': 78.16, 'STEP-3': 72.9}, 'base-2': {'Average': 73.84, 'STEP-1': 70.59, 'STEP-2': 78.16, 'STEP-3': 72.9}}
     #{'Average': 73.84, 'STEP-1': 70.59, 'STEP-2': 78.16, 'STEP-3': 72.9}}
@@ -30,9 +30,9 @@ def main():
     advanced_evaluator = AdvancedEvaluator()
     peft_model_id = "/workspace/models/adapters/uk-med-text-v1"
     model = PeftModel.from_pretrained(advanced_evaluator.get_model(), peft_model_id)
-    model.load_adapter(adapter_to_merge[0], adapter_name="medal-v1")
+    model.load_adapter(adapter_to_merge[0], adapter_name="uk-med-v2")
     model.load_adapter(adapter_to_merge[1], adapter_name="uk-med-text-v1")
-    model.add_weighted_adapter(adapters=['medal-v1', 'uk-med-text-v1'], weights=[0.25, 0.25], adapter_name="combined", combination_type="linear")
+    model.add_weighted_adapter(adapters=['uk-med-v2', 'uk-med-text-v1'], weights=[0.5, 0.5], adapter_name="combined", combination_type="linear")
     model.set_adapter("combined")
     #model.merge_adapter(['combined'])
 
