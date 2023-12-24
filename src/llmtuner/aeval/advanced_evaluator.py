@@ -48,6 +48,9 @@ class AdvancedEvaluator:
 
         del self.model  # deleting the model
         del self.tokenizer #delete token
+        del self.template
+        del self.eval_template
+        del self.choice_inputs
 
         # model will still be on cache until its place is taken by other objects so also execute the below lines
         import gc  # garbage collect library
