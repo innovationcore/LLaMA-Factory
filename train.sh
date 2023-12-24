@@ -94,8 +94,8 @@ accelerate launch --num_processes=$(( 8 * $WORLD_SIZE )) --num_machines $WORLD_S
     --per_device_train_batch_size $BATCH_SIZE \
     --gradient_accumulation_steps $GRADIENT_ACCUMULATION_STEPS \
     --lr_scheduler_type cosine \
-    --logging_steps 10 \
-    --save_steps 1000 \
+    --logging_steps 1 \
+    --save_steps 100 \
     --learning_rate $LR \
     --num_train_epochs $EPOCH \
     --plot_loss \
