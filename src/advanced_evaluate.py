@@ -21,9 +21,21 @@ def main():
 
     combined_results = dict()
 
+    adapter_to_merge = ['/workspace/models/adapters/uk-med-text-v1', '/workspace/models/adapters/medal-v1']
+
+
     advanced_evaluator = AdvancedEvaluator()
+    peft_model_id = "/workspace/models/adapters/uk-med-text-v1"
+    model = PeftModel.from_pretrained(advanced_evaluator.get_model(), peft_model_id)
+    model.load_adapter(adapter_to_merge[0], adapter_name="medal-v1")
+    model.load_adapter(adapter_to_merge[1], adapter_name="uk-med-text-v1")
+    model.add_weighted_adapter(adapters=['medal-v1', 'uk-med-text-v1'], weights=[1.0, 1.0], adapter_name="combined", combination_type="linear")
+    model.set_adapter("combined")
+    model.delete_adapter("medal-v1")
+    model.delete_adapter("uk-med-text-v1")
+    print(model.active_adapters, model.active_adapter, model.peft_config)
     category_corrects, results = advanced_evaluator.eval()
-    combined_results['base-1'] = get_score(category_corrects)
+    combined_results['combined'] = get_score(category_corrects)
 
     del advanced_evaluator
     # model will still be on cache until its place is taken by other objects so also execute the below lines
