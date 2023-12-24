@@ -32,7 +32,7 @@ def main():
     model = PeftModel.from_pretrained(advanced_evaluator.get_model(), peft_model_id)
     model.load_adapter(adapter_to_merge[0], adapter_name="uk-med-v2")
     model.load_adapter(adapter_to_merge[1], adapter_name="uk-med-text-v1")
-    model.add_weighted_adapter(adapters=['uk-med-v2', 'uk-med-text-v1'], weights=[0.5, 0.5], adapter_name="combined", combination_type="linear")
+    model.add_weighted_adapter(adapters=['uk-med-v2', 'uk-med-text-v1'], weights=[1.0, 1.0], adapter_name="combined", combination_type="linear")
     model.set_adapter("combined")
     #model.merge_adapter(['combined'])
 
