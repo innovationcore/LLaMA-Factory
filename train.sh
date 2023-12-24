@@ -30,24 +30,24 @@ export DDP_TIMEOUT=14400
 
 export LORA_RANK=64
 export LORA_ALPHA=64
-#export LORA_TARGET=all
-#export LORA_TARGET=q_proj,k_proj,v_proj,o_proj,gate_proj,up_proj,down_proj
-export LORA_TARGET=k_proj,w2,o_proj,q_proj,w1,w3,gate,v_proj
 
+#export LORA_TARGET=all
 #export LORA_TARGET=q_proj,v_proj
+export LORA_TARGET=k_proj,w2,o_proj,q_proj,w1,w3,gate,v_proj
 
 echo "LORA_RANK="$LORA_RANK
 echo "LORA_RANK="$LORA_ALPHA
 echo "LORA_TARGET="$LORA_TARGET
 
-export BATCH_SIZE=56
+export BATCH_SIZE=2
 echo "BATCH_SIZE="$BATCH_SIZE
 
-export GRADIENT_ACCUMULATION_STEPS=8
+export GRADIENT_ACCUMULATION_STEPS=1
 echo "GRADIENT_ACCUMULATION_STEPS="$GRADIENT_ACCUMULATION_STEPS
 
 export EPOCH=3.0
-export LR=5e-5
+export LR=2e-4
+#export LR=5e-5
 #export LR=1e-6
 
 #export TEMPLATE=default
