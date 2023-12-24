@@ -33,6 +33,7 @@ def main():
     model.set_adapter("combined")
     model.delete_adapter("medal-v1")
     model.delete_adapter("uk-med-text-v1")
+    advanced_evaluator.set_model(model)
     print(model.active_adapters, model.active_adapter, model.peft_config)
     category_corrects, results = advanced_evaluator.eval()
     combined_results['combined'] = get_score(category_corrects)
