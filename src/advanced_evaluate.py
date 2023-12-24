@@ -23,7 +23,7 @@ def main():
 
     adapter_to_merge = ['/workspace/models/adapters/uk-med-text-v1', '/workspace/models/adapters/medal-v1']
 
-
+    #{'combined': {'Average': 73.84, 'STEP-1': 70.59, 'STEP-2': 78.16, 'STEP-3': 72.9}, 'base-2': {'Average': 73.84, 'STEP-1': 70.59, 'STEP-2': 78.16, 'STEP-3': 72.9}}
     advanced_evaluator = AdvancedEvaluator()
     peft_model_id = "/workspace/models/adapters/uk-med-text-v1"
     model = PeftModel.from_pretrained(advanced_evaluator.get_model(), peft_model_id)
@@ -33,7 +33,9 @@ def main():
     model.set_adapter("combined")
     model.delete_adapter("medal-v1")
     model.delete_adapter("uk-med-text-v1")
+    model = model.merge_and_unload()
     advanced_evaluator.set_model(model)
+
     print(model.active_adapters, model.active_adapter, model.peft_config)
     category_corrects, results = advanced_evaluator.eval()
     combined_results['combined'] = get_score(category_corrects)
