@@ -17,6 +17,8 @@ from llmtuner.eval.template import get_eval_template
 from llmtuner.extras.constants import CHOICES
 from llmtuner.model import dispatch_model, get_eval_args, load_model_and_tokenizer
 
+import gc  # garbage collect library
+
 SUBJECTS = ["Average","STEP-1", "STEP-2", "STEP-3"]
 
 class AdvancedEvaluator:
@@ -28,12 +30,16 @@ class AdvancedEvaluator:
         self.template = None
         self.eval_template = None
         self.choice_inputs = None
+        self.load_model()
         #self.model, self.tokenizer = load_model_and_tokenizer(self.model_args, finetuning_args)
         #self.tokenizer.padding_side = "right" # avoid overflow issue in batched inference for llama2
         #self.model = dispatch_model(self.model)
         #self.template = get_template_and_fix_tokenizer(self.data_args.template, self.tokenizer)
         #self.eval_template = get_eval_template(self.eval_args.lang)
         #self.choice_inputs = self._encode_choices()
+
+    def __del__(self):
+        self.unload_model()
 
     def load_model(self):
 
@@ -53,7 +59,6 @@ class AdvancedEvaluator:
         del self.choice_inputs
 
         # model will still be on cache until its place is taken by other objects so also execute the below lines
-        import gc  # garbage collect library
         gc.collect()
         torch.cuda.empty_cache()
 

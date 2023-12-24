@@ -1,3 +1,4 @@
+import gc
 import time
 
 import numpy as np
@@ -17,19 +18,21 @@ def get_score(category_corrects):
 
 def main():
     print('Advanced Evaluator')
-    advanced_evaluator = AdvancedEvaluator()
 
     combined_results = dict()
 
-    advanced_evaluator.load_model()
+    advanced_evaluator = AdvancedEvaluator()
     category_corrects, results = advanced_evaluator.eval()
     combined_results['base-1'] = get_score(category_corrects)
-    advanced_evaluator.unload_model()
 
-    advanced_evaluator.load_model()
-    category_corrects, results = advanced_evaluator.eval()
+    del advanced_evaluator
+    # model will still be on cache until its place is taken by other objects so also execute the below lines
+    gc.collect()
+    torch.cuda.empty_cache()
+
+    advanced_evaluator2 = AdvancedEvaluator()
+    category_corrects, results = advanced_evaluator2.eval()
     combined_results['base-2'] = get_score(category_corrects)
-    advanced_evaluator.unload_model()
 
     print(combined_results)
 
