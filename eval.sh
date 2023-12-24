@@ -19,4 +19,3 @@ CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python src/advanced_evaluate.py \
 
 end=$(date +%s)
 echo "Elapsed Time: $(($end-$start)) seconds"
-
