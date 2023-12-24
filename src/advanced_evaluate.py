@@ -24,13 +24,15 @@ def main():
     adapter_to_merge = ['/workspace/models/adapters/uk-med-text-v1', '/workspace/models/adapters/medal-v1']
 
     #{'combined': {'Average': 73.84, 'STEP-1': 70.59, 'STEP-2': 78.16, 'STEP-3': 72.9}, 'base-2': {'Average': 73.84, 'STEP-1': 70.59, 'STEP-2': 78.16, 'STEP-3': 72.9}}
+    #{'Average': 73.84, 'STEP-1': 70.59, 'STEP-2': 78.16, 'STEP-3': 72.9}}
     advanced_evaluator = AdvancedEvaluator()
     peft_model_id = "/workspace/models/adapters/uk-med-text-v1"
     model = PeftModel.from_pretrained(advanced_evaluator.get_model(), peft_model_id)
     model.load_adapter(adapter_to_merge[0], adapter_name="medal-v1")
     model.load_adapter(adapter_to_merge[1], adapter_name="uk-med-text-v1")
-    model.add_weighted_adapter(adapters=['medal-v1', 'uk-med-text-v1'], weights=[1.0, 1.0], adapter_name="combined", combination_type="linear")
-    model.set_adapter("combined")
+    model.merge_adapter(['medal-v1', 'uk-med-text-v1'])
+    #model.add_weighted_adapter(adapters=['medal-v1', 'uk-med-text-v1'], weights=[1.0, 1.0], adapter_name="combined", combination_type="linear")
+    #model.set_adapter("combined")
     #model.delete_adapter("medal-v1")
     #model.delete_adapter("uk-med-text-v1")
     #model = model.merge_and_unload()
