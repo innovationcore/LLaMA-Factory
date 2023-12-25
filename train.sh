@@ -75,6 +75,8 @@ export DATASET=uk-med-text
 export OUTPUT_MODEL=$DATASET_S-$STAGE_R-$LORA_RANK_A-$LORA_ALPHA_E-$EPOCH_LR-$LR
 echo "OUTPUT_MODEL="$OUTPUT_MODEL
 
+exit
+
 cd /workspace
 
 #--adapter_name_or_path $ADAPTER \
