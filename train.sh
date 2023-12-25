@@ -49,7 +49,7 @@ echo "GRADIENT_ACCUMULATION_STEPS="$GRADIENT_ACCUMULATION_STEPS
 export EPOCH=1.0
 #export LR=1e-4
 #export LR=5e-5
-export LR=2e-5
+export LR=5e-5
 #export LR=1e-6
 
 
@@ -76,8 +76,6 @@ export DATASET=uk-med-text
 #echo $DATASET _S- $STAGE _R- $LORA_RANK _A-\ $LORA_ALPHA _E- $EPOCH _LR- $LR
 export OUTPUT_MODEL=$DATASET'_S-'$STAGE'_R-'$LORA_RANK'_A-'$LORA_ALPHA'_E-'$EPOCH'_LR-'$LR
 echo "OUTPUT_MODEL="$OUTPUT_MODEL
-
-exit
 
 cd /workspace
 
