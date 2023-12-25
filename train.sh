@@ -71,6 +71,9 @@ export DATASET=uk-med-text
 #export DATASET=uk-data-train
 #export DATASET=medal_full
 
+export OUTPUT_MODEL=$DATASET_S-$STAGE_R-$LORA_RANK_A-$LORA_ALPHA_E-$EPOCH_LR-$LR
+echo "OUTPUT_MODEL="$OUTPUT_MODEL
+
 cd /workspace
 
 #--adapter_name_or_path $ADAPTER \
@@ -89,7 +92,7 @@ accelerate launch --num_processes=$(( 8 * $WORLD_SIZE )) --num_machines $WORLD_S
     --lora_rank $LORA_RANK \
     --lora_alpha $LORA_ALPHA \
     --lora_target $LORA_TARGET \
-    --output_dir /workspace/outputmodels/llmfactory \
+    --output_dir /workspace/outputmodels/$OUTPUT_MODEL \
     --overwrite_output_dir \
     --overwrite_cache \
     --per_device_train_batch_size $BATCH_SIZE \
