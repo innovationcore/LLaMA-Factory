@@ -28,12 +28,13 @@ echo "NCCL_DEBUG="$NCCL_DEBUG
 #export NCCL_IB_TIMEOUT=22
 export DDP_TIMEOUT=14400
 
-export LORA_RANK=64
-export LORA_ALPHA=64
+export LORA_RANK=16
+export LORA_ALPHA=16
 
 #export LORA_TARGET=all
 #export LORA_TARGET=q_proj,v_proj
-export LORA_TARGET=k_proj,w2,o_proj,q_proj,w1,w3,gate,v_proj
+#export LORA_TARGET=k_proj,w2,o_proj,q_proj,w1,w3,gate,v_proj
+export LORA_TARGET=q_proj,k_proj,v_proj,o_proj,gate_proj,up_proj,down_proj
 
 echo "LORA_RANK="$LORA_RANK
 echo "LORA_RANK="$LORA_ALPHA
