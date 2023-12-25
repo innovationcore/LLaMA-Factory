@@ -47,9 +47,9 @@ export GRADIENT_ACCUMULATION_STEPS=1
 echo "GRADIENT_ACCUMULATION_STEPS="$GRADIENT_ACCUMULATION_STEPS
 
 export EPOCH=1.0
-#export LR=1e-4
+export LR=1e-4
 #export LR=5e-5
-export LR=5e-5
+#export LR=5e-5
 #export LR=1e-6
 
 
