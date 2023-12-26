@@ -1,4 +1,5 @@
 import gc
+import os.path
 import time
 
 import numpy as np
@@ -21,7 +22,8 @@ def main():
 
     combined_results = dict()
 
-    adapter_to_merge = ['/workspace/models/adapters/uk-med-v2', '/workspace/models/adapters/uk-med-text-v1']
+    adapter_to_merge = ['uk-med-text_S-pt_R-16_A-16_E-1.0_LR-5e-5','uk-data-train_S-sft_R-16_A-16_E-3.0_LR-1e-4']
+    #adapter_to_merge = ['/workspace/models/adapters/uk-med-text_S-pt_R-16_A-16_E-1.0_LR-5e-5', '/workspace/models/adapters/uk-data-train_S-sft_R-16_A-16_E-3.0_LR-1e-4']
 
     #{'combined': {'Average': 73.84, 'STEP-1': 70.59, 'STEP-2': 78.16, 'STEP-3': 72.9}, 'base-2': {'Average': 73.84, 'STEP-1': 70.59, 'STEP-2': 78.16, 'STEP-3': 72.9}}
     #{'Average': 73.84, 'STEP-1': 70.59, 'STEP-2': 78.16, 'STEP-3': 72.9}}
@@ -30,9 +32,9 @@ def main():
     advanced_evaluator = AdvancedEvaluator()
     peft_model_id = "/workspace/models/adapters/uk-med-text-v1"
     model = PeftModel.from_pretrained(advanced_evaluator.get_model(), peft_model_id)
-    model.load_adapter(adapter_to_merge[0], adapter_name="uk-med-v2")
-    model.load_adapter(adapter_to_merge[1], adapter_name="uk-med-text-v1")
-    model.add_weighted_adapter(adapters=['uk-med-v2', 'uk-med-text-v1'], weights=[1.0, 1.0], adapter_name="combined", combination_type="linear")
+    model.load_adapter(os.path.join('/workspace/models/adapters/',adapter_to_merge[0]), adapter_name=adapter_to_merge[0])
+    model.load_adapter(os.path.join('/workspace/models/adapters/', adapter_to_merge[0]),adapter_name=adapter_to_merge[0])
+    model.add_weighted_adapter(adapters=adapter_to_merge, weights=[1.0, 1.0], adapter_name="combined", combination_type="linear")
     model.set_adapter("combined")
     #model.merge_adapter(['combined'])
 
