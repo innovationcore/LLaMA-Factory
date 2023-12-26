@@ -100,7 +100,7 @@ def main():
     #adapter_map = parse_adapters(adapter_list)
     #exit(0)
 
-    study.optimize(objective, n_trials=3)
+    study.optimize(objective, n_trials=15)
     trial = study.best_trial
 
     print('Accuracy: {}'.format(trial.value))
