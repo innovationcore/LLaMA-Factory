@@ -72,7 +72,8 @@ export STAGE=sft
 #export DATASET=uk-data-train
 #export DATASET=medal_full
 #export DATASET=case-chat-med-train
-export DATASET=qa-med-train
+#export DATASET=qa-med-train
+export DATASET=multi-choice-med-train
 
 #echo $DATASET'_S-'$STAGE'_R-'$LORA_RANK'_A-'$LORA_ALPHA'_E-'$EPOCH'_LR-'$LR
 #echo $DATASET _S- $STAGE _R- $LORA_RANK _A-\ $LORA_ALPHA _E- $EPOCH _LR- $LR
