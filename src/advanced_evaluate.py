@@ -26,7 +26,7 @@ def main():
     #{'combined': {'Average': 70.97, 'STEP-1': 70.59, 'STEP-2': 74.71, 'STEP-3': 68.22}} linear [1.0, 1.0]
     #{'combined': {'Average': 72.04, 'STEP-1': 69.41, 'STEP-2': 77.01, 'STEP-3': 70.09}} cat [1.0, 1.0]
     #{'combined': {'Average': 73.48, 'STEP-1': 74.12, 'STEP-2': 77.01, 'STEP-3': 70.09}} linear [0.5, 0.5]
-    #
+    #{'combined': {'Average': 72.76, 'STEP-1': 71.76, 'STEP-2': 75.86, 'STEP-3': 71.03}} cat [1.0, 1.0]
 
     #adapter_to_merge = ['/workspace/models/adapters/uk-med-text_S-pt_R-16_A-16_E-1.0_LR-5e-5', '/workspace/models/adapters/uk-data-train_S-sft_R-16_A-16_E-3.0_LR-1e-4']
 
@@ -35,7 +35,7 @@ def main():
     model = PeftModel.from_pretrained(advanced_evaluator.get_model(), peft_model_id)
     model.load_adapter(os.path.join('/workspace/models/adapters/',adapter_to_merge[0]), adapter_name=adapter_to_merge[0])
     model.load_adapter(os.path.join('/workspace/models/adapters/', adapter_to_merge[1]),adapter_name=adapter_to_merge[1])
-    model.add_weighted_adapter(adapters=adapter_to_merge, weights=[0.5, 0.5], adapter_name="combined", combination_type="cat")
+    model.add_weighted_adapter(adapters=adapter_to_merge, weights=[0.25, 0.25], adapter_name="combined", combination_type="linear")
     model.set_adapter("combined")
     #model.merge_adapter(['combined'])
 
