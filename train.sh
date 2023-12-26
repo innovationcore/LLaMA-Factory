@@ -52,7 +52,6 @@ export LR=1e-4
 #export LR=5e-5
 #export LR=1e-6
 
-
 #export TEMPLATE=default
 export TEMPLATE=mistral
 
