@@ -28,7 +28,8 @@ def main():
     #{'combined': {'Average': 73.48, 'STEP-1': 74.12, 'STEP-2': 77.01, 'STEP-3': 70.09}} linear [0.5, 0.5]
     #{'combined': {'Average': 72.76, 'STEP-1': 71.76, 'STEP-2': 75.86, 'STEP-3': 71.03}} cat [0.5, 0.5]
     #{'combined': {'Average': 71.33, 'STEP-1': 70.59, 'STEP-2': 74.71, 'STEP-3': 69.16}} linear [0.25, 0.25]
-    #
+    #{'combined': {'Average': 73.48, 'STEP-1': 71.76, 'STEP-2': 78.16, 'STEP-3': 71.03}} cat [0.25, 0.25]
+    #{'base-2':   {'Average': 73.84, 'STEP-1': 70.59, 'STEP-2': 78.16, 'STEP-3': 72.9}} base model alone
 
     #adapter_to_merge = ['/workspace/models/adapters/uk-med-text_S-pt_R-16_A-16_E-1.0_LR-5e-5', '/workspace/models/adapters/uk-data-train_S-sft_R-16_A-16_E-3.0_LR-1e-4']
 
