@@ -73,7 +73,7 @@ def objective(trial):
         adapters_to_merge = ['uk-med-text_S-pt_R-32_A-32_E-1_LR-5e-5', 'uk-data-train_S-sft_R-32_A-32_E-3_LR-1e-4']
     inf_config['lora_rank'] = lora_rank
     '''
-    adapters_to_merge = ['case-chat-med-train_S-sft_R-8_A-8_E-1_LR-5e-5']
+    adapters_to_merge = ['qa-med-train_S-sft_R-8_A-8_E-1_LR-5e-5', 'case-chat-med-train_S-sft_R-8_A-8_E-1_LR-5e-5']
     inf_config['adapters_to_merge'] = adapters_to_merge
 
 
