@@ -62,29 +62,25 @@ def objective(trial):
 
     adapters_path = '/workspace/models/adapters/'
     inf_config['adapters_path'] = adapters_path
-    adapters_to_merge = ['uk-med-text_S-pt_R-16_A-16_E-1_LR-5e-5', 'uk-data-train_S-sft_R-16_A-16_E-3_LR-1e-4']
+
+    lora_rank = trial.suggest_categorical('lora_rank', [8, 16])
+    if lora_rank == 8:
+        adapters_to_merge = ['uk-med-text_S-pt_R-8_A-8_E-1_LR-5e-5', 'uk-data-train_S-sft_R-8_A-8_E-3_LR-1e-4']
+    elif lora_rank == 16:
+        adapters_to_merge = ['uk-med-text_S-pt_R-16_A-16_E-1_LR-5e-5', 'uk-data-train_S-sft_R-16_A-16_E-3_LR-1e-4']
+    elif lora_rank == 32:
+        adapters_to_merge = ['uk-med-text_S-pt_R-32_A-32_E-1_LR-5e-5', 'uk-data-train_S-sft_R-32_A-32_E-3_LR-1e-4']
+
     inf_config['adapters_to_merge'] = adapters_to_merge
 
-    # Invoke suggest methods of a Trial object to generate hyperparameters.
     merge_combination_type = trial.suggest_categorical('combination_type', ['linear', 'cat'])
-    #if merge_combination_type == 'cat':
-    #    print('cat type could OOM')
     inf_config['merge_combination_type'] = merge_combination_type
 
     adapter_0_weight = trial.suggest_float('adapter_0_weight',0.0,1.0, step=0.25)
     adapter_1_weight = trial.suggest_float('adapter_1_weight', 0.0, 1.0, step=0.25)
-
     adapter_weights = [adapter_0_weight, adapter_1_weight]
     inf_config['adapter_weights'] = adapter_weights
 
-    '''
-    score = run_inf(inf_config)
-
-    x = trial.suggest_float('x', -10, 10)
-    test = (x - 2) ** 2
-    print(test)
-    return test
-    '''
     return run_inf(inf_config)
 
 def main():
