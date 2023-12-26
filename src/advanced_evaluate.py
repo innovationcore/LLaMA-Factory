@@ -33,7 +33,7 @@ def main():
     peft_model_id = os.path.join('/workspace/models/adapters/',adapter_to_merge[0])
     model = PeftModel.from_pretrained(advanced_evaluator.get_model(), peft_model_id)
     model.load_adapter(os.path.join('/workspace/models/adapters/',adapter_to_merge[0]), adapter_name=adapter_to_merge[0])
-    model.load_adapter(os.path.join('/workspace/models/adapters/', adapter_to_merge[0]),adapter_name=adapter_to_merge[0])
+    model.load_adapter(os.path.join('/workspace/models/adapters/', adapter_to_merge[1]),adapter_name=adapter_to_merge[1])
     model.add_weighted_adapter(adapters=adapter_to_merge, weights=[1.0, 1.0], adapter_name="combined", combination_type="linear")
     model.set_adapter("combined")
     #model.merge_adapter(['combined'])
