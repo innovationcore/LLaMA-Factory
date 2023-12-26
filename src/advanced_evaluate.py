@@ -30,7 +30,7 @@ def main():
     #{'combined': {'Average': 73.12, 'STEP-1': 70.59, 'STEP-2': 75.86, 'STEP-3': 72.9}}
     #{'combined': {'Average': 73.48, 'STEP-1': 70.59, 'STEP-2': 75.86, 'STEP-3': 73.83}}
     advanced_evaluator = AdvancedEvaluator()
-    peft_model_id = "/workspace/models/adapters/uk-med-text-v1"
+    peft_model_id = os.path.join('/workspace/models/adapters/',adapter_to_merge[0])
     model = PeftModel.from_pretrained(advanced_evaluator.get_model(), peft_model_id)
     model.load_adapter(os.path.join('/workspace/models/adapters/',adapter_to_merge[0]), adapter_name=adapter_to_merge[0])
     model.load_adapter(os.path.join('/workspace/models/adapters/', adapter_to_merge[0]),adapter_name=adapter_to_merge[0])
