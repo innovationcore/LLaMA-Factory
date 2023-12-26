@@ -28,8 +28,8 @@ echo "NCCL_DEBUG="$NCCL_DEBUG
 #export NCCL_IB_TIMEOUT=22
 export DDP_TIMEOUT=14400
 
-export LORA_RANK=16
-export LORA_ALPHA=16
+export LORA_RANK=8
+export LORA_ALPHA=8
 
 #export LORA_TARGET=all
 #export LORA_TARGET=q_proj,v_proj
@@ -46,10 +46,10 @@ echo "BATCH_SIZE="$BATCH_SIZE
 export GRADIENT_ACCUMULATION_STEPS=1
 echo "GRADIENT_ACCUMULATION_STEPS="$GRADIENT_ACCUMULATION_STEPS
 
-export EPOCH=3.0
+export EPOCH=1.0
 #export LR=1e-4
-#export LR=5e-5
-export LR=1e-5
+export LR=5e-5
+#export LR=1e-5
 #export LR=1e-6
 
 #export TEMPLATE=default
