@@ -1,4 +1,31 @@
 {
+  "case-chat-med-train": {
+  "file_name": "case-chat-med-train.json",
+  "columns": {
+    "prompt": "instruction",
+    "query": "input",
+    "response": "output",
+    "history": "history"
+    }
+  },
+  "qa-med-train": {
+    "file_name": "qa-med-train.json",
+    "columns": {
+      "prompt": "instruction",
+      "query": "input",
+      "response": "output",
+      "history": "history"
+    }
+  },
+  "multi-choice-med-train": {
+    "file_name": "multi-choice-med-train.json",
+    "columns": {
+      "prompt": "instruction",
+      "query": "input",
+      "response": "output",
+      "history": "history"
+    }
+  },
   "uk-med-text": {
     "file_name": "uk-med-text.txt",
     "columns": {
