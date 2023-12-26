@@ -70,7 +70,7 @@ def objective(trial):
         adapters_to_merge = ['uk-med-text_S-pt_R-16_A-16_E-1_LR-5e-5', 'uk-data-train_S-sft_R-16_A-16_E-3_LR-1e-4']
     elif lora_rank == 32:
         adapters_to_merge = ['uk-med-text_S-pt_R-32_A-32_E-1_LR-5e-5', 'uk-data-train_S-sft_R-32_A-32_E-3_LR-1e-4']
-
+    inf_config['lora_rank'] = lora_rank
     inf_config['adapters_to_merge'] = adapters_to_merge
 
     merge_combination_type = trial.suggest_categorical('combination_type', ['linear', 'cat'])
