@@ -22,7 +22,7 @@ def main():
 
     combined_results = dict()
 
-    adapter_to_merge = ['uk-med-text_S-pt_R-16_A-16_E-1.0_LR-5e-5','uk-data-train_S-sft_R-16_A-16_E-3.0_LR-1e-4']
+    adapter_to_merge = ['uk-med-text_S-pt_R-16_A-16_E-1_LR-5e-5','uk-data-train_S-sft_R-16_A-16_E-3_LR-1e-4']
     #adapter_to_merge = ['/workspace/models/adapters/uk-med-text_S-pt_R-16_A-16_E-1.0_LR-5e-5', '/workspace/models/adapters/uk-data-train_S-sft_R-16_A-16_E-3.0_LR-1e-4']
 
     #{'combined': {'Average': 73.84, 'STEP-1': 70.59, 'STEP-2': 78.16, 'STEP-3': 72.9}, 'base-2': {'Average': 73.84, 'STEP-1': 70.59, 'STEP-2': 78.16, 'STEP-3': 72.9}}
