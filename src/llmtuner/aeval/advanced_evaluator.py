@@ -130,6 +130,8 @@ class AdvancedEvaluator:
                 labels.append(resp)
 
             for i in trange(0, len(inputs), self.eval_args.batch_size, desc="Predicting batches", position=1, leave=False):
+                print(inputs)
+                exit(0)
                 batch_input = self.tokenizer.pad(
                     inputs[i : i + self.eval_args.batch_size], return_attention_mask=True, return_tensors="pt"
                 ).to(self.model.device)
