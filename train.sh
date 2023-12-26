@@ -46,10 +46,10 @@ echo "BATCH_SIZE="$BATCH_SIZE
 export GRADIENT_ACCUMULATION_STEPS=1
 echo "GRADIENT_ACCUMULATION_STEPS="$GRADIENT_ACCUMULATION_STEPS
 
-export EPOCH=4.0
+#export EPOCH=3.0
 #export LR=1e-4
-export LR=5e-5
 #export LR=5e-5
+export LR=1e-5
 #export LR=1e-6
 
 #export TEMPLATE=default
@@ -62,13 +62,13 @@ export MODEL=/workspace/basemodels/Mixtral-8x7B-Instruct-v0.1
 #export ADAPTER=/workspace/basemodels/Mixtral-8x7B-Instruct-v0.1_adapters/med-text-pt
 #export ADAPTER=/workspace/outputmodels/med-text-128
 
-#export STAGE=pt
-export STAGE=sft
+export STAGE=pt
+#export STAGE=sft
 
 #export DATASET=c4_demo
 #export DATASET=wiki_demo
-#export DATASET=uk-med-text
-export DATASET=uk-data-train
+export DATASET=uk-med-text
+#export DATASET=uk-data-train
 #export DATASET=medal_full
 
 #echo $DATASET'_S-'$STAGE'_R-'$LORA_RANK'_A-'$LORA_ALPHA'_E-'$EPOCH'_LR-'$LR
