@@ -16,9 +16,11 @@ def main():
     print('Advanced Evaluator')
 
     combined_results = dict()
-
+    print('load constuctor')
     advanced_evaluator = AdvancedEvaluator()
+    print('load model')
     advanced_evaluator.load_model()
+    print('eval')
     category_corrects, results = advanced_evaluator.eval()
     combined_results['base'] = get_score(category_corrects)
     #{'base': {'Average': 73.84, 'STEP-1': 70.59, 'STEP-2': 78.16, 'STEP-3': 72.9}}
