@@ -84,7 +84,7 @@ def objective(trial):
         adapters_to_merge = ['uk-med-text_S-pt_R-32_A-32_E-1_LR-5e-5', 'uk-data-train_S-sft_R-32_A-32_E-3_LR-1e-4']
     inf_config['lora_rank'] = lora_rank
     '''
-    candiate_adapters = ['multi-choice-med-train_S-sft_R-8_A-8_E-1_LR-1e-5','qa-med-train_S-sft_R-8_A-8_E-1_LR-5e-5',
+    candiate_adapters = ['qa-med-train_S-sft_R-8_A-8_E-1_LR-5e-5',
                          'case-chat-med-train_S-sft_R-8_A-8_E-1_LR-5e-5', 'uk-med-text_S-pt_R-8_A-8_E-1_LR-5e-5']
 
     adapter_config = dict()
@@ -99,7 +99,7 @@ def objective(trial):
         if is_enabled:
             need_adapter = False
             adapter_weight = adapter + '_weight'
-            adapter_config[adapter]['weight'] = trial.suggest_float(adapter_weight, 0.0, 2.0, step=0.1)
+            adapter_config[adapter]['weight'] = trial.suggest_float(adapter_weight, 0.0, 1.2, step=0.1)
 
     if need_adapter:
         print('NO ADAPTER SELECTED: PICKING RANDOM')
