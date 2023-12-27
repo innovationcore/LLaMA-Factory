@@ -72,7 +72,8 @@ def objective(trial):
         adapters_to_merge = ['uk-med-text_S-pt_R-32_A-32_E-1_LR-5e-5', 'uk-data-train_S-sft_R-32_A-32_E-3_LR-1e-4']
     inf_config['lora_rank'] = lora_rank
     '''
-    adapters_to_merge = ['multi-choice-med-train_S-sft_R-8_A-8_E-1_LR-1e-5','qa-med-train_S-sft_R-8_A-8_E-1_LR-5e-5', 'case-chat-med-train_S-sft_R-8_A-8_E-1_LR-5e-5']
+    adapters_to_merge = ['multi-choice-med-train_S-sft_R-8_A-8_E-1_LR-1e-5','qa-med-train_S-sft_R-8_A-8_E-1_LR-5e-5',
+                         'case-chat-med-train_S-sft_R-8_A-8_E-1_LR-5e-5', 'uk-med-text_S-pt_R-8_A-8_E-1_LR-5e-5']
     inf_config['adapters_to_merge'] = adapters_to_merge
 
 
@@ -82,8 +83,9 @@ def objective(trial):
     adapter_0_weight = trial.suggest_float('adapter_0_weight', 0.0, 2.0, step=0.1)
     adapter_1_weight = trial.suggest_float('adapter_1_weight', 0.0, 2.0, step=0.1)
     adapter_2_weight = trial.suggest_float('adapter_2_weight', 0.0, 2.0, step=0.1)
+    adapter_3_weight = trial.suggest_float('adapter_3_weight', 0.0, 2.0, step=0.1)
 
-    adapter_weights = [adapter_0_weight, adapter_1_weight, adapter_2_weight]
+    adapter_weights = [adapter_0_weight, adapter_1_weight, adapter_2_weight, adapter_3_weight]
     inf_config['adapter_weights'] = adapter_weights
 
     return run_inf(inf_config)
