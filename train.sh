@@ -88,8 +88,8 @@ cd /workspace
 
 for rank in 8 16 32 128 256
 do
-  export LORA_RANK=rank
-  export LORA_ALPHA=rank
+  export LORA_RANK="$rank"
+  export LORA_ALPHA="$rank"
 
   accelerate launch --num_processes=$(( 8 * $WORLD_SIZE )) --num_machines $WORLD_SIZE  --machine_rank $RANK --main_process_ip $MASTER_ADDR --main_process_port $MASTER_PORT --config_file=/workspace/config/accelerate_config.yaml \
       /workspace/src/train_bash.py \
