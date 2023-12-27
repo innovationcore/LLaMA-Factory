@@ -1,10 +1,4 @@
-import gc
-import os.path
-import time
-
 import numpy as np
-import torch
-from peft import PeftModel, PeftConfig
 
 from llmtuner import AdvancedEvaluator
 
