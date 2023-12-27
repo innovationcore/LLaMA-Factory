@@ -88,6 +88,8 @@ class USMLE(datasets.GeneratorBasedBuilder):
                     ),
                 },
             ),
+            '''
+            ,
             datasets.SplitGenerator(
                 name=datasets.Split.VALIDATION,
                 gen_kwargs={
@@ -104,6 +106,7 @@ class USMLE(datasets.GeneratorBasedBuilder):
                     ),
                 },
             ),
+            '''
         ]
 
     def _generate_examples(self, filepath):
