@@ -127,13 +127,15 @@ def main():
     study_name = "lora_mix_study"
     study_db = 'opt_study.db'
 
+    study = optuna.create_study(direction='maximize')
+    '''
     if os.path.isfile(study_db):
         print('Loading existing study DB:', study_db)
         study = optuna.load_study(study_name=study_name, storage="sqlite:///" + study_db)
     else:
         print('Creating new study DB:', study_db)
         study = optuna.create_study(direction='maximize', study_name=study_name, storage="sqlite:///" + study_db)
-
+    '''
 
     #adapter_list = ['uk-data-train_S-sft_R-16_A-16_E-1_LR-1e-4','uk-data-train_S-sft_R-16_A-16_E-1_LR-5e-5','uk-data-train_S-sft_R-16_A-16_E-3_LR-1e-4','uk-data-train_S-sft_R-16_A-16_E-4_LR-5e-5','uk-med-text_S-pt_R-16_A-16_E-1_LR-5e-5','uk-med-text_S-pt_R-16_A-16_E-3_LR-1e-5']
     #adapter_map = parse_adapters(adapter_list)
