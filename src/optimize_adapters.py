@@ -112,7 +112,7 @@ def objective(trial):
         print('RANDOM:', adapter)
         adapter_config[adapter]['is_enabled'] = True
         adapter_weight = adapter + '_weight'
-        adapter_config[adapter]['weight'] = trial.suggest_float(adapter_weight, 0.0, 2.0, step=0.1)
+        adapter_config[adapter]['weight'] = trial.suggest_float(adapter_weight, 0.0, 1.25, step=0.1)
 
     inf_config['adapter_config'] = adapter_config
 
