@@ -22,6 +22,7 @@ def main():
     category_corrects, results = advanced_evaluator.eval()
     combined_results['base'] = get_score(category_corrects)
     #{'base': {'Average': 73.84, 'STEP-1': 70.59, 'STEP-2': 78.16, 'STEP-3': 72.9}}
+    #{'base': {'Average': 11.47, 'STEP-1': 5.03, 'STEP-2': 11.06, 'STEP-3': 25.25}}
     #advanced_evaluator.unload_model()
 
     print(combined_results)
