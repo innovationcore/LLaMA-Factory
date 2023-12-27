@@ -5,7 +5,7 @@ RUN_NAME="Training Distributed"
 #for lrank in 8 16 32 64 128 256
 
 echo "Running ${RUN_NAME}"
-  for lrank in 64
+  for lrank in 8 16 32 64 128 256
   do
 
   echo "MASTER_ADDR="$MASTER_ADDR
@@ -78,8 +78,8 @@ echo "Running ${RUN_NAME}"
   #export DATASET=uk-med-text
   #export DATASET=uk-data-train
   #export DATASET=medal_full
-  #export DATASET=case-chat-med-train
-  export DATASET=qa-med-train
+  export DATASET=case-chat-med-train
+  #export DATASET=qa-med-train
   #export DATASET=multi-choice-med-train
 
   #echo $DATASET'_S-'$STAGE'_R-'$LORA_RANK'_A-'$LORA_ALPHA'_E-'$EPOCH'_LR-'$LR
