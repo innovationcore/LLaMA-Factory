@@ -31,6 +31,7 @@ export DDP_TIMEOUT=14400
 #export LORA_RANK=8
 #export LORA_ALPHA=8
 
+
 #export LORA_TARGET=all
 export LORA_TARGET=q_proj,v_proj
 #export LORA_TARGET=k_proj,w2,o_proj,q_proj,w1,w3,gate,v_proj
