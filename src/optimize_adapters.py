@@ -104,7 +104,7 @@ def objective(trial):
         if is_enabled:
             need_adapter = False
             adapter_weight = adapter + '_weight'
-            adapter_config[adapter]['weight'] = trial.suggest_float(adapter_weight, 0.0, 1.2, step=0.1)
+            adapter_config[adapter]['weight'] = trial.suggest_float(adapter_weight, 0.0, 1.25, step=0.25)
 
     if need_adapter:
         print('NO ADAPTER SELECTED: PICKING RANDOM')
