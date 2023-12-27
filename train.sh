@@ -35,7 +35,7 @@ echo "Running ${RUN_NAME}"
 
   export LORA_RANK="$lrank"
   export LORA_ALPHA="$lrank"
-  
+
   #export LORA_TARGET=all
   export LORA_TARGET=q_proj,v_proj
   #export LORA_TARGET=k_proj,w2,o_proj,q_proj,w1,w3,gate,v_proj
@@ -77,8 +77,8 @@ echo "Running ${RUN_NAME}"
   #export DATASET=uk-med-text
   #export DATASET=uk-data-train
   #export DATASET=medal_full
-  #export DATASET=case-chat-med-train
-  export DATASET=qa-med-train
+  export DATASET=case-chat-med-train
+  #export DATASET=qa-med-train
   #export DATASET=multi-choice-med-train
 
   #echo $DATASET'_S-'$STAGE'_R-'$LORA_RANK'_A-'$LORA_ALPHA'_E-'$EPOCH'_LR-'$LR
