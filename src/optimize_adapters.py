@@ -79,9 +79,9 @@ def objective(trial):
     merge_combination_type = trial.suggest_categorical('combination_type', ['linear', 'cat'])
     inf_config['merge_combination_type'] = merge_combination_type
 
-    adapter_0_weight = trial.suggest_float('adapter_0_weight', 0.0, 2.0, step=0.25)
-    adapter_1_weight = trial.suggest_float('adapter_1_weight', 0.0, 2.0, step=0.25)
-    adapter_2_weight = trial.suggest_float('adapter_2_weight', 0.0, 2.0, step=0.25)
+    adapter_0_weight = trial.suggest_float('adapter_0_weight', 0.0, 2.0, step=0.1)
+    adapter_1_weight = trial.suggest_float('adapter_1_weight', 0.0, 2.0, step=0.1)
+    adapter_2_weight = trial.suggest_float('adapter_2_weight', 0.0, 2.0, step=0.1)
 
     adapter_weights = [adapter_0_weight, adapter_1_weight, adapter_2_weight]
     inf_config['adapter_weights'] = adapter_weights
