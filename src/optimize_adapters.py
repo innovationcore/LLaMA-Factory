@@ -26,6 +26,7 @@ def get_score(category_corrects):
 
 def run_inf(inf_config):
 
+    print(inf_config)
     adapters_path = inf_config['adapters_path']
 
     adapters_to_merge = []
