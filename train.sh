@@ -4,7 +4,7 @@ export PYTHONPATH=.
 RUN_NAME="Training Distributed"
 
 echo "Running ${RUN_NAME}"
-  for lrank in 8 16 32 128 256
+  for lrank in 8 16 32 64 128 256
   do
 
   echo "MASTER_ADDR="$MASTER_ADDR
