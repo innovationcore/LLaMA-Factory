@@ -18,8 +18,6 @@ def main():
     combined_results = dict()
     print('load constuctor')
     advanced_evaluator = AdvancedEvaluator()
-    print('load model')
-    advanced_evaluator.load_model()
     print('eval')
     category_corrects, results = advanced_evaluator.eval()
     combined_results['base'] = get_score(category_corrects)
