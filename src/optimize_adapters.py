@@ -69,6 +69,8 @@ def run_inf(inf_config):
 
 def objective(trial):
 
+    disable_adapters = True
+
     inf_config = dict()
 
     adapters_path = '/workspace/models/adapters/'
@@ -94,7 +96,10 @@ def objective(trial):
     for adapter in candiate_adapters:
         adapter_config[adapter] = dict()
         adapter_is_enabled_id = adapter + '_is_enabled'
-        is_enabled = trial.suggest_categorical(adapter_is_enabled_id, [True, False])
+        if disable_adapters:
+            is_enabled = trial.suggest_categorical(adapter_is_enabled_id, [True, False])
+        else:
+            is_enabled = True
         adapter_config[adapter]['is_enabled'] = is_enabled
         if is_enabled:
             need_adapter = False
@@ -114,15 +119,8 @@ def objective(trial):
     merge_combination_type = trial.suggest_categorical('combination_type', ['linear', 'cat'])
     inf_config['merge_combination_type'] = merge_combination_type
 
-    #adapter_0_weight = trial.suggest_float('adapter_0_weight', 0.0, 2.0, step=0.1)
-    #adapter_1_weight = trial.suggest_float('adapter_1_weight', 0.0, 2.0, step=0.1)
-    #adapter_2_weight = trial.suggest_float('adapter_2_weight', 0.0, 2.0, step=0.1)
-    #adapter_3_weight = trial.suggest_float('adapter_3_weight', 0.0, 2.0, step=0.1)
-
-    #adapter_weights = [adapter_0_weight, adapter_1_weight, adapter_2_weight, adapter_3_weight]
-    #inf_config['adapter_weights'] = adapter_weights
-
     return run_inf(inf_config)
+
 
 def main():
     print('Config Optimizer')
