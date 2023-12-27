@@ -1,6 +1,8 @@
 import os
 import gc
 import os.path
+import random
+
 import torch
 from peft import PeftModel, PeftConfig
 from llmtuner import AdvancedEvaluator
@@ -88,16 +90,22 @@ def objective(trial):
     adapter_config = dict()
 
     need_adapter = True
-    while(need_adapter):
-        for adapter in candiate_adapters:
-            adapter_config[adapter] = dict()
-            adapter_is_enabled_id = adapter + '_is_enabled'
-            is_enabled = trial.suggest_categorical(adapter_is_enabled_id, [True, False])
-            adapter_config[adapter]['is_enabled'] = is_enabled
-            if is_enabled:
-                need_adapter = False
-                adapter_weight = adapter + '_weight'
-                adapter_config[adapter]['weight'] = trial.suggest_float(adapter_weight, 0.0, 2.0, step=0.1)
+
+    for adapter in candiate_adapters:
+        adapter_config[adapter] = dict()
+        adapter_is_enabled_id = adapter + '_is_enabled'
+        is_enabled = trial.suggest_categorical(adapter_is_enabled_id, [True, False])
+        adapter_config[adapter]['is_enabled'] = is_enabled
+        if is_enabled:
+            need_adapter = False
+            adapter_weight = adapter + '_weight'
+            adapter_config[adapter]['weight'] = trial.suggest_float(adapter_weight, 0.0, 2.0, step=0.1)
+
+    if need_adapter:
+        adapter = random.choice(list(adapter_config))
+        adapter_config[adapter]['is_enabled'] = True
+        adapter_weight = adapter + '_weight'
+        adapter_config[adapter]['weight'] = trial.suggest_float(adapter_weight, 0.0, 2.0, step=0.1)
 
     inf_config['adapter_config'] = adapter_config
 
