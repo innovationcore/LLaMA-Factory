@@ -35,10 +35,9 @@ def run_inf(inf_config):
     peft_model_id = os.path.join(adapters_path, adapters_to_merge[0])
     model = PeftModel.from_pretrained(advanced_evaluator.get_model(), peft_model_id)
 
-    model.load_adapter(os.path.join(adapters_path, adapters_to_merge[0]),
-                       adapter_name=adapters_to_merge[0])
-    model.load_adapter(os.path.join(adapters_path, adapters_to_merge[1]),
-                       adapter_name=adapters_to_merge[1])
+    for adapter in adapters_to_merge:
+        print('loading adapter:', adapter)
+        model.load_adapter(os.path.join(adapters_path, adapter), adapter_name=adapter)
 
     model.add_weighted_adapter(adapters=adapters_to_merge, weights=adapter_weights,
                                adapter_name="combined", combination_type=merge_combination_type)
