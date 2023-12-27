@@ -27,9 +27,18 @@ def get_score(category_corrects):
 def run_inf(inf_config):
 
     adapters_path = inf_config['adapters_path']
-    adapters_to_merge = inf_config['adapters_to_merge']
+
+    adapters_to_merge = []
+    adapter_weights = []
+
+    for adapter, adapter_config in inf_config['adapter_config'].items():
+        if adapter_config['is_enabled']:
+            adapters_to_merge.append(adapter)
+            adapter_weights.append(adapter_config['weight'])
+
+    #adapters_to_merge = inf_config['adapters_to_merge']
     merge_combination_type = inf_config['merge_combination_type']
-    adapter_weights = inf_config['adapter_weights']
+    #adapter_weights = inf_config['adapter_weights']
 
     advanced_evaluator = AdvancedEvaluator()
     peft_model_id = os.path.join(adapters_path, adapters_to_merge[0])
@@ -72,21 +81,35 @@ def objective(trial):
         adapters_to_merge = ['uk-med-text_S-pt_R-32_A-32_E-1_LR-5e-5', 'uk-data-train_S-sft_R-32_A-32_E-3_LR-1e-4']
     inf_config['lora_rank'] = lora_rank
     '''
-    adapters_to_merge = ['multi-choice-med-train_S-sft_R-8_A-8_E-1_LR-1e-5','qa-med-train_S-sft_R-8_A-8_E-1_LR-5e-5',
+    candiate_adapters = ['multi-choice-med-train_S-sft_R-8_A-8_E-1_LR-1e-5','qa-med-train_S-sft_R-8_A-8_E-1_LR-5e-5',
                          'case-chat-med-train_S-sft_R-8_A-8_E-1_LR-5e-5', 'uk-med-text_S-pt_R-8_A-8_E-1_LR-5e-5']
-    inf_config['adapters_to_merge'] = adapters_to_merge
 
+    adapter_config = dict()
+
+    need_adapter = True
+    while(need_adapter):
+        for adapter in candiate_adapters:
+            adapter_config[adapter] = dict()
+            adapter_is_enabled_id = adapter + '_is_enabled'
+            is_enabled = trial.suggest_categorical(adapter_is_enabled_id, [True, False])
+            adapter_config[adapter]['is_enabled'] = is_enabled
+            if is_enabled:
+                need_adapter = False
+                adapter_weight = adapter + '_weight'
+                adapter_config[adapter]['weight'] = trial.suggest_float(adapter_weight, 0.0, 2.0, step=0.1)
+
+    inf_config['adapter_config'] = adapter_config
 
     merge_combination_type = trial.suggest_categorical('combination_type', ['linear', 'cat'])
     inf_config['merge_combination_type'] = merge_combination_type
 
-    adapter_0_weight = trial.suggest_float('adapter_0_weight', 0.0, 2.0, step=0.1)
-    adapter_1_weight = trial.suggest_float('adapter_1_weight', 0.0, 2.0, step=0.1)
-    adapter_2_weight = trial.suggest_float('adapter_2_weight', 0.0, 2.0, step=0.1)
-    adapter_3_weight = trial.suggest_float('adapter_3_weight', 0.0, 2.0, step=0.1)
+    #adapter_0_weight = trial.suggest_float('adapter_0_weight', 0.0, 2.0, step=0.1)
+    #adapter_1_weight = trial.suggest_float('adapter_1_weight', 0.0, 2.0, step=0.1)
+    #adapter_2_weight = trial.suggest_float('adapter_2_weight', 0.0, 2.0, step=0.1)
+    #adapter_3_weight = trial.suggest_float('adapter_3_weight', 0.0, 2.0, step=0.1)
 
-    adapter_weights = [adapter_0_weight, adapter_1_weight, adapter_2_weight, adapter_3_weight]
-    inf_config['adapter_weights'] = adapter_weights
+    #adapter_weights = [adapter_0_weight, adapter_1_weight, adapter_2_weight, adapter_3_weight]
+    #inf_config['adapter_weights'] = adapter_weights
 
     return run_inf(inf_config)
 
