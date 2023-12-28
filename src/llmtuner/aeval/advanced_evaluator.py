@@ -18,6 +18,8 @@ from llmtuner.model import dispatch_model, get_eval_args, load_model_and_tokeniz
 
 import gc  # garbage collect library
 
+SUBJECTS = None
+CHOICES = None
 
 class AdvancedEvaluator:
 
@@ -29,8 +31,6 @@ class AdvancedEvaluator:
         self.eval_template = None
         self.choice_inputs = None
         self.load_model()
-        self.SUBJECTS = None
-        self.CHOICES = None
 
         #self.model, self.tokenizer = load_model_and_tokenizer(self.model_args, finetuning_args)
         #self.tokenizer.padding_side = "right" # avoid overflow issue in batched inference for llama2
@@ -46,16 +46,16 @@ class AdvancedEvaluator:
 
         print('Assigning subjects and choices for:', self.eval_args.task)
         if self.eval_args.task == 'mausmle':
-            self.SUBJECTS = ["Average", "STEP-1", "STEP-2", "STEP-3"]
-            self.CHOICES = ["A", "B", "C", "D", "E"]
-            print('Subjects:', self.SUBJECTS)
-            print('Choices:', self.CHOICES)
+            SUBJECTS = ["Average", "STEP-1", "STEP-2", "STEP-3"]
+            CHOICES = ["A", "B", "C", "D", "E"]
+            print('Subjects:', SUBJECTS)
+            print('Choices:', CHOICES)
 
         elif self.eval_args.task == 'medqa':
-            self.SUBJECTS = ["Average", "STEP-1", "STEP-2&3"]
-            self.CHOICES = ["A", "B", "C", "D"]
-            print('Subjects:', self.SUBJECTS)
-            print('Choices:', self.CHOICES)
+            SUBJECTS = ["Average", "STEP-1", "STEP-2&3"]
+            CHOICES = ["A", "B", "C", "D"]
+            print('Subjects:', SUBJECTS)
+            print('Choices:', CHOICES)
 
         self.model, self.tokenizer = load_model_and_tokenizer(self.model_args, self.finetuning_args)
         self.tokenizer.padding_side = "right" # avoid overflow issue in batched inference for llama2
@@ -90,7 +90,9 @@ class AdvancedEvaluator:
         else:
             kwargs = dict(add_special_tokens=False)
 
-        return [self.tokenizer.encode(self.eval_template.prefix + ch, **kwargs)[-1] for ch in self.CHOICES]
+        print('Choices:', CHOICES)
+
+        return [self.tokenizer.encode(self.eval_template.prefix + ch, **kwargs)[-1] for ch in CHOICES]
 
     @torch.inference_mode()
     def batch_inference(self, batch_input: Dict[str, torch.Tensor]) -> List[str]:
@@ -116,7 +118,9 @@ class AdvancedEvaluator:
         with open(mapping, "r", encoding="utf-8") as f:
             categorys: Dict[str, Dict[str, str]] = json.load(f)
 
-        category_corrects = {subj: np.array([], dtype="bool") for subj in self.SUBJECTS}
+        print('Subjects:', SUBJECTS)
+
+        category_corrects = {subj: np.array([], dtype="bool") for subj in SUBJECTS}
         pbar = tqdm(categorys.keys(), desc="Processing subjects", position=0)
         results = {}
         for subject in pbar:
