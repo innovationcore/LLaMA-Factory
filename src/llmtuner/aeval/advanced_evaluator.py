@@ -18,9 +18,6 @@ from llmtuner.model import dispatch_model, get_eval_args, load_model_and_tokeniz
 
 import gc  # garbage collect library
 
-SUBJECTS = None
-CHOICES = None
-
 class AdvancedEvaluator:
 
     def __init__(self, args: Optional[Dict[str, Any]] = None) -> None:
@@ -39,10 +36,10 @@ class AdvancedEvaluator:
         #self.eval_template = get_eval_template(self.eval_args.lang)
         #self.choice_inputs = self._encode_choices()
 
-    def __del__(self):
-        self.unload_model()
+    def get_subjects_and_choices(self):
 
-    def load_model(self):
+        SUBJECTS = None
+        CHOICES = None
 
         print('Assigning subjects and choices for:', self.eval_args.task)
         if self.eval_args.task == 'mausmle':
@@ -56,6 +53,13 @@ class AdvancedEvaluator:
             CHOICES = ["A", "B", "C", "D"]
             print('Subjects:', SUBJECTS)
             print('Choices:', CHOICES)
+
+        return SUBJECTS, CHOICES
+
+    def __del__(self):
+        self.unload_model()
+
+    def load_model(self):
 
         self.model, self.tokenizer = load_model_and_tokenizer(self.model_args, self.finetuning_args)
         self.tokenizer.padding_side = "right" # avoid overflow issue in batched inference for llama2
@@ -90,8 +94,8 @@ class AdvancedEvaluator:
         else:
             kwargs = dict(add_special_tokens=False)
 
-        print('Choices:', CHOICES)
-
+        SUBJECTS, CHOICES = self.get_subjects_and_choices()
+        
         return [self.tokenizer.encode(self.eval_template.prefix + ch, **kwargs)[-1] for ch in CHOICES]
 
     @torch.inference_mode()
@@ -117,6 +121,8 @@ class AdvancedEvaluator:
 
         with open(mapping, "r", encoding="utf-8") as f:
             categorys: Dict[str, Dict[str, str]] = json.load(f)
+
+        SUBJECTS, CHOICES = self.get_subjects_and_choices()
 
         print('Subjects:', SUBJECTS)
 
