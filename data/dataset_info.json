@@ -26,19 +26,10 @@
       "history": "history"
     }
   },
-  "uk-med-text": {
-    "file_name": "uk-med-text.txt",
+  "medqa-textbooks-dataset": {
+    "file_name": "medqa-textbooks-dataset.txt",
     "columns": {
       "prompt": "text"
-    }
-  },
-  "uk-data-train": {
-    "file_name": "uk-data-train.json",
-    "columns": {
-      "prompt": "instruction",
-      "query": "input",
-      "response": "output",
-      "history": "history"
     }
   },
   "medal_full": {
