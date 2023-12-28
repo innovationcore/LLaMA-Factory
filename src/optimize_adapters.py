@@ -2,6 +2,7 @@ import os
 import gc
 import os.path
 import random
+from time import sleep
 
 import torch
 from peft import PeftModel, PeftConfig
@@ -122,16 +123,16 @@ def main():
     study_name = "lora_mix_study"
     study_journal = '/workspace/optuna-journal.log'
 
-    storage = JournalStorage(JournalFileStorage(study_journal))
-
     if os.path.isfile(study_journal):
         print('Loading existing journal DB:', study_journal)
+        storage = JournalStorage(JournalFileStorage(study_journal))
         study = optuna.load_study(study_name=study_name, storage=storage)
     else:
         print('Creating new study journal:', study_journal)
+        storage = JournalStorage(JournalFileStorage(study_journal))
         study = optuna.create_study(direction='maximize', study_name=study_name, storage=storage)
 
-    study.optimize(objective, n_trials=10)
+    study.optimize(objective, n_trials=3)
     trial = study.best_trial
 
     print('Accuracy: {}'.format(trial.value))
