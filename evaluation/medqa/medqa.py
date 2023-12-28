@@ -34,7 +34,7 @@ _HOMEPAGE = "https://github.com/hendrycks/test"
 
 _LICENSE = "MIT"
 
-_URL = "usmle.zip"
+_URL = "medqa.zip"
 
 task_list = [
     "medqa_step1",

@@ -1,14 +1,10 @@
 {
-  "usmle1": {
-    "name": "usmle 1",
+  "medqa_step1": {
+    "name": "medqa step 1",
     "category": "STEP-1"
   },
-  "usmle2": {
-    "name": "usmle 2",
-    "category": "STEP-2"
-  },
-  "usmle3": {
-    "name": "usmle 3",
-    "category": "STEP-3"
+  "medqa_step2&3": {
+    "name": "medqa step 2&3",
+    "category": "STEP-2&3"
   }
 }

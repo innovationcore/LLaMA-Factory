@@ -34,23 +34,41 @@ _HOMEPAGE = "https://github.com/hendrycks/test"
 
 _LICENSE = "MIT"
 
-_URL = "usmle.zip"
+_URL = "medmcqa.zip"
 
 task_list = [
-    "usmle1",
-    "usmle2",
-    "usmle3",
+    "medmcqa_medicine",
+    "medmcqa_ophthalmology",
+    "medmcqa_anatomy",
+    "medmcqa_pathology",
+    "medmcqa_physiology",
+    "medmcqa_dental",
+    "medmcqa_radiology",
+    "medmcqa_biochemistry",
+    "medmcqa_anaesthesia",
+    "medmcqa_gynaecology",
+    "medmcqa_pharmacology",
+    "medmcqa_social",
+    "medmcqa_pediatrics",
+    "medmcqa_ent",
+    "medmcqa_surgery",
+    "medmcqa_microbiology",
+    "medmcqa_forensic",
+    "medmcqa_psychiatry",
+    "medmcqa_skin",
+    "medmcqa_orthopaedics",
+    "medmcqa_unknown",
 ]
 
 
-class USMLEConfig(datasets.BuilderConfig):
+class MEDMCQAConfig(datasets.BuilderConfig):
     def __init__(self, **kwargs):
         super().__init__(version=datasets.Version("1.0.0"), **kwargs)
 
 
-class USMLE(datasets.GeneratorBasedBuilder):
+class MEDMCQA(datasets.GeneratorBasedBuilder):
     BUILDER_CONFIGS = [
-        USMLEConfig(
+        MEDMCQAConfig(
             name=task_name,
         )
         for task_name in task_list
@@ -64,7 +82,6 @@ class USMLE(datasets.GeneratorBasedBuilder):
                 "B": datasets.Value("string"),
                 "C": datasets.Value("string"),
                 "D": datasets.Value("string"),
-                "E": datasets.Value("string"),
                 "answer": datasets.Value("string"),
             }
         )
@@ -108,7 +125,7 @@ class USMLE(datasets.GeneratorBasedBuilder):
 
     def _generate_examples(self, filepath):
         df = pd.read_csv(filepath)
-        df.columns = ["question", "A", "B", "C", "D","E", "answer"]
+        df.columns = ["question", "A", "B", "C", "D", "answer"]
 
         for i, instance in enumerate(df.to_dict(orient="records")):
             yield i, instance
