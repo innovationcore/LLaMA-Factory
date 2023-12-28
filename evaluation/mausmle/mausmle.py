@@ -34,7 +34,7 @@ _HOMEPAGE = "https://github.com/hendrycks/test"
 
 _LICENSE = "MIT"
 
-_URL = "usmle.zip"
+_URL = "mausmle.zip"
 
 task_list = [
     "usmle1",
