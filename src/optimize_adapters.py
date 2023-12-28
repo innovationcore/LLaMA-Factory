@@ -77,17 +77,11 @@ def objective(trial):
     adapters_path = '/workspace/models/adapters/'
     inf_config['adapters_path'] = adapters_path
 
-    '''
-    lora_rank = trial.suggest_categorical('lora_rank', [8, 16])
-    if lora_rank == 8:
-        adapters_to_merge = ['uk-med-text_S-pt_R-8_A-8_E-1_LR-5e-5', 'uk-data-train_S-sft_R-8_A-8_E-3_LR-1e-4']
-    elif lora_rank == 16:
-        adapters_to_merge = ['uk-med-text_S-pt_R-16_A-16_E-1_LR-5e-5', 'uk-data-train_S-sft_R-16_A-16_E-3_LR-1e-4']
-    elif lora_rank == 32:
-        adapters_to_merge = ['uk-med-text_S-pt_R-32_A-32_E-1_LR-5e-5', 'uk-data-train_S-sft_R-32_A-32_E-3_LR-1e-4']
+
+    lora_rank = trial.suggest_categorical('lora_rank', [8, 16, 32, 64, 128, 256])
+    candiate_adapters = ['case-chat-med-train_S-sft_R-' + str(lora_rank) + '_A-' + str(lora_rank) + '_E-1_LR-5e-5',
+                         'qa-med-train_S-sft_R-' + str(lora_rank) + '_A-' + str(lora_rank) + '_E-1_LR-5e-5']
     inf_config['lora_rank'] = lora_rank
-    '''
-    candiate_adapters = ['qa-med-train_S-sft_R-8_A-8_E-1_LR-5e-5', 'case-chat-med-train_S-sft_R-8_A-8_E-1_LR-5e-5', 'uk-med-text_S-pt_R-8_A-8_E-1_LR-5e-5']
 
     adapter_config = dict()
 
