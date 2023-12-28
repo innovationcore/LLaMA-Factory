@@ -20,7 +20,7 @@ echo "Run started at:- "
 date
 
 # Actual run of script 
-srun /cm/shared/data/LLaMA-Factory/d_launch.sh
+srun /cm/shared/data/LLaMA-Factory/d_launch_training.sh
 
 
 
