@@ -20,14 +20,15 @@ import gc  # garbage collect library
 
 class AdvancedEvaluator:
 
-    def __init__(self, args: Optional[Dict[str, Any]] = None) -> None:
+    def __init__(self, auto_load=True, args: Optional[Dict[str, Any]] = None) -> None:
         self.model_args, self.data_args, self.eval_args, self.finetuning_args = get_eval_args(args)
         self.model = None
         self.tokenizer = None
         self.template = None
         self.eval_template = None
         self.choice_inputs = None
-        self.load_model()
+        if auto_load:
+            self.load_model()
 
         #self.model, self.tokenizer = load_model_and_tokenizer(self.model_args, finetuning_args)
         #self.tokenizer.padding_side = "right" # avoid overflow issue in batched inference for llama2
@@ -63,9 +64,16 @@ class AdvancedEvaluator:
     def __del__(self):
         self.unload_model()
 
-    def load_model(self):
+    def get_model_tokenizer(self):
+        return load_model_and_tokenizer(self.model_args, self.finetuning_args)
+    def load_model(self, model=None, tokenizer=None):
 
-        self.model, self.tokenizer = load_model_and_tokenizer(self.model_args, self.finetuning_args)
+        if (model is None) and (tokenizer is None):
+            self.model, self.tokenizer = load_model_and_tokenizer(self.model_args, self.finetuning_args)
+        else:
+            self.model = model
+            self.tokenizer = tokenizer
+
         self.tokenizer.padding_side = "right" # avoid overflow issue in batched inference for llama2
         self.model = dispatch_model(self.model)
         self.template = get_template_and_fix_tokenizer(self.data_args.template, self.tokenizer)
@@ -156,7 +164,7 @@ class AdvancedEvaluator:
                 )
                 inputs.append({"input_ids": input_ids, "attention_mask": [1] * len(input_ids)})
                 labels.append(resp)
-            print('CODY:', self.model.device)
+
             for i in trange(0, len(inputs), self.eval_args.batch_size, desc="Predicting batches", position=1, leave=False):
                 batch_input = self.tokenizer.pad(
                     inputs[i : i + self.eval_args.batch_size], return_attention_mask=True, return_tensors="pt"
