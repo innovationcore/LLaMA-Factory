@@ -156,7 +156,7 @@ class AdvancedEvaluator:
                 )
                 inputs.append({"input_ids": input_ids, "attention_mask": [1] * len(input_ids)})
                 labels.append(resp)
-
+            print('CODY:', self.model.device)
             for i in trange(0, len(inputs), self.eval_args.batch_size, desc="Predicting batches", position=1, leave=False):
                 batch_input = self.tokenizer.pad(
                     inputs[i : i + self.eval_args.batch_size], return_attention_mask=True, return_tensors="pt"
