@@ -87,6 +87,7 @@ echo "Running ${RUN_NAME}"
   export OUTPUT_MODEL=$DATASET'_S-'$STAGE'_R-'$LORA_RANK'_A-'$LORA_ALPHA'_E-'${EPOCH%.*}'_LR-'$LR
   echo "OUTPUT_MODEL="$OUTPUT_MODEL
 
+
   cd /workspace
 
   #--adapter_name_or_path $ADAPTER \
