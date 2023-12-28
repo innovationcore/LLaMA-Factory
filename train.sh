@@ -37,8 +37,8 @@ echo "Running ${RUN_NAME}"
   export LORA_RANK="$lrank"
   export LORA_ALPHA="$lrank"
 
-  #export LORA_TARGET=all
-  export LORA_TARGET=q_proj,v_proj
+  export LORA_TARGET=all
+  #export LORA_TARGET=q_proj,v_proj
   #export LORA_TARGET=k_proj,w2,o_proj,q_proj,w1,w3,gate,v_proj
   #export LORA_TARGET=q_proj,k_proj,v_proj,o_proj,gate_proj,up_proj,down_proj
   #export LORA_TARGET=q_proj,k_proj,v_proj,o_proj,lm_head
@@ -84,7 +84,7 @@ echo "Running ${RUN_NAME}"
 
   #echo $DATASET'_S-'$STAGE'_R-'$LORA_RANK'_A-'$LORA_ALPHA'_E-'$EPOCH'_LR-'$LR
   #echo $DATASET _S- $STAGE _R- $LORA_RANK _A-\ $LORA_ALPHA _E- $EPOCH _LR- $LR
-  export OUTPUT_MODEL=$DATASET'_S-'$STAGE'_R-'$LORA_RANK'_A-'$LORA_ALPHA'_E-'${EPOCH%.*}'_LR-'$LR
+  export OUTPUT_MODEL=$DATASET'_S-'$STAGE'_R-'$LORA_RANK'_A-'$LORA_ALPHA'_E-'${EPOCH%.*}'_LR-'$LR'-all'
   echo "OUTPUT_MODEL="$OUTPUT_MODEL
 
 
