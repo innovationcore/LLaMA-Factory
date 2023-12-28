@@ -75,7 +75,7 @@ echo "Running ${RUN_NAME}"
 
   #export DATASET=c4_demo
   #export DATASET=wiki_demo
-  export DATASET=uk-med-text
+  export DATASET=medqa-textbooks-dataset
   #export DATASET=uk-data-train
   #export DATASET=medal_full
   #export DATASET=case-chat-med-train
