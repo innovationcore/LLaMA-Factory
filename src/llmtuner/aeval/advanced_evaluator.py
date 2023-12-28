@@ -44,17 +44,20 @@ class AdvancedEvaluator:
 
     def load_model(self):
 
-        print(self.eval_args.task)
-        exit()
-        
+        print('Assigning subjects and choices for:', self.eval_args.task)
         if self.eval_args.task == 'mausmle':
             self.SUBJECTS = ["Average", "STEP-1", "STEP-2", "STEP-3"]
             self.CHOICES = ["A", "B", "C", "D", "E"]
+            print('Subjects:', self.SUBJECTS)
+            print('Choices:', self.CHOICES)
 
         elif self.eval_args.task == 'medqa':
             self.SUBJECTS = ["Average", "STEP-1", "STEP-2&3"]
             self.CHOICES = ["A", "B", "C", "D"]
+            print('Subjects:', self.SUBJECTS)
+            print('Choices:', self.CHOICES)
 
+        exit(0)
 
         self.model, self.tokenizer = load_model_and_tokenizer(self.model_args, self.finetuning_args)
         self.tokenizer.padding_side = "right" # avoid overflow issue in batched inference for llama2
