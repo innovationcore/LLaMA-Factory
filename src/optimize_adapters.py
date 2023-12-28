@@ -44,10 +44,13 @@ def run_inf(inf_config):
     merge_combination_type = inf_config['merge_combination_type']
 
     #create evaluator and supress model load
+    print('-Creating evaluator')
     advanced_evaluator = AdvancedEvaluator(auto_load=False)
     #get base model
+    print('-Loading base model')
     model, tokenizer = advanced_evaluator.get_model_tokenizer()
 
+    print('-Adding adapters')
     peft_model_id = os.path.join(adapters_path, adapters_to_merge[0])
     model = PeftModel.from_pretrained(model, peft_model_id)
 
@@ -60,6 +63,7 @@ def run_inf(inf_config):
     model.set_adapter("combined")
 
     #init model with adapter weights
+    print('-Loading base with adapters')
     advanced_evaluator.load_model(model, tokenizer)
 
     category_corrects, results = advanced_evaluator.eval()
