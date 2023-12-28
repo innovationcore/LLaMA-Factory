@@ -41,18 +41,22 @@ class AdvancedEvaluator:
         SUBJECTS = None
         CHOICES = None
 
-        print('Assigning subjects and choices for:', self.eval_args.task)
         if self.eval_args.task == 'mausmle':
             SUBJECTS = ["Average", "STEP-1", "STEP-2", "STEP-3"]
             CHOICES = ["A", "B", "C", "D", "E"]
-            print('Subjects:', SUBJECTS)
-            print('Choices:', CHOICES)
 
         elif self.eval_args.task == 'medqa':
             SUBJECTS = ["Average", "STEP-1", "STEP-2&3"]
             CHOICES = ["A", "B", "C", "D"]
-            print('Subjects:', SUBJECTS)
-            print('Choices:', CHOICES)
+
+        elif self.eval_args.task == 'medmcqa':
+            SUBJECTS = ["Average", "MEDICINE", "OPHTHALMOLOGY", "ANATOMY", "PATHOLOGY", "PHYSIOLOGY", "DENTAL", "RADIOLOGY",
+                        "BIOCHEMISTRY", "ANAESTHESIA", "GYNAECOLOGY", "PHARMACOLOGY", "SOCIAL", "PEDIATRICS", "ENT",
+                        "SURGERY", "MICROBIOLOGY", "FORENSIC", "PSYCHIATRY", "SKIN", "ORTHOPAEDICS", "UNKNOWN"]
+            CHOICES = ["A", "B", "C", "D"]
+        else:
+            SUBJECTS = ["Average", "STEM", "Social Sciences", "Humanities", "Other"]
+            CHOICES = ["A", "B", "C", "D", "E"]
 
         return SUBJECTS, CHOICES
 
@@ -95,7 +99,7 @@ class AdvancedEvaluator:
             kwargs = dict(add_special_tokens=False)
 
         SUBJECTS, CHOICES = self.get_subjects_and_choices()
-        
+
         return [self.tokenizer.encode(self.eval_template.prefix + ch, **kwargs)[-1] for ch in CHOICES]
 
     @torch.inference_mode()
