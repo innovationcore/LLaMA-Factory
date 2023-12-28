@@ -70,17 +70,17 @@ echo "Running ${RUN_NAME}"
   #export ADAPTER=/workspace/basemodels/Mixtral-8x7B-Instruct-v0.1_adapters/med-text-pt
   #export ADAPTER=/workspace/outputmodels/med-text-128
 
-  export STAGE=pt
-  #export STAGE=sft
+  #export STAGE=pt
+  export STAGE=sft
 
   #export DATASET=c4_demo
   #export DATASET=wiki_demo
-  export DATASET=medqa-textbooks-dataset
+  #export DATASET=medqa-textbooks-dataset
   #export DATASET=uk-data-train
   #export DATASET=medal_full
   #export DATASET=case-chat-med-train
   #export DATASET=qa-med-train
-  #export DATASET=multi-choice-med-train
+  export DATASET=multi-choice-med-train
 
   #echo $DATASET'_S-'$STAGE'_R-'$LORA_RANK'_A-'$LORA_ALPHA'_E-'$EPOCH'_LR-'$LR
   #echo $DATASET _S- $STAGE _R- $LORA_RANK _A-\ $LORA_ALPHA _E- $EPOCH _LR- $LR
