@@ -8,6 +8,7 @@ from peft import PeftModel, PeftConfig
 from llmtuner import AdvancedEvaluator
 import numpy as np
 import optuna
+from optuna.storages import JournalStorage, JournalFileStorage
 
 def parse_adapters(adapter_list):
     print(adapter_list)
@@ -122,25 +123,21 @@ def objective(trial):
 
 
 def main():
+
     print('Config Optimizer')
     study_name = "lora_mix_study"
-    study_db = 'opt_study.db'
+    study_journal = 'optuna-journal.log'
 
-    study = optuna.create_study(direction='maximize')
-    '''
-    if os.path.isfile(study_db):
-        print('Loading existing study DB:', study_db)
-        study = optuna.load_study(study_name=study_name, storage="sqlite:///" + study_db)
+    storage = JournalStorage(JournalFileStorage(study_journal))
+
+    if os.path.isfile(study_journal):
+        print('Loading existing journal DB:', study_journal)
+        study = optuna.load_study(study_name=study_name, storage=storage)
     else:
-        print('Creating new study DB:', study_db)
-        study = optuna.create_study(direction='maximize', study_name=study_name, storage="sqlite:///" + study_db)
-    '''
+        print('Creating new study journal:', study_journal)
+        study = optuna.create_study(direction='maximize', study_name=study_name, storage=storage)
 
-    #adapter_list = ['uk-data-train_S-sft_R-16_A-16_E-1_LR-1e-4','uk-data-train_S-sft_R-16_A-16_E-1_LR-5e-5','uk-data-train_S-sft_R-16_A-16_E-3_LR-1e-4','uk-data-train_S-sft_R-16_A-16_E-4_LR-5e-5','uk-med-text_S-pt_R-16_A-16_E-1_LR-5e-5','uk-med-text_S-pt_R-16_A-16_E-3_LR-1e-5']
-    #adapter_map = parse_adapters(adapter_list)
-    #exit(0)
-
-    study.optimize(objective, n_trials=50)
+    study.optimize(objective, n_trials=10)
     trial = study.best_trial
 
     print('Accuracy: {}'.format(trial.value))
