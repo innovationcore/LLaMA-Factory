@@ -14,12 +14,10 @@ from transformers.utils import cached_file
 
 from llmtuner.data.template import get_template_and_fix_tokenizer
 from llmtuner.eval.template import get_eval_template
-from llmtuner.extras.constants import CHOICES
 from llmtuner.model import dispatch_model, get_eval_args, load_model_and_tokenizer
 
 import gc  # garbage collect library
 
-SUBJECTS = ["Average","STEP-1", "STEP-2", "STEP-3"]
 
 class AdvancedEvaluator:
 
@@ -31,6 +29,15 @@ class AdvancedEvaluator:
         self.eval_template = None
         self.choice_inputs = None
         self.load_model()
+
+        if self.eval_args.task == 'mausmle':
+            self.SUBJECTS = ["Average", "STEP-1", "STEP-2", "STEP-3"]
+            self.CHOICES = ["A", "B", "C", "D", "E"]
+
+        elif self.eval_args.task == 'medqa':
+            self.SUBJECTS = ["Average", "STEP-1", "STEP-2&3"]
+            self.CHOICES = ["A", "B", "C", "D"]
+
         #self.model, self.tokenizer = load_model_and_tokenizer(self.model_args, finetuning_args)
         #self.tokenizer.padding_side = "right" # avoid overflow issue in batched inference for llama2
         #self.model = dispatch_model(self.model)
@@ -76,7 +83,7 @@ class AdvancedEvaluator:
         else:
             kwargs = dict(add_special_tokens=False)
 
-        return [self.tokenizer.encode(self.eval_template.prefix + ch, **kwargs)[-1] for ch in CHOICES]
+        return [self.tokenizer.encode(self.eval_template.prefix + ch, **kwargs)[-1] for ch in self.CHOICES]
 
     @torch.inference_mode()
     def batch_inference(self, batch_input: Dict[str, torch.Tensor]) -> List[str]:
@@ -102,7 +109,7 @@ class AdvancedEvaluator:
         with open(mapping, "r", encoding="utf-8") as f:
             categorys: Dict[str, Dict[str, str]] = json.load(f)
 
-        category_corrects = {subj: np.array([], dtype="bool") for subj in SUBJECTS}
+        category_corrects = {subj: np.array([], dtype="bool") for subj in self.SUBJECTS}
         pbar = tqdm(categorys.keys(), desc="Processing subjects", position=0)
         results = {}
         for subject in pbar:
