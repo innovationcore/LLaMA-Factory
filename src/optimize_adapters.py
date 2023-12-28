@@ -132,7 +132,7 @@ def main():
         storage = JournalStorage(JournalFileStorage(study_journal))
         study = optuna.create_study(direction='maximize', study_name=study_name, storage=storage)
 
-    study.optimize(objective, n_trials=3)
+    study.optimize(objective, n_trials=10)
     trial = study.best_trial
 
     print('Accuracy: {}'.format(trial.value))
