@@ -120,7 +120,7 @@ def main():
 
     print('Config Optimizer')
     study_name = "lora_mix_study"
-    study_journal = 'optuna-journal.log'
+    study_journal = '/workspace/optuna-journal.log'
 
     storage = JournalStorage(JournalFileStorage(study_journal))
 
