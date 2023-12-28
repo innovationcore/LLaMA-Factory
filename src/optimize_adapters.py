@@ -81,7 +81,8 @@ def objective(trial):
 
     lora_rank = trial.suggest_categorical('lora_rank', [8, 16, 32, 64, 128, 256])
     candiate_adapters = ['case-chat-med-train_S-sft_R-' + str(lora_rank) + '_A-' + str(lora_rank) + '_E-1_LR-5e-5',
-                         'qa-med-train_S-sft_R-' + str(lora_rank) + '_A-' + str(lora_rank) + '_E-1_LR-5e-5']
+                         'qa-med-train_S-sft_R-' + str(lora_rank) + '_A-' + str(lora_rank) + '_E-1_LR-5e-5',
+                         'medqa-textbooks-dataset_S-pt_R-' + str(lora_rank) + '_A-' + str(lora_rank) + '_E-1_LR-5e-5']
     inf_config['lora_rank'] = lora_rank
 
     adapter_config = dict()
