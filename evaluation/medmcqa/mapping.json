@@ -1,10 +1,86 @@
 {
-  "medqa_step1": {
-    "name": "medqa step 1",
-    "category": "STEP-1"
-  },
-  "medqa_step2&3": {
-    "name": "medqa step 2&3",
-    "category": "STEP-2&3"
-  }
+    "medmcqa_medicine": {
+        "name": "medmcqa medicine",
+        "category": "MEDICINE"
+    },
+    "medmcqa_ophthalmology": {
+        "name": "medmcqa ophthalmology",
+        "category": "OPHTHALMOLOGY"
+    },
+    "medmcqa_anatomy": {
+        "name": "medmcqa anatomy",
+        "category": "ANATOMY"
+    },
+    "medmcqa_pathology": {
+        "name": "medmcqa pathology",
+        "category": "PATHOLOGY"
+    },
+    "medmcqa_physiology": {
+        "name": "medmcqa physiology",
+        "category": "PHYSIOLOGY"
+    },
+    "medmcqa_dental": {
+        "name": "medmcqa dental",
+        "category": "DENTAL"
+    },
+    "medmcqa_radiology": {
+        "name": "medmcqa radiology",
+        "category": "RADIOLOGY"
+    },
+    "medmcqa_biochemistry": {
+        "name": "medmcqa biochemistry",
+        "category": "BIOCHEMISTRY"
+    },
+    "medmcqa_anaesthesia": {
+        "name": "medmcqa anaesthesia",
+        "category": "ANAESTHESIA"
+    },
+    "medmcqa_gynaecology": {
+        "name": "medmcqa gynaecology",
+        "category": "GYNAECOLOGY"
+    },
+    "medmcqa_pharmacology": {
+        "name": "medmcqa pharmacology",
+        "category": "PHARMACOLOGY"
+    },
+    "medmcqa_social": {
+        "name": "medmcqa social",
+        "category": "SOCIAL"
+    },
+    "medmcqa_pediatrics": {
+        "name": "medmcqa pediatrics",
+        "category": "PEDIATRICS"
+    },
+    "medmcqa_ent": {
+        "name": "medmcqa ent",
+        "category": "ENT"
+    },
+    "medmcqa_surgery": {
+        "name": "medmcqa surgery",
+        "category": "SURGERY"
+    },
+    "medmcqa_microbiology": {
+        "name": "medmcqa microbiology",
+        "category": "MICROBIOLOGY"
+    },
+    "medmcqa_forensic": {
+        "name": "medmcqa forensic",
+        "category": "FORENSIC"
+    },
+    "medmcqa_psychiatry": {
+        "name": "medmcqa psychiatry",
+        "category": "PSYCHIATRY"
+    },
+    "medmcqa_skin": {
+        "name": "medmcqa skin",
+        "category": "SKIN"
+    },
+    "medmcqa_orthopaedics": {
+        "name": "medmcqa orthopaedics",
+        "category": "ORTHOPAEDICS"
+    },
+    "medmcqa_unknown": {
+        "name": "medmcqa unknown",
+        "category": "UNKNOWN"
+    }
 }
