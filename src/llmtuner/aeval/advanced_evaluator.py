@@ -44,6 +44,9 @@ class AdvancedEvaluator:
 
     def load_model(self):
 
+        print(self.eval_args.task)
+        exit()
+        
         if self.eval_args.task == 'mausmle':
             self.SUBJECTS = ["Average", "STEP-1", "STEP-2", "STEP-3"]
             self.CHOICES = ["A", "B", "C", "D", "E"]
