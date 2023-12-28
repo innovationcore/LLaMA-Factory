@@ -57,8 +57,6 @@ class AdvancedEvaluator:
             print('Subjects:', self.SUBJECTS)
             print('Choices:', self.CHOICES)
 
-        exit(0)
-
         self.model, self.tokenizer = load_model_and_tokenizer(self.model_args, self.finetuning_args)
         self.tokenizer.padding_side = "right" # avoid overflow issue in batched inference for llama2
         self.model = dispatch_model(self.model)
