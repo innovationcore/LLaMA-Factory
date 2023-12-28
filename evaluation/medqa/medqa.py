@@ -37,20 +37,19 @@ _LICENSE = "MIT"
 _URL = "usmle.zip"
 
 task_list = [
-    "usmle1",
-    "usmle2",
-    "usmle3",
+    "medqa_step1",
+    "medqa_step2&3",
 ]
 
 
-class USMLEConfig(datasets.BuilderConfig):
+class MEDQAConfig(datasets.BuilderConfig):
     def __init__(self, **kwargs):
         super().__init__(version=datasets.Version("1.0.0"), **kwargs)
 
 
-class USMLE(datasets.GeneratorBasedBuilder):
+class MEDQA(datasets.GeneratorBasedBuilder):
     BUILDER_CONFIGS = [
-        USMLEConfig(
+        MEDQAConfig(
             name=task_name,
         )
         for task_name in task_list
@@ -64,7 +63,6 @@ class USMLE(datasets.GeneratorBasedBuilder):
                 "B": datasets.Value("string"),
                 "C": datasets.Value("string"),
                 "D": datasets.Value("string"),
-                "E": datasets.Value("string"),
                 "answer": datasets.Value("string"),
             }
         )
@@ -108,7 +106,7 @@ class USMLE(datasets.GeneratorBasedBuilder):
 
     def _generate_examples(self, filepath):
         df = pd.read_csv(filepath)
-        df.columns = ["question", "A", "B", "C", "D","E", "answer"]
+        df.columns = ["question", "A", "B", "C", "D", "answer"]
 
         for i, instance in enumerate(df.to_dict(orient="records")):
             yield i, instance
