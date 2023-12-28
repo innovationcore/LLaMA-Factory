@@ -16,7 +16,7 @@ CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python src/advanced_evaluate.py \
     --split test \
     --lang en \
     --n_shot 5 \
-    --batch_size 4
+    --batch_size 2
 
 end=$(date +%s)
 echo "Elapsed Time: $(($end-$start)) seconds"
