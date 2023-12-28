@@ -29,14 +29,8 @@ class AdvancedEvaluator:
         self.eval_template = None
         self.choice_inputs = None
         self.load_model()
-
-        if self.eval_args.task == 'mausmle':
-            self.SUBJECTS = ["Average", "STEP-1", "STEP-2", "STEP-3"]
-            self.CHOICES = ["A", "B", "C", "D", "E"]
-
-        elif self.eval_args.task == 'medqa':
-            self.SUBJECTS = ["Average", "STEP-1", "STEP-2&3"]
-            self.CHOICES = ["A", "B", "C", "D"]
+        self.SUBJECTS = None
+        self.CHOICES = None
 
         #self.model, self.tokenizer = load_model_and_tokenizer(self.model_args, finetuning_args)
         #self.tokenizer.padding_side = "right" # avoid overflow issue in batched inference for llama2
@@ -49,6 +43,15 @@ class AdvancedEvaluator:
         self.unload_model()
 
     def load_model(self):
+
+        if self.eval_args.task == 'mausmle':
+            self.SUBJECTS = ["Average", "STEP-1", "STEP-2", "STEP-3"]
+            self.CHOICES = ["A", "B", "C", "D", "E"]
+
+        elif self.eval_args.task == 'medqa':
+            self.SUBJECTS = ["Average", "STEP-1", "STEP-2&3"]
+            self.CHOICES = ["A", "B", "C", "D"]
+
 
         self.model, self.tokenizer = load_model_and_tokenizer(self.model_args, self.finetuning_args)
         self.tokenizer.padding_side = "right" # avoid overflow issue in batched inference for llama2
