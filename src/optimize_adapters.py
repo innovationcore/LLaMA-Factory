@@ -125,15 +125,18 @@ def objective(trial):
     need_adapter = True
 
     for adapter_name, adapter_info in candiate_adapters.items():
-        adapter_config[adapter_name] = dict()
 
-        # set rank/alpha
+        #set rank, epoch, lr, and state based on base adapter name
         rank = trial.suggest_categorical(adapter_name + '_rank', adapter_info['rank'])
         epoch = trial.suggest_categorical(adapter_name + '_epoch', adapter_info['epoch'])
         lr = trial.suggest_categorical(adapter_name + '_lr', adapter_info['lr'])
         stage = adapter_info['stage']
 
+        #get id of specific adapter
         adapter_id = adapter_name + '_S-' + stage + '_R-' + str(rank) + '_A-' + str(rank) + '_E-' + str(epoch) + '_LR-' + lr
+
+        #create config for specific adapter
+        adapter_config[adapter_id] = dict()
 
         adapter_is_enabled_id = adapter_id + '_is_enabled'
         if disable_adapters:
