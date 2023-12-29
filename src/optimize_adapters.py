@@ -124,7 +124,7 @@ def objective(trial):
 
     need_adapter = True
 
-    for adapter_name, adapter_info in candiate_adapters:
+    for adapter_name, adapter_info in candiate_adapters.items():
         adapter_config[adapter_name] = dict()
 
         # set rank/alpha
