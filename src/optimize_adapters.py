@@ -112,6 +112,13 @@ def objective(trial):
     candiate_adapters['medqa-textbooks-dataset']['rank'] = [8, 16, 32, 64, 128, 256]
     candiate_adapters['medqa-textbooks-dataset']['stage'] = 'pt'
 
+    candiate_adapters['multi-choice-med-train'] = dict()
+    candiate_adapters['multi-choice-med-train']['epoch'] = [1]
+    candiate_adapters['multi-choice-med-train']['lr'] = ['1e-5']
+    candiate_adapters['multi-choice-med-train']['rank'] = [8, 16, 32, 64, 128, 256]
+    candiate_adapters['multi-choice-med-train']['stage'] = 'sft'
+
+
     '''
     lora_rank = trial.suggest_categorical('lora_rank', [8, 16, 32, 64, 128, 256])
     candiate_adapters = ['case-chat-med-train_S-sft_R-' + str(lora_rank) + '_A-' + str(lora_rank) + '_E-1_LR-5e-5',
@@ -149,7 +156,7 @@ def objective(trial):
             need_adapter = False
             #set weights
             adapter_weight = adapter_id + '_weight'
-            adapter_config[adapter_id]['weight'] = trial.suggest_float(adapter_weight, 0.0, 1.25, step=0.25)
+            adapter_config[adapter_id]['weight'] = trial.suggest_float(adapter_weight, 0.0, 1, step=0.1)
 
 
     if need_adapter:
