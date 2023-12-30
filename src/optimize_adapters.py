@@ -131,7 +131,7 @@ def objective(trial):
     elif model == 'llamav2-7b':
 
         candiate_adapters['multi-choice-med-train'] = dict()
-        candiate_adapters['case-chat-med-train']['model'] = ['llamav2-7b']
+        candiate_adapters['multi-choice-med-train']['model'] = ['llamav2-7b']
         candiate_adapters['multi-choice-med-train']['epoch'] = [1]
         candiate_adapters['multi-choice-med-train']['lr'] = ['1e-5']
         candiate_adapters['multi-choice-med-train']['rank'] = [8, 16, 32, 64, 128, 256]
