@@ -92,31 +92,50 @@ def objective(trial):
     adapters_path = '/workspace/models/adapters/'
     inf_config['adapters_path'] = adapters_path
 
+    model = 'llamav2-7b'
+
+    #multi-choice-med-train_S-sft_R-128_A-128_E-1_LR-1e-5_M-llamav2-7b
+    #case-chat-med-train_S-sft_R-128_A-128_E-1_LR-5e-5_M-mixtral
+
     candiate_adapters = dict()
 
-    candiate_adapters['case-chat-med-train'] = dict()
-    candiate_adapters['case-chat-med-train']['epoch'] = [1]
-    candiate_adapters['case-chat-med-train']['lr'] = ['5e-5']
-    candiate_adapters['case-chat-med-train']['rank'] = [8, 16, 32, 64, 128, 256]
-    candiate_adapters['case-chat-med-train']['stage'] = 'sft'
+    if model == 'mixtral':
+        candiate_adapters['case-chat-med-train'] = dict()
+        candiate_adapters['case-chat-med-train']['model'] = ['mixtral']
+        candiate_adapters['case-chat-med-train']['epoch'] = [1]
+        candiate_adapters['case-chat-med-train']['lr'] = ['5e-5']
+        candiate_adapters['case-chat-med-train']['rank'] = [8, 16, 32, 64, 128, 256]
+        candiate_adapters['case-chat-med-train']['stage'] = ['sft']
 
-    candiate_adapters['qa-med-train'] = dict()
-    candiate_adapters['qa-med-train']['epoch'] = [1]
-    candiate_adapters['qa-med-train']['lr'] = ['5e-5']
-    candiate_adapters['qa-med-train']['rank'] = [8, 16, 32, 64, 128, 256]
-    candiate_adapters['qa-med-train']['stage'] = 'sft'
+        candiate_adapters['qa-med-train'] = dict()
+        candiate_adapters['case-chat-med-train']['model'] = ['mixtral']
+        candiate_adapters['qa-med-train']['epoch'] = [1]
+        candiate_adapters['qa-med-train']['lr'] = ['5e-5']
+        candiate_adapters['qa-med-train']['rank'] = [8, 16, 32, 64, 128, 256]
+        candiate_adapters['qa-med-train']['stage'] = ['sft']
 
-    candiate_adapters['medqa-textbooks-dataset'] = dict()
-    candiate_adapters['medqa-textbooks-dataset']['epoch'] = [1]
-    candiate_adapters['medqa-textbooks-dataset']['lr'] = ['5e-5']
-    candiate_adapters['medqa-textbooks-dataset']['rank'] = [8, 16, 32, 64, 128, 256]
-    candiate_adapters['medqa-textbooks-dataset']['stage'] = 'pt'
+        candiate_adapters['medqa-textbooks-dataset'] = dict()
+        candiate_adapters['case-chat-med-train']['model'] = ['mixtral']
+        candiate_adapters['medqa-textbooks-dataset']['epoch'] = [1]
+        candiate_adapters['medqa-textbooks-dataset']['lr'] = ['5e-5']
+        candiate_adapters['medqa-textbooks-dataset']['rank'] = [8, 16, 32, 64, 128, 256]
+        candiate_adapters['medqa-textbooks-dataset']['stage'] = ['pt']
 
-    candiate_adapters['multi-choice-med-train'] = dict()
-    candiate_adapters['multi-choice-med-train']['epoch'] = [1]
-    candiate_adapters['multi-choice-med-train']['lr'] = ['1e-5']
-    candiate_adapters['multi-choice-med-train']['rank'] = [8, 16, 32, 64, 128, 256]
-    candiate_adapters['multi-choice-med-train']['stage'] = 'sft'
+        candiate_adapters['multi-choice-med-train'] = dict()
+        candiate_adapters['case-chat-med-train']['model'] = ['mixtral']
+        candiate_adapters['multi-choice-med-train']['epoch'] = [1]
+        candiate_adapters['multi-choice-med-train']['lr'] = ['1e-5']
+        candiate_adapters['multi-choice-med-train']['rank'] = [8, 16, 32, 64, 128, 256]
+        candiate_adapters['multi-choice-med-train']['stage'] = ['sft']
+
+    elif model == 'llamav2-7b':
+
+        candiate_adapters['multi-choice-med-train'] = dict()
+        candiate_adapters['case-chat-med-train']['model'] = ['llamav2-7b']
+        candiate_adapters['multi-choice-med-train']['epoch'] = [1]
+        candiate_adapters['multi-choice-med-train']['lr'] = ['1e-5']
+        candiate_adapters['multi-choice-med-train']['rank'] = [8, 16, 32, 64, 128, 256]
+        candiate_adapters['multi-choice-med-train']['stage'] = ['sft']
 
 
     '''
@@ -133,14 +152,15 @@ def objective(trial):
 
     for adapter_name, adapter_info in candiate_adapters.items():
 
-        #set rank, epoch, lr, and state based on base adapter name
+        #set model, rank, epoch, lr, and state based on base adapter name
+        model = trial.suggest_categorical(adapter_name + '_model', adapter_info['model'])
         rank = trial.suggest_categorical(adapter_name + '_rank', adapter_info['rank'])
         epoch = trial.suggest_categorical(adapter_name + '_epoch', adapter_info['epoch'])
         lr = trial.suggest_categorical(adapter_name + '_lr', adapter_info['lr'])
-        stage = adapter_info['stage']
+        stage = trial.suggest_categorical(adapter_name + '_stage', adapter_info['stage'])
 
         #get id of specific adapter
-        adapter_id = adapter_name + '_S-' + stage + '_R-' + str(rank) + '_A-' + str(rank) + '_E-' + str(epoch) + '_LR-' + lr
+        adapter_id = adapter_name + '_S-' + stage + '_R-' + str(rank) + '_A-' + str(rank) + '_E-' + str(epoch) + '_LR-' + lr + '_M-' + model
 
         #create config for specific adapter
         adapter_config[adapter_id] = dict()
