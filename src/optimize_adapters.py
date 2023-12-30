@@ -92,7 +92,7 @@ def objective(trial):
     adapters_path = '/workspace/models/adapters/'
     inf_config['adapters_path'] = adapters_path
 
-    model = 'llamav2-7b'
+    model = 'llama-2-7b-chat-hf'
 
     #multi-choice-med-train_S-sft_R-128_A-128_E-1_LR-1e-5_M-llamav2-7b
     #case-chat-med-train_S-sft_R-128_A-128_E-1_LR-5e-5_M-mixtral
@@ -128,10 +128,10 @@ def objective(trial):
         candiate_adapters['multi-choice-med-train']['rank'] = [8, 16, 32, 64, 128, 256]
         candiate_adapters['multi-choice-med-train']['stage'] = ['sft']
 
-    elif model == 'llamav2-7b':
+    elif model == 'llama-2-7b-chat-hf':
 
         candiate_adapters['multi-choice-med-train'] = dict()
-        candiate_adapters['multi-choice-med-train']['model'] = ['llamav2-7b']
+        candiate_adapters['multi-choice-med-train']['model'] = ['llama-2-7b-chat-hf']
         candiate_adapters['multi-choice-med-train']['epoch'] = [1]
         candiate_adapters['multi-choice-med-train']['lr'] = ['1e-5']
         candiate_adapters['multi-choice-med-train']['rank'] = [8, 16, 32, 64, 128, 256]
