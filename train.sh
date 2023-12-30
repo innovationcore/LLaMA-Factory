@@ -60,8 +60,8 @@ echo "Running ${RUN_NAME}"
   export LR=1e-5
   #export LR=1e-6
 
-  #export TEMPLATE=default
-  export TEMPLATE=mistral
+  export TEMPLATE=default
+  #export TEMPLATE=mistral
 
   export MODEL=/workspace/basemodels/llama-2-7b-chat-hf
   #export MODEL=/workspace/basemodels/llama-2-70b-chat-hf
@@ -79,8 +79,8 @@ echo "Running ${RUN_NAME}"
   #export DATASET=uk-data-train
   #export DATASET=medal_full
   #export DATASET=case-chat-med-train
-  #export DATASET=qa-med-train
-  export DATASET=multi-choice-med-train
+  export DATASET=qa-med-train
+  #export DATASET=multi-choice-med-train
 
   #echo $DATASET'_S-'$STAGE'_R-'$LORA_RANK'_A-'$LORA_ALPHA'_E-'$EPOCH'_LR-'$LR
   #echo $DATASET _S- $STAGE _R- $LORA_RANK _A-\ $LORA_ALPHA _E- $EPOCH _LR- $LR
