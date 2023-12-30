@@ -130,12 +130,12 @@ def objective(trial):
 
     elif model == 'llama-2-7b-chat-hf':
 
-        candiate_adapters['multi-choice-med-train'] = dict()
-        candiate_adapters['multi-choice-med-train']['model'] = ['llama-2-7b-chat-hf']
-        candiate_adapters['multi-choice-med-train']['epoch'] = [1]
-        candiate_adapters['multi-choice-med-train']['lr'] = ['1e-5']
-        candiate_adapters['multi-choice-med-train']['rank'] = [8, 16, 32, 64, 128, 256]
-        candiate_adapters['multi-choice-med-train']['stage'] = ['sft']
+        candiate_adapters['case-chat-med-train'] = dict()
+        candiate_adapters['case-chat-med-train']['model'] = ['llama-2-7b-chat-hf']
+        candiate_adapters['case-chat-med-train']['epoch'] = [1]
+        candiate_adapters['case-chat-med-train']['lr'] = ['5e-5']
+        candiate_adapters['case-chat-med-train']['rank'] = [8, 16, 32, 64, 128, 256]
+        candiate_adapters['case-chat-med-train']['stage'] = ['sft']
 
         candiate_adapters['qa-med-train'] = dict()
         candiate_adapters['qa-med-train']['model'] = ['llama-2-7b-chat-hf']
@@ -143,6 +143,14 @@ def objective(trial):
         candiate_adapters['qa-med-train']['lr'] = ['1e-5']
         candiate_adapters['qa-med-train']['rank'] = [8, 16, 32, 64, 128, 256]
         candiate_adapters['qa-med-train']['stage'] = ['sft']
+
+        candiate_adapters['multi-choice-med-train'] = dict()
+        candiate_adapters['multi-choice-med-train']['model'] = ['llama-2-7b-chat-hf']
+        candiate_adapters['multi-choice-med-train']['epoch'] = [1]
+        candiate_adapters['multi-choice-med-train']['lr'] = ['1e-5']
+        candiate_adapters['multi-choice-med-train']['rank'] = [8, 16, 32, 64, 128, 256]
+        candiate_adapters['multi-choice-med-train']['stage'] = ['sft']
+
 
 
     '''
