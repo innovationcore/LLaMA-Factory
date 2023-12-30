@@ -63,12 +63,10 @@ echo "Running ${RUN_NAME}"
   export TEMPLATE=default
   #export TEMPLATE=mistral
 
-  export MODEL=/workspace/basemodels/llama-2-7b-chat-hf
-  #export MODEL=/workspace/basemodels/llama-2-70b-chat-hf
-  #export MODEL=/workspace/basemodels/falcon-180B
-  #export MODEL=/workspace/basemodels/Mixtral-8x7B-Instruct-v0.1
-  #export ADAPTER=/workspace/basemodels/Mixtral-8x7B-Instruct-v0.1_adapters/med-text-pt
-  #export ADAPTER=/workspace/outputmodels/med-text-128
+  export MODEL=llama-2-7b-chat-hf
+  #export MODEL=llama-2-70b-chat-hf
+  #export MODEL=falcon-180B
+  #export MODEL=Mixtral-8x7B-Instruct-v0.1
 
   #export STAGE=pt
   export STAGE=sft
@@ -85,7 +83,7 @@ echo "Running ${RUN_NAME}"
   #echo $DATASET'_S-'$STAGE'_R-'$LORA_RANK'_A-'$LORA_ALPHA'_E-'$EPOCH'_LR-'$LR
   #echo $DATASET _S- $STAGE _R- $LORA_RANK _A-\ $LORA_ALPHA _E- $EPOCH _LR- $LR
   #export OUTPUT_MODEL=$DATASET'_S-'$STAGE'_R-'$LORA_RANK'_A-'$LORA_ALPHA'_E-'${EPOCH%.*}'_LR-'$LR'-all'
-  export OUTPUT_MODEL=$DATASET'_S-'$STAGE'_R-'$LORA_RANK'_A-'$LORA_ALPHA'_E-'${EPOCH%.*}'_LR-'$LR'-llama'
+  export OUTPUT_MODEL=$DATASET'_S-'$STAGE'_R-'$LORA_RANK'_A-'$LORA_ALPHA'_E-'${EPOCH%.*}'_LR-'$LR'_M-'$MODEL
 
   echo "OUTPUT_MODEL="$OUTPUT_MODEL
 
@@ -96,7 +94,7 @@ echo "Running ${RUN_NAME}"
   accelerate launch --num_processes=$(( 8 * $WORLD_SIZE )) --num_machines $WORLD_SIZE  --machine_rank $RANK --main_process_ip $MASTER_ADDR --main_process_port $MASTER_PORT --config_file=/workspace/config/accelerate_config.yaml \
       /workspace/src/train_bash.py \
       --stage $STAGE \
-      --model_name_or_path $MODEL \
+      --model_name_or_path /workspace/basemodels/$MODEL \
       --do_train \
       --flash_attn \
       --dataset $DATASET \
