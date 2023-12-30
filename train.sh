@@ -56,8 +56,8 @@ echo "Running ${RUN_NAME}"
   export EPOCH=1.0
 
   #export LR=1e-4
-  #export LR=5e-5
-  export LR=1e-5
+  export LR=5e-5
+  #export LR=1e-5
   #export LR=1e-6
 
   export TEMPLATE=default
@@ -76,8 +76,8 @@ echo "Running ${RUN_NAME}"
   #export DATASET=medqa-textbooks-dataset
   #export DATASET=uk-data-train
   #export DATASET=medal_full
-  #export DATASET=case-chat-med-train
-  export DATASET=qa-med-train
+  export DATASET=case-chat-med-train
+  #export DATASET=qa-med-train
   #export DATASET=multi-choice-med-train
 
   #echo $DATASET'_S-'$STAGE'_R-'$LORA_RANK'_A-'$LORA_ALPHA'_E-'$EPOCH'_LR-'$LR
