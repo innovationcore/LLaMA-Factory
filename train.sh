@@ -89,7 +89,6 @@ echo "Running ${RUN_NAME}"
 
   echo "OUTPUT_MODEL="$OUTPUT_MODEL
 
-
   cd /workspace
 
   #--adapter_name_or_path $ADAPTER \
