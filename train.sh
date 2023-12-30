@@ -37,8 +37,8 @@ echo "Running ${RUN_NAME}"
   export LORA_RANK="$lrank"
   export LORA_ALPHA="$lrank"
 
-  export LORA_TARGET=all
-  #export LORA_TARGET=q_proj,v_proj
+  #export LORA_TARGET=all
+  export LORA_TARGET=q_proj,v_proj
   #export LORA_TARGET=k_proj,w2,o_proj,q_proj,w1,w3,gate,v_proj
   #export LORA_TARGET=q_proj,k_proj,v_proj,o_proj,gate_proj,up_proj,down_proj
   #export LORA_TARGET=q_proj,k_proj,v_proj,o_proj,lm_head
@@ -63,10 +63,10 @@ echo "Running ${RUN_NAME}"
   #export TEMPLATE=default
   export TEMPLATE=mistral
 
-  #export MODEL=/workspace/basemodels/llama-2-7b-chat-hf
+  export MODEL=/workspace/basemodels/llama-2-7b-chat-hf
   #export MODEL=/workspace/basemodels/llama-2-70b-chat-hf
   #export MODEL=/workspace/basemodels/falcon-180B
-  export MODEL=/workspace/basemodels/Mixtral-8x7B-Instruct-v0.1
+  #export MODEL=/workspace/basemodels/Mixtral-8x7B-Instruct-v0.1
   #export ADAPTER=/workspace/basemodels/Mixtral-8x7B-Instruct-v0.1_adapters/med-text-pt
   #export ADAPTER=/workspace/outputmodels/med-text-128
 
@@ -84,7 +84,9 @@ echo "Running ${RUN_NAME}"
 
   #echo $DATASET'_S-'$STAGE'_R-'$LORA_RANK'_A-'$LORA_ALPHA'_E-'$EPOCH'_LR-'$LR
   #echo $DATASET _S- $STAGE _R- $LORA_RANK _A-\ $LORA_ALPHA _E- $EPOCH _LR- $LR
-  export OUTPUT_MODEL=$DATASET'_S-'$STAGE'_R-'$LORA_RANK'_A-'$LORA_ALPHA'_E-'${EPOCH%.*}'_LR-'$LR'-all'
+  #export OUTPUT_MODEL=$DATASET'_S-'$STAGE'_R-'$LORA_RANK'_A-'$LORA_ALPHA'_E-'${EPOCH%.*}'_LR-'$LR'-all'
+  export OUTPUT_MODEL=$DATASET'_S-'$STAGE'_R-'$LORA_RANK'_A-'$LORA_ALPHA'_E-'${EPOCH%.*}'_LR-'$LR'-llama'
+
   echo "OUTPUT_MODEL="$OUTPUT_MODEL
 
 
