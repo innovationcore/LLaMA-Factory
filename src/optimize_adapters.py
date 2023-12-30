@@ -108,21 +108,21 @@ def objective(trial):
         candiate_adapters['case-chat-med-train']['stage'] = ['sft']
 
         candiate_adapters['qa-med-train'] = dict()
-        candiate_adapters['case-chat-med-train']['model'] = ['mixtral']
+        candiate_adapters['qa-med-train']['model'] = ['mixtral']
         candiate_adapters['qa-med-train']['epoch'] = [1]
         candiate_adapters['qa-med-train']['lr'] = ['5e-5']
         candiate_adapters['qa-med-train']['rank'] = [8, 16, 32, 64, 128, 256]
         candiate_adapters['qa-med-train']['stage'] = ['sft']
 
         candiate_adapters['medqa-textbooks-dataset'] = dict()
-        candiate_adapters['case-chat-med-train']['model'] = ['mixtral']
+        candiate_adapters['medqa-textbooks-dataset']['model'] = ['mixtral']
         candiate_adapters['medqa-textbooks-dataset']['epoch'] = [1]
         candiate_adapters['medqa-textbooks-dataset']['lr'] = ['5e-5']
         candiate_adapters['medqa-textbooks-dataset']['rank'] = [8, 16, 32, 64, 128, 256]
         candiate_adapters['medqa-textbooks-dataset']['stage'] = ['pt']
 
         candiate_adapters['multi-choice-med-train'] = dict()
-        candiate_adapters['case-chat-med-train']['model'] = ['mixtral']
+        candiate_adapters['multi-choice-med-train']['model'] = ['mixtral']
         candiate_adapters['multi-choice-med-train']['epoch'] = [1]
         candiate_adapters['multi-choice-med-train']['lr'] = ['1e-5']
         candiate_adapters['multi-choice-med-train']['rank'] = [8, 16, 32, 64, 128, 256]
@@ -136,6 +136,13 @@ def objective(trial):
         candiate_adapters['multi-choice-med-train']['lr'] = ['1e-5']
         candiate_adapters['multi-choice-med-train']['rank'] = [8, 16, 32, 64, 128, 256]
         candiate_adapters['multi-choice-med-train']['stage'] = ['sft']
+
+        candiate_adapters['qa-med-train'] = dict()
+        candiate_adapters['qa-med-train']['model'] = ['llama-2-7b-chat-hf']
+        candiate_adapters['qa-med-train']['epoch'] = [1]
+        candiate_adapters['qa-med-train']['lr'] = ['1e-5']
+        candiate_adapters['qa-med-train']['rank'] = [8, 16, 32, 64, 128, 256]
+        candiate_adapters['qa-med-train']['stage'] = ['sft']
 
 
     '''
