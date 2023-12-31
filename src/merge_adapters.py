@@ -29,6 +29,40 @@ def get_score(category_corrects):
 
 def main():
 
+    '''
+    {'adapters_path': '/workspace/models/adapters/',
+    'adapter_config': {'case-chat-med-train_S-sft_R-8_A-8_E-1_LR-5e-5_M-llama-2-7b-chat-hf': {'is_enabled': True, 'weight': 0.0},
+    'qa-med-train_S-sft_R-16_A-16_E-1_LR-1e-5_M-llama-2-7b-chat-hf': {'is_enabled': True, 'weight': 0.7000000000000001},
+    'medqa-textbooks-dataset_S-pt_R-32_A-32_E-1_LR-5e-5_M-llama-2-7b-chat-hf': {'is_enabled': True, 'weight': 0.7000000000000001},
+    'multi-choice-med-train_S-sft_R-256_A-256_E-1_LR-1e-5_M-llama-2-7b-chat-hf': {'is_enabled': True, 'weight': 0.2}},
+    'merge_combination_type': 'cat'} ]
+
+    medmcqa: 42.9%
+    case-chat-med-train_S-sft_R-128_A-128_E-1_LR-5e-5_M-llama-2-7b-chat-hf_weight", "param_value_internal": 0.3
+    qa-med-train_S-sft_R-16_A-16_E-1_LR-1e-5_M-llama-2-7b-chat-hf_weight", "param_value_internal": 0.7
+    medqa-textbooks-dataset_S-pt_R-8_A-8_E-1_LR-5e-5_M-llama-2-7b-chat-hf_weight", "param_value_internal": 0.8
+    multi-choice-med-train_S-sft_R-128_A-128_E-1_LR-1e-5_M-llama-2-7b-chat-hf_weight", "param_value_internal": 0.2
+
+    '''
+
+    inf_config = dict()
+    inf_config['adapters_path'] = '/workspace/models/adapters/'
+    inf_config['adapter_config'] = dict()
+    inf_config['adapter_config']['case-chat-med-train_S-sft_R-128_A-128_E-1_LR-5e-5_M-llama-2-7b-chat-hf'] = dict()
+    inf_config['adapter_config']['case-chat-med-train_S-sft_R-128_A-128_E-1_LR-5e-5_M-llama-2-7b-chat-hf']['is_enabled'] = True
+    inf_config['adapter_config']['case-chat-med-train_S-sft_R-128_A-128_E-1_LR-5e-5_M-llama-2-7b-chat-hf']['weight'] = 0.3
+    inf_config['adapter_config'][''] = dict()
+    inf_config['adapter_config']['']['is_enabled'] = True
+    inf_config['adapter_config']['']['weight'] = 0.3
+    inf_config['adapter_config'][''] = dict()
+    inf_config['adapter_config']['']['is_enabled'] = True
+    inf_config['adapter_config']['']['weight'] = 0.3
+    inf_config['adapter_config'][''] = dict()
+    inf_config['adapter_config']['']['is_enabled'] = True
+    inf_config['adapter_config']['']['weight'] = 0.3
+
+    inf_config['merge_combination_type'] = 'cat'
+
     print(inf_config)
     adapters_path = inf_config['adapters_path']
 
