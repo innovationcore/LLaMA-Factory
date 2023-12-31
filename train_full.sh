@@ -37,7 +37,8 @@ export LR=5e-5
 #export TEMPLATE=default
 export TEMPLATE=mistral
 
-export MODEL=Mixtral-8x7B-Instruct-v0.1
+#export MODEL=Mixtral-8x7B-Instruct-v0.1
+export MODEL=Mistral-7B-v0.1
 
 export STAGE=pt
 #export STAGE=sft
