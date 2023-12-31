@@ -204,7 +204,7 @@ def objective(trial):
     adapter_config = dict()
 
     need_adapter = True
-    sync_rank = False
+    sync_rank = True
 
     rank = None
 
