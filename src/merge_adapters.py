@@ -43,7 +43,7 @@ def get_log():
                         adapters_to_merge.append(adapter_name)
                         adapter_weight = round(result['param_value_internal'],1)
                         adapter_weights.append(adapter_weight)
-                    
+
     return adapters_to_merge, adapter_weights
 
 def merge_model(adapters_to_merge, adapter_weights):

@@ -7,6 +7,8 @@
 export MODEL=llama-2-7b-chat-hf
 #export MODEL=Mixtral-8x7B-Instruct-v0.1
 
+export TEMPLATE=mistral
+#export TEMPLATE=vanilla
 
 rm -rf /root/.cache/huggingface/datasets/
 
@@ -16,7 +18,7 @@ cd /workspace
 
 CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python /workspace/src/optimize_adapters.py \
     --model_name_or_path /workspace/basemodels/$MODEL \
-    --template vanilla \
+    --template mistral \
     --finetuning_type lora \
     --task medqa \
     --split test \
