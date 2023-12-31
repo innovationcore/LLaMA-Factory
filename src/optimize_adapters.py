@@ -2,6 +2,7 @@ import os
 import gc
 import os.path
 import random
+from statistics import mean
 from time import sleep
 
 import torch
@@ -27,10 +28,9 @@ def get_score(category_corrects):
 
     return score
 
+def run_inf_task(inf_config, task):
 
-def run_inf(inf_config):
-
-    print(inf_config)
+    print(inf_config, task)
     adapters_path = inf_config['adapters_path']
 
     adapters_to_merge = []
@@ -43,10 +43,11 @@ def run_inf(inf_config):
 
     merge_combination_type = inf_config['merge_combination_type']
 
-    #create evaluator and supress model load
+    # create evaluator and supress model load
     print('-Creating evaluator')
-    advanced_evaluator = AdvancedEvaluator(auto_load=False)
-    #get base model
+    advanced_evaluator = AdvancedEvaluator(auto_load=False, task=task)
+
+    # get base model
     print('-Loading base model')
     model, tokenizer = advanced_evaluator.get_model_tokenizer()
 
@@ -62,22 +63,35 @@ def run_inf(inf_config):
                                adapter_name="combined", combination_type=merge_combination_type)
     model.set_adapter("combined")
 
-    #init model with adapter weights
+    # init model with adapter weights
     print('-Loading base with adapters')
     advanced_evaluator.load_model(model, tokenizer)
 
     category_corrects, results = advanced_evaluator.eval()
-    #score = get_score(category_corrects)['Average']
+    # score = get_score(category_corrects)['Average']
     scores = get_score(category_corrects)
-    print(scores)
-    score = scores['Average']
 
     del advanced_evaluator
     # model will still be on cache until its place is taken by other objects so also execute the below lines
     gc.collect()
     torch.cuda.empty_cache()
 
-    return score
+    return scores
+
+
+def run_inf(inf_config):
+
+    task_results = dict()
+    result_scores = []
+    #tasks = ['mausmle', 'medmcqa', 'medqa']
+    tasks = ['mausmle']
+    for task in tasks:
+        task_results = run_inf_task(inf_config, task)
+        result_scores.append(task_results['Average'])
+        task_results[task] = task_results
+
+    print('task_results:', task_results)
+    return mean(result_scores)
 
 def objective(trial):
 
