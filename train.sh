@@ -68,8 +68,8 @@ echo "Running ${RUN_NAME}"
   #export MODEL=falcon-180B
   export MODEL=Mixtral-8x7B-Instruct-v0.1
 
-  export STAGE=pt
-  #export STAGE=sft
+  #export STAGE=pt
+  export STAGE=sft
 
   #export DATASET=c4_demo
   #export DATASET=wiki_demo
