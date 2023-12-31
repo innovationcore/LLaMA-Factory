@@ -79,7 +79,7 @@ def merge_and_eval_lora(inf_config, save_model=False):
 
     # create evaluator and supress model load
     print('-Creating evaluator')
-    advanced_evaluator = AdvancedEvaluator(auto_load=False)
+    advanced_evaluator = AdvancedEvaluator(auto_load=False, task='banjo')
     # get base model
     print('-Loading base model')
     model, tokenizer = advanced_evaluator.get_model_tokenizer()

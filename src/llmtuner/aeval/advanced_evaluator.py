@@ -20,7 +20,7 @@ import gc  # garbage collect library
 
 class AdvancedEvaluator:
 
-    def __init__(self, auto_load=True, args: Optional[Dict[str, Any]] = None) -> None:
+    def __init__(self, auto_load=True, task=None, args: Optional[Dict[str, Any]] = None) -> None:
         self.model_args, self.data_args, self.eval_args, self.finetuning_args = get_eval_args(args)
         self.model = None
         self.tokenizer = None
@@ -29,8 +29,11 @@ class AdvancedEvaluator:
         self.choice_inputs = None
         if auto_load:
             self.load_model()
+        print('EVAL:', self.eval_args)
+        if task is not None:
+            self.eval_args = task
+        print('EVAL:', self.eval_args)
 
-        print('EVAL:',self.eval_args)
         exit(0)
         #self.model, self.tokenizer = load_model_and_tokenizer(self.model_args, finetuning_args)
         #self.tokenizer.padding_side = "right" # avoid overflow issue in batched inference for llama2
