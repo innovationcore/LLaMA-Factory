@@ -231,8 +231,10 @@ def objective(trial):
 
     inf_config['adapter_config'] = adapter_config
 
-    #merge_combination_type = trial.suggest_categorical('combination_type', ['linear', 'cat'])
-    merge_combination_type = 'cat'
+    if sync_rank:
+        merge_combination_type = trial.suggest_categorical('combination_type', ['linear', 'cat'])
+    else:
+        merge_combination_type = 'cat'
 
     inf_config['merge_combination_type'] = merge_combination_type
 
