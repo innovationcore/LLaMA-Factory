@@ -27,40 +27,42 @@ def get_score(category_corrects):
 
     return score
 
-def main():
+def get_best_config():
 
     '''
-    {'adapters_path': '/workspace/models/adapters/',
-    'adapter_config': {'case-chat-med-train_S-sft_R-8_A-8_E-1_LR-5e-5_M-llama-2-7b-chat-hf': {'is_enabled': True, 'weight': 0.0},
-    'qa-med-train_S-sft_R-16_A-16_E-1_LR-1e-5_M-llama-2-7b-chat-hf': {'is_enabled': True, 'weight': 0.7000000000000001},
-    'medqa-textbooks-dataset_S-pt_R-32_A-32_E-1_LR-5e-5_M-llama-2-7b-chat-hf': {'is_enabled': True, 'weight': 0.7000000000000001},
-    'multi-choice-med-train_S-sft_R-256_A-256_E-1_LR-1e-5_M-llama-2-7b-chat-hf': {'is_enabled': True, 'weight': 0.2}},
-    'merge_combination_type': 'cat'} ]
-
     medmcqa: 42.9%
     case-chat-med-train_S-sft_R-128_A-128_E-1_LR-5e-5_M-llama-2-7b-chat-hf_weight", "param_value_internal": 0.3
     qa-med-train_S-sft_R-16_A-16_E-1_LR-1e-5_M-llama-2-7b-chat-hf_weight", "param_value_internal": 0.7
     medqa-textbooks-dataset_S-pt_R-8_A-8_E-1_LR-5e-5_M-llama-2-7b-chat-hf_weight", "param_value_internal": 0.8
     multi-choice-med-train_S-sft_R-128_A-128_E-1_LR-1e-5_M-llama-2-7b-chat-hf_weight", "param_value_internal": 0.2
-
     '''
 
     inf_config = dict()
     inf_config['adapters_path'] = '/workspace/models/adapters/'
     inf_config['adapter_config'] = dict()
     inf_config['adapter_config']['case-chat-med-train_S-sft_R-128_A-128_E-1_LR-5e-5_M-llama-2-7b-chat-hf'] = dict()
-    inf_config['adapter_config']['case-chat-med-train_S-sft_R-128_A-128_E-1_LR-5e-5_M-llama-2-7b-chat-hf']['is_enabled'] = True
-    inf_config['adapter_config']['case-chat-med-train_S-sft_R-128_A-128_E-1_LR-5e-5_M-llama-2-7b-chat-hf']['weight'] = 0.3
+    inf_config['adapter_config']['case-chat-med-train_S-sft_R-128_A-128_E-1_LR-5e-5_M-llama-2-7b-chat-hf'][
+        'is_enabled'] = True
+    inf_config['adapter_config']['case-chat-med-train_S-sft_R-128_A-128_E-1_LR-5e-5_M-llama-2-7b-chat-hf'][
+        'weight'] = 0.3
     inf_config['adapter_config']['qa-med-train_S-sft_R-16_A-16_E-1_LR-1e-5_M-llama-2-7b-chat-hf'] = dict()
     inf_config['adapter_config']['qa-med-train_S-sft_R-16_A-16_E-1_LR-1e-5_M-llama-2-7b-chat-hf']['is_enabled'] = True
     inf_config['adapter_config']['qa-med-train_S-sft_R-16_A-16_E-1_LR-1e-5_M-llama-2-7b-chat-hf']['weight'] = 0.7
     inf_config['adapter_config']['medqa-textbooks-dataset_S-pt_R-8_A-8_E-1_LR-5e-5_M-llama-2-7b-chat-hf'] = dict()
-    inf_config['adapter_config']['medqa-textbooks-dataset_S-pt_R-8_A-8_E-1_LR-5e-5_M-llama-2-7b-chat-hf']['is_enabled'] = True
-    inf_config['adapter_config']['medqa-textbooks-dataset_S-pt_R-8_A-8_E-1_LR-5e-5_M-llama-2-7b-chat-hf']['weight'] = 0.8
+    inf_config['adapter_config']['medqa-textbooks-dataset_S-pt_R-8_A-8_E-1_LR-5e-5_M-llama-2-7b-chat-hf'][
+        'is_enabled'] = True
+    inf_config['adapter_config']['medqa-textbooks-dataset_S-pt_R-8_A-8_E-1_LR-5e-5_M-llama-2-7b-chat-hf'][
+        'weight'] = 0.8
     inf_config['adapter_config']['multi-choice-med-train_S-sft_R-128_A-128_E-1_LR-1e-5_M-llama-2-7b-chat-hf'] = dict()
-    inf_config['adapter_config']['multi-choice-med-train_S-sft_R-128_A-128_E-1_LR-1e-5_M-llama-2-7b-chat-hf']['is_enabled'] = True
-    inf_config['adapter_config']['multi-choice-med-train_S-sft_R-128_A-128_E-1_LR-1e-5_M-llama-2-7b-chat-hf']['weight'] = 0.2
+    inf_config['adapter_config']['multi-choice-med-train_S-sft_R-128_A-128_E-1_LR-1e-5_M-llama-2-7b-chat-hf'][
+        'is_enabled'] = True
+    inf_config['adapter_config']['multi-choice-med-train_S-sft_R-128_A-128_E-1_LR-1e-5_M-llama-2-7b-chat-hf'][
+        'weight'] = 0.2
     inf_config['merge_combination_type'] = 'cat'
+
+    return inf_config
+
+def merge_and_eval_lora(inf_config, save_model=False):
 
     print(inf_config)
     adapters_path = inf_config['adapters_path']
@@ -94,6 +96,9 @@ def main():
                                adapter_name="combined", combination_type=merge_combination_type)
     model.set_adapter("combined")
 
+    if save_model:
+        model.save_pretrained('saved_lora_adapter', save_adapter=True, save_config=True)
+
     # init model with adapter weights
     print('-Loading base with adapters')
     advanced_evaluator.load_model(model, tokenizer)
@@ -101,12 +106,19 @@ def main():
     category_corrects, results = advanced_evaluator.eval()
     # score = get_score(category_corrects)['Average']
     scores = get_score(category_corrects)
-    print(scores)
 
     del advanced_evaluator
     # model will still be on cache until its place is taken by other objects so also execute the below lines
     gc.collect()
     torch.cuda.empty_cache()
+
+    return scores
+
+def main():
+
+    inf_config = get_best_config()
+    lora_score = merge_and_eval_lora(inf_config, save_model=False)
+
 
 if __name__ == "__main__":
     main()

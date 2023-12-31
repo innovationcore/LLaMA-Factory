@@ -18,7 +18,7 @@ CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python /workspace/src/merge_adapters.py \
     --model_name_or_path /workspace/basemodels/$MODEL \
     --template vanilla \
     --finetuning_type lora \
-    --task medqa \
+    --task mausmle \
     --split test \
     --lang en \
     --n_shot 5 \
