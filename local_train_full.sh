@@ -20,12 +20,12 @@ export MODEL=Mistral-7B-v0.1
 export STAGE=pt
 #export STAGE=sft
 
-#export DATASET=medqa-textbooks-dataset
+export DATASET=medqa-textbooks-dataset
 #export DATASET=uk-data-train
 #export DATASET=medal_full
 #export DATASET=case-chat-med-train
 #export DATASET=qa-med-train
-export DATASET=multi-choice-med-train
+#export DATASET=multi-choice-med-train
 
 export EPOCH=1.0
 export LR=5e-5
