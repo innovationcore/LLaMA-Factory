@@ -32,7 +32,6 @@ def get_log():
                     max_result = result['values'][0]
                     top_trial = result['trial_id']
 
-    print(top_trial, max_result)
     for result in results:
         if 'trial_id' in result:
             trail_id = result['trial_id']
@@ -40,14 +39,11 @@ def get_log():
                 if 'param_name' in result:
                     param_name = result['param_name']
                     if '_weight' in param_name:
-                        print(result)
                         adapter_name = param_name.replace('_weight','')
                         adapters_to_merge.append(adapter_name)
                         adapter_weight = round(result['param_value_internal'],1)
                         adapter_weights.append(adapter_weight)
-                    else:
-                        print(result)
-
+                    
     return adapters_to_merge, adapter_weights
 
 def merge_model(adapters_to_merge, adapter_weights):
@@ -77,7 +73,7 @@ def merge_model(adapters_to_merge, adapter_weights):
 def main():
 
     adapters_to_merge, adapter_weights = get_log()
-
+    merge_model(adapters_to_merge, adapter_weights)
 
 if __name__ == "__main__":
 
