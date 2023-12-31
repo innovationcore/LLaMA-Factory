@@ -68,8 +68,9 @@ def run_inf(inf_config):
 
     category_corrects, results = advanced_evaluator.eval()
     #score = get_score(category_corrects)['Average']
-    score = get_score(category_corrects)['MEDICINE']
-
+    scores = get_score(category_corrects)
+    print(scores)
+    score = scores['MEDICINE']
 
     del advanced_evaluator
     # model will still be on cache until its place is taken by other objects so also execute the below lines
