@@ -15,7 +15,7 @@ def get_log():
 
     results = []
 
-    with open(args.log_path, 'r') as json_file:
+    with open(args.journal_path, 'r') as json_file:
         json_list = list(json_file)
 
     for json_str in json_list:
@@ -70,7 +70,7 @@ def merge_model(adapters_to_merge, adapter_weights):
         max_shard_size="{}GB".format(2),
         safe_serialization=True
     )
-    
+
     #model = PeftModel.from_pretrained(model, adapter)
     #model = model.merge_and_unload()
 
