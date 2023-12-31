@@ -5,7 +5,7 @@ import os.path
 
 import torch
 from peft import PeftModel
-from transformers import AutoModelForCausalLM
+from transformers import AutoModelForCausalLM, AutoTokenizer
 
 
 def get_log():
@@ -49,9 +49,11 @@ def get_log():
 def merge_model(adapters_to_merge, adapter_weights):
 
     model = AutoModelForCausalLM.from_pretrained(args.basemodel, torch_dtype=torch.bfloat16, device_map='auto')
+    tokenizer = AutoTokenizer.from_pretrained(args.basemodel)
 
     peft_model_id = os.path.join(args.adapters_path, adapters_to_merge[0])
     model = PeftModel.from_pretrained(model, peft_model_id)
+
 
     for adapter in adapters_to_merge:
         print('loading adapter:', adapter)
@@ -67,6 +69,11 @@ def merge_model(adapters_to_merge, adapter_weights):
         safe_serialization=True
     )
 
+    tokenizer.save_pretrained(
+        save_directory=args.export_path,
+        safe_serialization=True
+    )
+    
     #model = PeftModel.from_pretrained(model, adapter)
     #model = model.merge_and_unload()
 
