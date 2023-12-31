@@ -67,7 +67,8 @@ def run_inf(inf_config):
     advanced_evaluator.load_model(model, tokenizer)
 
     category_corrects, results = advanced_evaluator.eval()
-    score = get_score(category_corrects)['Average']
+    #score = get_score(category_corrects)['Average']
+    score = get_score(category_corrects)['MEDICINE']
 
 
     del advanced_evaluator
@@ -79,11 +80,19 @@ def run_inf(inf_config):
 
 def objective(trial):
 
+    #Mixtral
     #{'base': {'Average': 60.54, 'MEDICINE': 56.52, 'OPHTHALMOLOGY': 59.52, 'ANATOMY': 63.01, 'PATHOLOGY': 70.54,
     # 'PHYSIOLOGY': 65.91, 'DENTAL': 51.78, 'RADIOLOGY': 66.07, 'BIOCHEMISTRY': 74.38, 'ANAESTHESIA': 73.91,
     # 'GYNAECOLOGY': 55.56, 'PHARMACOLOGY': 73.03, 'SOCIAL': 51.11, 'PEDIATRICS': 59.09, 'ENT': 73.68,
     # 'SURGERY': 62.5, 'MICROBIOLOGY': 61.64, 'FORENSIC': 69.77, 'PSYCHIATRY': 77.78, 'SKIN': 60.0,
     # 'ORTHOPAEDICS': 71.43, 'UNKNOWN': 100.0}}
+
+    #Llama-7b-chat
+    #{'base': {'Average': 41.93, 'MEDICINE': 33.15, 'OPHTHALMOLOGY': 45.24, 'ANATOMY': 45.21, 'PATHOLOGY': 41.09,
+    # 'PHYSIOLOGY': 43.18, 'DENTAL': 39.57, 'RADIOLOGY': 50.0, 'BIOCHEMISTRY': 44.63, 'ANAESTHESIA': 39.13,
+    # 'GYNAECOLOGY': 35.29, 'PHARMACOLOGY': 44.94, 'SOCIAL': 44.44, 'PEDIATRICS': 48.48, 'ENT': 50.0,
+    # 'SURGERY': 42.74, 'MICROBIOLOGY': 49.32, 'FORENSIC': 51.16, 'PSYCHIATRY': 55.56, 'SKIN': 70.0,
+    # 'ORTHOPAEDICS': 28.57, 'UNKNOWN': 100.0}}
 
     disable_adapters = False
 
