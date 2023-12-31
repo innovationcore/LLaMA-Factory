@@ -40,12 +40,12 @@ export TEMPLATE=mistral
 #export MODEL=Mixtral-8x7B-Instruct-v0.1
 export MODEL=Mistral-7B-v0.1
 
-export STAGE=pt
-#export STAGE=sft
+#export STAGE=pt
+export STAGE=sft
 
-export DATASET=medqa-textbooks-dataset
+#export DATASET=medqa-textbooks-dataset
 #export DATASET=medal_full
-#export DATASET=case-chat-med-train
+export DATASET=case-chat-med-train
 #export DATASET=qa-med-train
 #export DATASET=multi-choice-med-train
 
