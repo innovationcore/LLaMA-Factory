@@ -51,16 +51,15 @@ def main():
     inf_config['adapter_config']['case-chat-med-train_S-sft_R-128_A-128_E-1_LR-5e-5_M-llama-2-7b-chat-hf'] = dict()
     inf_config['adapter_config']['case-chat-med-train_S-sft_R-128_A-128_E-1_LR-5e-5_M-llama-2-7b-chat-hf']['is_enabled'] = True
     inf_config['adapter_config']['case-chat-med-train_S-sft_R-128_A-128_E-1_LR-5e-5_M-llama-2-7b-chat-hf']['weight'] = 0.3
-    inf_config['adapter_config'][''] = dict()
-    inf_config['adapter_config']['']['is_enabled'] = True
-    inf_config['adapter_config']['']['weight'] = 0.3
-    inf_config['adapter_config'][''] = dict()
-    inf_config['adapter_config']['']['is_enabled'] = True
-    inf_config['adapter_config']['']['weight'] = 0.3
-    inf_config['adapter_config'][''] = dict()
-    inf_config['adapter_config']['']['is_enabled'] = True
-    inf_config['adapter_config']['']['weight'] = 0.3
-
+    inf_config['adapter_config']['qa-med-train_S-sft_R-16_A-16_E-1_LR-1e-5_M-llama-2-7b-chat-hf'] = dict()
+    inf_config['adapter_config']['qa-med-train_S-sft_R-16_A-16_E-1_LR-1e-5_M-llama-2-7b-chat-hf']['is_enabled'] = True
+    inf_config['adapter_config']['qa-med-train_S-sft_R-16_A-16_E-1_LR-1e-5_M-llama-2-7b-chat-hf']['weight'] = 0.7
+    inf_config['adapter_config']['medqa-textbooks-dataset_S-pt_R-8_A-8_E-1_LR-5e-5_M-llama-2-7b-chat-hf'] = dict()
+    inf_config['adapter_config']['medqa-textbooks-dataset_S-pt_R-8_A-8_E-1_LR-5e-5_M-llama-2-7b-chat-hf']['is_enabled'] = True
+    inf_config['adapter_config']['medqa-textbooks-dataset_S-pt_R-8_A-8_E-1_LR-5e-5_M-llama-2-7b-chat-hf']['weight'] = 0.8
+    inf_config['adapter_config']['multi-choice-med-train_S-sft_R-128_A-128_E-1_LR-1e-5_M-llama-2-7b-chat-hf'] = dict()
+    inf_config['adapter_config']['multi-choice-med-train_S-sft_R-128_A-128_E-1_LR-1e-5_M-llama-2-7b-chat-hf']['is_enabled'] = True
+    inf_config['adapter_config']['multi-choice-med-train_S-sft_R-128_A-128_E-1_LR-1e-5_M-llama-2-7b-chat-hf']['weight'] = 0.2
     inf_config['merge_combination_type'] = 'cat'
 
     print(inf_config)
@@ -103,15 +102,11 @@ def main():
     # score = get_score(category_corrects)['Average']
     scores = get_score(category_corrects)
     print(scores)
-    score = scores['Average']
 
     del advanced_evaluator
     # model will still be on cache until its place is taken by other objects so also execute the below lines
     gc.collect()
     torch.cuda.empty_cache()
-
-    return score
-
 
 if __name__ == "__main__":
     main()
