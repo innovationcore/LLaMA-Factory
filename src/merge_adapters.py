@@ -85,8 +85,10 @@ def run_inf(inf_config):
 def main():
 
     inf_config = get_best_config()
+    base_score = run_inf(None)
     lora_score = run_inf(inf_config)
-    print(lora_score)
+    print('base score:', base_score)
+    print('lora_score:',lora_score)
 
 if __name__ == "__main__":
     main()

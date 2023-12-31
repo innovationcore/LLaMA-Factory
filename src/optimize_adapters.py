@@ -30,41 +30,49 @@ def get_score(category_corrects):
 
 def run_inf_task(inf_config, task):
 
-    print(inf_config, task)
-    adapters_path = inf_config['adapters_path']
+    if inf_config is not None:
+        print(inf_config, task)
+        adapters_path = inf_config['adapters_path']
 
-    adapters_to_merge = []
-    adapter_weights = []
+        adapters_to_merge = []
+        adapter_weights = []
 
-    for adapter, adapter_config in inf_config['adapter_config'].items():
-        if adapter_config['is_enabled']:
-            adapters_to_merge.append(adapter)
-            adapter_weights.append(adapter_config['weight'])
+        for adapter, adapter_config in inf_config['adapter_config'].items():
+            if adapter_config['is_enabled']:
+                adapters_to_merge.append(adapter)
+                adapter_weights.append(adapter_config['weight'])
 
-    merge_combination_type = inf_config['merge_combination_type']
+        merge_combination_type = inf_config['merge_combination_type']
 
-    # create evaluator and supress model load
-    print('-Creating evaluator')
-    advanced_evaluator = AdvancedEvaluator(auto_load=False, task=task)
+        # create evaluator and supress model load
+        print('-Creating evaluator')
+        advanced_evaluator = AdvancedEvaluator(auto_load=False, task=task)
+        # get base model
+        print('-Loading base model')
+        model, tokenizer = advanced_evaluator.get_model_tokenizer()
 
-    # get base model
-    print('-Loading base model')
-    model, tokenizer = advanced_evaluator.get_model_tokenizer()
+        print('-Adding adapters')
+        peft_model_id = os.path.join(adapters_path, adapters_to_merge[0])
+        model = PeftModel.from_pretrained(model, peft_model_id)
 
-    print('-Adding adapters')
-    peft_model_id = os.path.join(adapters_path, adapters_to_merge[0])
-    model = PeftModel.from_pretrained(model, peft_model_id)
+        for adapter in adapters_to_merge:
+            print('loading adapter:', adapter)
+            model.load_adapter(os.path.join(adapters_path, adapter), adapter_name=adapter)
 
-    for adapter in adapters_to_merge:
-        print('loading adapter:', adapter)
-        model.load_adapter(os.path.join(adapters_path, adapter), adapter_name=adapter)
+        model.add_weighted_adapter(adapters=adapters_to_merge, weights=adapter_weights,
+                                   adapter_name="combined", combination_type=merge_combination_type)
+        model.set_adapter("combined")
 
-    model.add_weighted_adapter(adapters=adapters_to_merge, weights=adapter_weights,
-                               adapter_name="combined", combination_type=merge_combination_type)
-    model.set_adapter("combined")
+    else:
+        # create evaluator and supress model load
+        print('-Creating evaluator')
+        advanced_evaluator = AdvancedEvaluator(auto_load=False, task=task)
+        # get base model
+        print('-Loading base model')
+        model, tokenizer = advanced_evaluator.get_model_tokenizer()
 
     # init model with adapter weights
-    print('-Loading base with adapters')
+    print('-Loading base with any modifications')
     advanced_evaluator.load_model(model, tokenizer)
 
     category_corrects, results = advanced_evaluator.eval()
