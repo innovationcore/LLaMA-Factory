@@ -54,8 +54,6 @@ echo "OUTPUT_MODEL="$OUTPUT_MODEL
 
 cd /workspace
 
-#--adapter_name_or_path $ADAPTER \
-
 accelerate launch --num_processes=$(( 8 * $WORLD_SIZE )) --num_machines $WORLD_SIZE  --machine_rank $RANK --main_process_ip $MASTER_ADDR --main_process_port $MASTER_PORT --config_file=/workspace/config/accelerate_config_full.yaml \
     /workspace/src/train_bash.py \
     --stage $STAGE \
