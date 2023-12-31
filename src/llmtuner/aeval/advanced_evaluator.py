@@ -30,8 +30,8 @@ class AdvancedEvaluator:
         if auto_load:
             self.load_model()
         if task is not None:
-            self.eval_args = task
-        
+            self.eval_args.task = task
+
         #self.model, self.tokenizer = load_model_and_tokenizer(self.model_args, finetuning_args)
         #self.tokenizer.padding_side = "right" # avoid overflow issue in batched inference for llama2
         #self.model = dispatch_model(self.model)
