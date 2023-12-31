@@ -45,8 +45,8 @@ export STAGE=sft
 
 #export DATASET=medqa-textbooks-dataset
 #export DATASET=medal_full
-export DATASET=case-chat-med-train
-#export DATASET=qa-med-train
+#export DATASET=case-chat-med-train
+export DATASET=qa-med-train
 #export DATASET=multi-choice-med-train
 
 export OUTPUT_MODEL=$DATASET'_S-'$STAGE'_E-'${EPOCH%.*}'_LR-'$LR'_M-'$MODEL'-full'
