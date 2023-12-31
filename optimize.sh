@@ -4,7 +4,7 @@
 #--template vanilla \
 #--template mistral \
 
-export MODEL=llama-2-7b-chat-hf
+#export MODEL=llama-2-7b-chat-hf
 #export MODEL=Mixtral-8x7B-Instruct-v0.1
 
 #export TEMPLATE=mistral

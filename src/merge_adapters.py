@@ -74,6 +74,8 @@ def merge_model(adapters_to_merge, adapter_weights):
         safe_serialization=True
     )
 
+    if args.push_to_hub:
+        model
     #model = PeftModel.from_pretrained(model, adapter)
     #model = model.merge_and_unload()
 
@@ -92,6 +94,7 @@ if __name__ == "__main__":
     parser.add_argument('--combination_type', type=str, default='cat', help='name of project')
     parser.add_argument('--journal_path', type=str, default='../optuna-journal.log', help='name of project')
     parser.add_argument('--export_path', type=str, default='merged_model', help='name of project')
+    parser.add_argument('--push_to_hub', action=argparse.BooleanOptionalAction)
 
     args = parser.parse_args()
 
