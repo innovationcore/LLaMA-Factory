@@ -2,6 +2,7 @@ import os
 import gc
 import os.path
 import random
+from statistics import mean
 from time import sleep
 
 import torch
@@ -10,6 +11,9 @@ from llmtuner import AdvancedEvaluator
 import numpy as np
 import optuna
 from optuna.storages import JournalStorage, JournalFileStorage
+
+from optimize_adapters import run_inf_task
+
 
 def parse_adapters(adapter_list):
     print(adapter_list)
@@ -62,62 +66,26 @@ def get_best_config():
 
     return inf_config
 
-def merge_and_eval_lora(inf_config, save_model=False):
 
-    print(inf_config)
-    adapters_path = inf_config['adapters_path']
+def run_inf(inf_config):
 
-    adapters_to_merge = []
-    adapter_weights = []
+    task_results = dict()
+    result_scores = []
+    tasks = ['mausmle', 'medmcqa', 'medqa']
+    #tasks = ['mausmle']
+    for task in tasks:
+        task_results = run_inf_task(inf_config, task)
+        result_scores.append(task_results['Average'])
+        task_results[task] = task_results
 
-    for adapter, adapter_config in inf_config['adapter_config'].items():
-        if adapter_config['is_enabled']:
-            adapters_to_merge.append(adapter)
-            adapter_weights.append(adapter_config['weight'])
+    print('task_results:', task_results)
+    return mean(result_scores)
 
-    merge_combination_type = inf_config['merge_combination_type']
-
-    # create evaluator and supress model load
-    print('-Creating evaluator')
-    advanced_evaluator = AdvancedEvaluator(auto_load=False, task='banjo')
-    # get base model
-    print('-Loading base model')
-    model, tokenizer = advanced_evaluator.get_model_tokenizer()
-
-    print('-Adding adapters')
-    peft_model_id = os.path.join(adapters_path, adapters_to_merge[0])
-    model = PeftModel.from_pretrained(model, peft_model_id)
-
-    for adapter in adapters_to_merge:
-        print('loading adapter:', adapter)
-        model.load_adapter(os.path.join(adapters_path, adapter), adapter_name=adapter)
-
-    model.add_weighted_adapter(adapters=adapters_to_merge, weights=adapter_weights,
-                               adapter_name="combined", combination_type=merge_combination_type)
-    model.set_adapter("combined")
-
-    if save_model:
-        model.save_pretrained('saved_lora_adapter', save_adapter=True, save_config=True)
-
-    # init model with adapter weights
-    print('-Loading base with adapters')
-    advanced_evaluator.load_model(model, tokenizer)
-
-    category_corrects, results = advanced_evaluator.eval()
-    # score = get_score(category_corrects)['Average']
-    scores = get_score(category_corrects)
-
-    del advanced_evaluator
-    # model will still be on cache until its place is taken by other objects so also execute the below lines
-    gc.collect()
-    torch.cuda.empty_cache()
-
-    return scores
 
 def main():
 
     inf_config = get_best_config()
-    lora_score = merge_and_eval_lora(inf_config, save_model=False)
+    lora_score = run_inf(inf_config)
     print(lora_score)
 
 if __name__ == "__main__":

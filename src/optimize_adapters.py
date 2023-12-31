@@ -83,8 +83,8 @@ def run_inf(inf_config):
 
     task_results = dict()
     result_scores = []
-    #tasks = ['mausmle', 'medmcqa', 'medqa']
-    tasks = ['mausmle']
+    tasks = ['mausmle', 'medmcqa', 'medqa']
+    #tasks = ['mausmle']
     for task in tasks:
         task_results = run_inf_task(inf_config, task)
         result_scores.append(task_results['Average'])
