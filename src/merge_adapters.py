@@ -118,7 +118,7 @@ def main():
 
     inf_config = get_best_config()
     lora_score = merge_and_eval_lora(inf_config, save_model=False)
-
+    print(lora_score)
 
 if __name__ == "__main__":
     main()
