@@ -125,7 +125,8 @@ def objective(trial):
     adapters_path = '/workspace/models/adapters/'
     inf_config['adapters_path'] = adapters_path
 
-    model = 'llama-2-7b-chat-hf'
+    #model = 'llama-2-7b-chat-hf'
+    model == 'mixtral'
 
     #multi-choice-med-train_S-sft_R-128_A-128_E-1_LR-1e-5_M-llamav2-7b
     #case-chat-med-train_S-sft_R-128_A-128_E-1_LR-5e-5_M-mixtral
