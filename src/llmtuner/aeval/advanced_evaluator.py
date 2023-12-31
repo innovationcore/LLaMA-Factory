@@ -29,12 +29,9 @@ class AdvancedEvaluator:
         self.choice_inputs = None
         if auto_load:
             self.load_model()
-        print('EVAL:', self.eval_args)
         if task is not None:
             self.eval_args = task
-        print('EVAL:', self.eval_args)
-
-        exit(0)
+        
         #self.model, self.tokenizer = load_model_and_tokenizer(self.model_args, finetuning_args)
         #self.tokenizer.padding_side = "right" # avoid overflow issue in batched inference for llama2
         #self.model = dispatch_model(self.model)
