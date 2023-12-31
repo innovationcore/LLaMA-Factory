@@ -182,7 +182,7 @@ def objective(trial):
     adapter_config = dict()
 
     need_adapter = True
-    sync_rank = True
+    sync_rank = False
 
     rank = None
 
