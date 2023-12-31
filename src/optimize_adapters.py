@@ -95,6 +95,7 @@ def objective(trial):
     # 'SURGERY': 42.74, 'MICROBIOLOGY': 49.32, 'FORENSIC': 51.16, 'PSYCHIATRY': 55.56, 'SKIN': 70.0,
     # 'ORTHOPAEDICS': 28.57, 'UNKNOWN': 100.0}}
 
+    
     disable_adapters = False
 
     inf_config = dict()
