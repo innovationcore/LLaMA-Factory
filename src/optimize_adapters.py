@@ -70,7 +70,7 @@ def run_inf(inf_config):
     #score = get_score(category_corrects)['Average']
     scores = get_score(category_corrects)
     print(scores)
-    score = scores['MEDICINE']
+    score = scores['Average']
 
     del advanced_evaluator
     # model will still be on cache until its place is taken by other objects so also execute the below lines
@@ -182,12 +182,19 @@ def objective(trial):
     adapter_config = dict()
 
     need_adapter = True
+    sync_rank = True
+
+    rank = None
 
     for adapter_name, adapter_info in candiate_adapters.items():
 
         #set model, rank, epoch, lr, and state based on base adapter name
+        if sync_rank:
+            if rank is None:
+                rank = trial.suggest_categorical('group_rank', adapter_info['rank'])
+        else:
+            rank = trial.suggest_categorical(adapter_name + '_rank', adapter_info['rank'])
         model = trial.suggest_categorical(adapter_name + '_model', adapter_info['model'])
-        rank = trial.suggest_categorical(adapter_name + '_rank', adapter_info['rank'])
         epoch = trial.suggest_categorical(adapter_name + '_epoch', adapter_info['epoch'])
         lr = trial.suggest_categorical(adapter_name + '_lr', adapter_info['lr'])
         stage = trial.suggest_categorical(adapter_name + '_stage', adapter_info['stage'])

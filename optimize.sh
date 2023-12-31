@@ -18,11 +18,11 @@ CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python /workspace/src/optimize_adapters.py 
     --model_name_or_path /workspace/basemodels/$MODEL \
     --template vanilla \
     --finetuning_type lora \
-    --task medqa \
+    --task medmcqa \
     --split test \
     --lang en \
     --n_shot 5 \
-    --batch_size 16
+    --batch_size 32
 
 end=$(date +%s)
 echo "Elapsed Time: $(($end-$start)) seconds"
