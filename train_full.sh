@@ -30,8 +30,8 @@ echo "GRADIENT_ACCUMULATION_STEPS="$GRADIENT_ACCUMULATION_STEPS
 export EPOCH=1.0
 
 #export LR=1e-4
-#export LR=5e-5
-export LR=1e-5
+export LR=5e-5
+#export LR=1e-5
 #export LR=1e-6
 
 #export TEMPLATE=default
@@ -40,14 +40,14 @@ export TEMPLATE=mistral
 #export MODEL=Mixtral-8x7B-Instruct-v0.1
 export MODEL=Mistral-7B-Instruct-v0.1
 
-#export STAGE=pt
-export STAGE=sft
+export STAGE=pt
+#export STAGE=sft
 
-#export DATASET=medqa-textbooks-dataset
+export DATASET=medqa-textbooks-dataset
 #export DATASET=medal_full
 #export DATASET=case-chat-med-train
 #export DATASET=qa-med-train
-export DATASET=multi-choice-med-train
+#export DATASET=multi-choice-med-train
 
 export OUTPUT_MODEL=$DATASET'_S-'$STAGE'_E-'${EPOCH%.*}'_LR-'$LR'_M-'$MODEL'-full'
 echo "OUTPUT_MODEL="$OUTPUT_MODEL
