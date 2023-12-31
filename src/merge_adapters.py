@@ -73,7 +73,7 @@ def merge_model(adapters_to_merge, adapter_weights):
         save_directory=args.export_path,
         safe_serialization=True
     )
-    
+
     #model = PeftModel.from_pretrained(model, adapter)
     #model = model.merge_and_unload()
 
