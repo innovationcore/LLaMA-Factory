@@ -6,7 +6,7 @@ from statistics import mean
 from time import sleep
 
 import torch
-from peft import PeftModel, PeftConfig
+from peft import PeftModel
 from llmtuner import AdvancedEvaluator
 import numpy as np
 import optuna
