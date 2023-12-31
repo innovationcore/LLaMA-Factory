@@ -238,6 +238,8 @@ def objective(trial):
 
     inf_config['merge_combination_type'] = merge_combination_type
 
+    print('inf_config: [', inf_config, ']')
+
     return run_inf(inf_config)
 
 
