@@ -126,7 +126,8 @@ def objective(trial):
     inf_config['adapters_path'] = adapters_path
 
     #model = 'llama-2-7b-chat-hf'
-    model = 'mixtral'
+    #model = 'mixtral'
+    model = 'llama-2-7b-chat-hf-all'
 
     #multi-choice-med-train_S-sft_R-128_A-128_E-1_LR-1e-5_M-llamav2-7b
     #case-chat-med-train_S-sft_R-128_A-128_E-1_LR-5e-5_M-mixtral
@@ -192,7 +193,41 @@ def objective(trial):
         candiate_adapters['multi-choice-med-train']['rank'] = [8, 16, 32, 64, 128, 256]
         candiate_adapters['multi-choice-med-train']['stage'] = ['sft']
 
+    elif model == 'llama-2-7b-chat-hf-all':
 
+        candiate_adapters['case-chat-med-train'] = dict()
+        candiate_adapters['case-chat-med-train']['model'] = ['llama-2-7b-chat-hf']
+        candiate_adapters['case-chat-med-train']['epoch'] = [3]
+        candiate_adapters['case-chat-med-train']['lr'] = ['2e-4']
+        candiate_adapters['case-chat-med-train']['rank'] = [64]
+        candiate_adapters['case-chat-med-train']['stage'] = ['sft']
+        candiate_adapters['case-chat-med-train']['target'] = ['all']
+
+        candiate_adapters['qa-med-train'] = dict()
+        candiate_adapters['qa-med-train']['model'] = ['llama-2-7b-chat-hf']
+        candiate_adapters['qa-med-train']['epoch'] = [3]
+        candiate_adapters['qa-med-train']['lr'] = ['2e-4']
+        candiate_adapters['qa-med-train']['rank'] = [64]
+        candiate_adapters['qa-med-train']['stage'] = ['sft']
+        candiate_adapters['qa-med-train']['target'] = ['all']
+
+        candiate_adapters['medqa-textbooks-dataset'] = dict()
+        candiate_adapters['medqa-textbooks-dataset']['model'] = ['llama-2-7b-chat-hf']
+        candiate_adapters['medqa-textbooks-dataset']['epoch'] = [3]
+        candiate_adapters['medqa-textbooks-dataset']['lr'] = ['2e-4']
+        candiate_adapters['medqa-textbooks-dataset']['rank'] = [64]
+        candiate_adapters['medqa-textbooks-dataset']['stage'] = ['pt']
+        candiate_adapters['medqa-textbooks-dataset']['target'] = ['all']
+
+        candiate_adapters['multi-choice-med-train'] = dict()
+        candiate_adapters['multi-choice-med-train']['model'] = ['llama-2-7b-chat-hf']
+        candiate_adapters['multi-choice-med-train']['epoch'] = [3]
+        candiate_adapters['multi-choice-med-train']['lr'] = ['2e-4']
+        candiate_adapters['multi-choice-med-train']['rank'] = [64]
+        candiate_adapters['multi-choice-med-train']['stage'] = ['sft']
+        candiate_adapters['multi-choice-med-train']['target'] = ['all']
+
+    #multi-choice-med-train_S-sft_R-64_A-16_E-3_LR-2e-4_M-llama-2-7b-chat-hf-all
 
     '''
     lora_rank = trial.suggest_categorical('lora_rank', [8, 16, 32, 64, 128, 256])
@@ -222,8 +257,13 @@ def objective(trial):
         lr = trial.suggest_categorical(adapter_name + '_lr', adapter_info['lr'])
         stage = trial.suggest_categorical(adapter_name + '_stage', adapter_info['stage'])
 
+        if 'target' in adapter_info:
+            target = '-' + adapter_info['target']
+        else:
+            target = ''
+
         #get id of specific adapter
-        adapter_id = adapter_name + '_S-' + stage + '_R-' + str(rank) + '_A-' + str(rank) + '_E-' + str(epoch) + '_LR-' + lr + '_M-' + model
+        adapter_id = adapter_name + '_S-' + stage + '_R-' + str(rank) + '_A-' + str(rank) + '_E-' + str(epoch) + '_LR-' + lr + '_M-' + model + target
 
         #create config for specific adapter
         adapter_config[adapter_id] = dict()
