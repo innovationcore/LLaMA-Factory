@@ -4,8 +4,8 @@
 #--template vanilla \
 #--template mistral \
 
-export MODEL=llama-2-7b-chat-hf
-#export MODEL=Mixtral-8x7B-Instruct-v0.1
+#export MODEL=llama-2-7b-chat-hf
+export MODEL=Mixtral-8x7B-Instruct-v0.1
 
 #export TEMPLATE=mistral
 export TEMPLATE=vanilla
@@ -24,7 +24,7 @@ CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python /workspace/src/optimize_adapters.py 
     --split test \
     --lang en \
     --n_shot 5 \
-    --batch_size 8
+    --batch_size 64
 
 end=$(date +%s)
 echo "Elapsed Time: $(($end-$start)) seconds"

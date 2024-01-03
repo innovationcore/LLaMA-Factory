@@ -127,7 +127,8 @@ def objective(trial):
 
     #model = 'llama-2-7b-chat-hf'
     #model = 'mixtral'
-    model = 'llama-2-7b-chat-hf-all'
+    #model = 'llama-2-7b-chat-hf-all'
+    model = 'Mixtral-8x7B-Instruct-v0.1-all'
 
     #multi-choice-med-train_S-sft_R-128_A-128_E-1_LR-1e-5_M-llamav2-7b
     #case-chat-med-train_S-sft_R-128_A-128_E-1_LR-5e-5_M-mixtral
@@ -192,6 +193,40 @@ def objective(trial):
         candiate_adapters['multi-choice-med-train']['lr'] = ['1e-5']
         candiate_adapters['multi-choice-med-train']['rank'] = [8, 16, 32, 64, 128, 256]
         candiate_adapters['multi-choice-med-train']['stage'] = ['sft']
+
+    elif model == 'Mixtral-8x7B-Instruct-v0.1-all':
+
+        candiate_adapters['case-chat-med-train'] = dict()
+        candiate_adapters['case-chat-med-train']['model'] = ['Mixtral-8x7B-Instruct-v0.1']
+        candiate_adapters['case-chat-med-train']['epoch'] = [3]
+        candiate_adapters['case-chat-med-train']['lr'] = ['2e-4']
+        candiate_adapters['case-chat-med-train']['rank'] = [64]
+        candiate_adapters['case-chat-med-train']['stage'] = ['sft']
+        candiate_adapters['case-chat-med-train']['target'] = ['all']
+
+        candiate_adapters['qa-med-train'] = dict()
+        candiate_adapters['qa-med-train']['model'] = ['Mixtral-8x7B-Instruct-v0.1']
+        candiate_adapters['qa-med-train']['epoch'] = [3]
+        candiate_adapters['qa-med-train']['lr'] = ['2e-4']
+        candiate_adapters['qa-med-train']['rank'] = [64]
+        candiate_adapters['qa-med-train']['stage'] = ['sft']
+        candiate_adapters['qa-med-train']['target'] = ['all']
+
+        candiate_adapters['medqa-textbooks-dataset'] = dict()
+        candiate_adapters['medqa-textbooks-dataset']['model'] = ['Mixtral-8x7B-Instruct-v0.1']
+        candiate_adapters['medqa-textbooks-dataset']['epoch'] = [3]
+        candiate_adapters['medqa-textbooks-dataset']['lr'] = ['2e-4']
+        candiate_adapters['medqa-textbooks-dataset']['rank'] = [64]
+        candiate_adapters['medqa-textbooks-dataset']['stage'] = ['pt']
+        candiate_adapters['medqa-textbooks-dataset']['target'] = ['all']
+
+        candiate_adapters['multi-choice-med-train'] = dict()
+        candiate_adapters['multi-choice-med-train']['model'] = ['Mixtral-8x7B-Instruct-v0.1']
+        candiate_adapters['multi-choice-med-train']['epoch'] = [3]
+        candiate_adapters['multi-choice-med-train']['lr'] = ['2e-4']
+        candiate_adapters['multi-choice-med-train']['rank'] = [64]
+        candiate_adapters['multi-choice-med-train']['stage'] = ['sft']
+        candiate_adapters['multi-choice-med-train']['target'] = ['all']
 
     elif model == 'llama-2-7b-chat-hf-all':
 
