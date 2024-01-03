@@ -37,10 +37,10 @@ echo "Running ${RUN_NAME}"
   echo "LORA_RANK="$LORA_ALPHA
   echo "LORA_TARGET="$LORA_TARGET
 
-  export BATCH_SIZE=2
+  export BATCH_SIZE=32
   echo "BATCH_SIZE="$BATCH_SIZE
 
-  export GRADIENT_ACCUMULATION_STEPS=1
+  export GRADIENT_ACCUMULATION_STEPS=2
   echo "GRADIENT_ACCUMULATION_STEPS="$GRADIENT_ACCUMULATION_STEPS
 
   export EPOCH=3.0
@@ -84,7 +84,7 @@ echo "Running ${RUN_NAME}"
 
   #--adapter_name_or_path $ADAPTER \
 
-  accelerate launch --num_processes=$(( 8 * $WORLD_SIZE )) --num_machines $WORLD_SIZE  --machine_rank $RANK --main_process_ip $MASTER_ADDR --main_process_port $MASTER_PORT --config_file=/workspace/config/accelerate_config_full.yaml \
+  accelerate launch --num_processes=$(( 8 * $WORLD_SIZE )) --num_machines $WORLD_SIZE  --machine_rank $RANK --main_process_ip $MASTER_ADDR --main_process_port $MASTER_PORT --config_file=/workspace/config/accelerate_config.yaml \
       /workspace/src/train_bash.py \
       --stage $STAGE \
       --model_name_or_path /workspace/basemodels/$MODEL \
