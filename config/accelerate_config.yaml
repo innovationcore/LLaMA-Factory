@@ -1,6 +1,6 @@
 deepspeed_config:
   deepspeed_multinode_launcher: pdsh #standard #pdsh
-  deepspeed_config_file: /workspace/config/deep_speed_zero3.json
+  deepspeed_config_file: /workspace/config/deep_speed_zero3_gpu.json
   zero3_init_flag: true
 distributed_type: DEEPSPEED
 downcast_bf16: 'no'
