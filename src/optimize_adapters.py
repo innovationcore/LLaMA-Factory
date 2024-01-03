@@ -258,7 +258,7 @@ def objective(trial):
         stage = trial.suggest_categorical(adapter_name + '_stage', adapter_info['stage'])
 
         if 'target' in adapter_info:
-            target = '-' + adapter_info['target']
+            target = '-' + adapter_info['target'][0]
         else:
             target = ''
 
