@@ -263,7 +263,7 @@ def objective(trial):
             target = ''
 
         #get id of specific adapter
-        adapter_id = adapter_name + '_S-' + stage + '_R-' + str(rank) + '_A-' + str(rank) + '_E-' + str(epoch) + '_LR-' + lr + '_M-' + model + target
+        adapter_id = adapter_name + '_S-' + stage + '_R-' + str(rank) + '_A-' + '16' + '_E-' + str(epoch) + '_LR-' + lr + '_M-' + model + target
 
         #create config for specific adapter
         adapter_config[adapter_id] = dict()
