@@ -37,7 +37,7 @@ echo "Running ${RUN_NAME}"
   echo "LORA_RANK="$LORA_ALPHA
   echo "LORA_TARGET="$LORA_TARGET
 
-  export BATCH_SIZE=48
+  export BATCH_SIZE=64
   echo "BATCH_SIZE="$BATCH_SIZE
 
   export GRADIENT_ACCUMULATION_STEPS=2
