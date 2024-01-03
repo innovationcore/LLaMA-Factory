@@ -314,7 +314,7 @@ def objective(trial):
             need_adapter = False
             #set weights
             adapter_weight = adapter_id + '_weight'
-            adapter_config[adapter_id]['weight'] = trial.suggest_float(adapter_weight, 0.0, 1, step=0.1)
+            adapter_config[adapter_id]['weight'] = trial.suggest_float(adapter_weight, 0.0, 1.2, step=0.05)
 
 
     if need_adapter:
@@ -356,7 +356,7 @@ def main():
         storage = JournalStorage(JournalFileStorage(study_journal))
         study = optuna.create_study(direction='maximize', study_name=study_name, storage=storage)
 
-    study.optimize(objective, n_trials=100)
+    study.optimize(objective, n_trials=250)
     trial = study.best_trial
 
     print('Accuracy: {}'.format(trial.value))
