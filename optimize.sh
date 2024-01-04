@@ -7,8 +7,8 @@
 #export MODEL=llama-2-7b-chat-hf
 export MODEL=Mixtral-8x7B-Instruct-v0.1
 
-#export TEMPLATE=mistral
-export TEMPLATE=vanilla
+export TEMPLATE=mistral
+#export TEMPLATE=vanilla
 
 rm -rf /root/.cache/huggingface/datasets/
 
