@@ -24,7 +24,7 @@ CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python /workspace/src/optimize_adapters.py 
     --split test \
     --lang en \
     --n_shot 5 \
-    --batch_size 256
+    --batch_size 64
 
 end=$(date +%s)
 echo "Elapsed Time: $(($end-$start)) seconds"
