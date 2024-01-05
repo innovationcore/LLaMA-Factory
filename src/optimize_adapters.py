@@ -271,7 +271,6 @@ def objective(trial):
         candiate_adapters['case-chat-med-train']['lr'] = ['2e-4']
         candiate_adapters['case-chat-med-train']['rank'] = [64]
         candiate_adapters['case-chat-med-train']['stage'] = ['sft']
-        candiate_adapters['case-chat-med-train']['target'] = ['all']
 
         candiate_adapters['qa-med-train'] = dict()
         candiate_adapters['qa-med-train']['model'] = ['Mistral']
@@ -279,7 +278,6 @@ def objective(trial):
         candiate_adapters['qa-med-train']['lr'] = ['2e-4']
         candiate_adapters['qa-med-train']['rank'] = [64]
         candiate_adapters['qa-med-train']['stage'] = ['sft']
-        candiate_adapters['qa-med-train']['target'] = ['all']
 
         candiate_adapters['medqa-textbooks-dataset'] = dict()
         candiate_adapters['medqa-textbooks-dataset']['model'] = ['Mistral']
@@ -287,7 +285,6 @@ def objective(trial):
         candiate_adapters['medqa-textbooks-dataset']['lr'] = ['2e-4']
         candiate_adapters['medqa-textbooks-dataset']['rank'] = [64]
         candiate_adapters['medqa-textbooks-dataset']['stage'] = ['pt']
-        candiate_adapters['medqa-textbooks-dataset']['target'] = ['all']
 
         candiate_adapters['multi-choice-med-train'] = dict()
         candiate_adapters['multi-choice-med-train']['model'] = ['Mistral']
@@ -295,8 +292,7 @@ def objective(trial):
         candiate_adapters['multi-choice-med-train']['lr'] = ['2e-4']
         candiate_adapters['multi-choice-med-train']['rank'] = [64]
         candiate_adapters['multi-choice-med-train']['stage'] = ['sft']
-        candiate_adapters['multi-choice-med-train']['target'] = ['all']
-
+        
     #multi-choice-med-train_S-sft_R-64_A-16_E-3_LR-2e-4_M-llama-2-7b-chat-hf-all
 
     '''
