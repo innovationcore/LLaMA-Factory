@@ -38,15 +38,15 @@ echo "Running ${RUN_NAME}"
   echo "LORA_TARGET="$LORA_TARGET
 
   #export BATCH_SIZE=48
-  export BATCH_SIZE=1
+  export BATCH_SIZE=4
   echo "BATCH_SIZE="$BATCH_SIZE
 
+  #export GRADIENT_ACCUMULATION_STEPS=1
   export GRADIENT_ACCUMULATION_STEPS=1
-  #export GRADIENT_ACCUMULATION_STEPS=2
   echo "GRADIENT_ACCUMULATION_STEPS="$GRADIENT_ACCUMULATION_STEPS
 
-  export EPOCH=3.0
-
+  #export EPOCH=3.0
+  export EPOCH=1.0
   #export LR=1e-4
   #export LR=5e-5
   #export LR=1e-5
