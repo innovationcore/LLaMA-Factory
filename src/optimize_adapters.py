@@ -292,7 +292,7 @@ def objective(trial):
         candiate_adapters['multi-choice-med-train']['lr'] = ['2e-4']
         candiate_adapters['multi-choice-med-train']['rank'] = [64]
         candiate_adapters['multi-choice-med-train']['stage'] = ['sft']
-        
+
     #multi-choice-med-train_S-sft_R-64_A-16_E-3_LR-2e-4_M-llama-2-7b-chat-hf-all
 
     '''
