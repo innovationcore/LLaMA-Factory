@@ -64,7 +64,7 @@ echo "Running ${RUN_NAME}"
   export MODEL=llama-2-3x70b-chat-hf
 
   #export STAGE=pt
-  #export STAGE=sft
+  export STAGE=sft
 
   #export DATASET=c4_demo
   #export DATASET=wiki_demo
