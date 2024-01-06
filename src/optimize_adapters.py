@@ -346,7 +346,7 @@ def objective(trial):
             need_adapter = False
             #set weights
             adapter_weight = adapter_id + '_weight'
-            adapter_config[adapter_id]['weight'] = trial.suggest_float(adapter_weight, 0.0, 1.2, step=0.05)
+            adapter_config[adapter_id]['weight'] = trial.suggest_float(adapter_weight, 0.0, 1.0, step=0.05)
 
 
     if need_adapter:
