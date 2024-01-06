@@ -27,7 +27,7 @@ CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python src/export_model.py \
     --template default \
     --finetuning_type lora \
     --export_dir $SAVE_PATH \
-    --export_size 2 \
+    --export_size 10 \
     --export_legacy_format False
 
 end=$(date +%s)
