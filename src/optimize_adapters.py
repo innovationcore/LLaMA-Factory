@@ -263,6 +263,39 @@ def objective(trial):
         candiate_adapters['multi-choice-med-train']['stage'] = ['sft']
         candiate_adapters['multi-choice-med-train']['target'] = ['all']
 
+    elif model == 'llama-2-3x70b-chat-hf-all':
+
+        candiate_adapters['case-chat-med-train'] = dict()
+        candiate_adapters['case-chat-med-train']['model'] = ['llama-2-3x70b-chat-hf']
+        candiate_adapters['case-chat-med-train']['epoch'] = [1]
+        candiate_adapters['case-chat-med-train']['lr'] = ['2e-4']
+        candiate_adapters['case-chat-med-train']['rank'] = [64]
+        candiate_adapters['case-chat-med-train']['stage'] = ['sft']
+        candiate_adapters['case-chat-med-train']['target'] = ['all']
+
+        candiate_adapters['qa-med-train'] = dict()
+        candiate_adapters['qa-med-train']['model'] = ['llama-2-3x70b-chat-hf']
+        candiate_adapters['qa-med-train']['epoch'] = [1]
+        candiate_adapters['qa-med-train']['lr'] = ['2e-4']
+        candiate_adapters['qa-med-train']['rank'] = [64]
+        candiate_adapters['qa-med-train']['stage'] = ['sft']
+        candiate_adapters['qa-med-train']['target'] = ['all']
+
+        candiate_adapters['medqa-textbooks-dataset'] = dict()
+        candiate_adapters['medqa-textbooks-dataset']['model'] = ['llama-2-3x70b-chat-hf']
+        candiate_adapters['medqa-textbooks-dataset']['epoch'] = [1]
+        candiate_adapters['medqa-textbooks-dataset']['lr'] = ['2e-4']
+        candiate_adapters['medqa-textbooks-dataset']['rank'] = [64]
+        candiate_adapters['medqa-textbooks-dataset']['stage'] = ['pt']
+        candiate_adapters['medqa-textbooks-dataset']['target'] = ['all']
+
+        candiate_adapters['multi-choice-med-train'] = dict()
+        candiate_adapters['multi-choice-med-train']['model'] = ['llama-2-3x70b-chat-hf']
+        candiate_adapters['multi-choice-med-train']['epoch'] = [1]
+        candiate_adapters['multi-choice-med-train']['lr'] = ['2e-4']
+        candiate_adapters['multi-choice-med-train']['rank'] = [64]
+        candiate_adapters['multi-choice-med-train']['stage'] = ['sft']
+        candiate_adapters['multi-choice-med-train']['target'] = ['all']
 
     elif model == 'MELT-Mistral-3x7B-Instruct-v0.1-all':
 
