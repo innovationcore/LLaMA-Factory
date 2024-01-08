@@ -67,7 +67,7 @@ echo "Running ${RUN_NAME}"
   export MODEL=TinyLlama-1.1B-Chat-v1.0
 
   #export STAGE=pt
-  #export STAGE=sft
+  export STAGE=sft
 
   #export DATASET=c4_demo
   #export DATASET=wiki_demo
