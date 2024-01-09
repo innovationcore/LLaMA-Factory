@@ -24,14 +24,15 @@ export LORA_ALPHA=16
 
 export LORA_TARGET=all
 
-export BATCH_SIZE=64
+export BATCH_SIZE=48
 export GRADIENT_ACCUMULATION_STEPS=2
 export EPOCH=3.0
 export LR=2e-4
 
 
 export TEMPLATE=default
-export MODEL=TinyLlama-1.1B-Chat-v1.0
+#export MODEL=TinyLlama-1.1B-Chat-v1.0
+eport MODEL=TinyLlama-16x1.1B-Chat-v1.0
 
 export STAGE=pt
 #export STAGE=sft
