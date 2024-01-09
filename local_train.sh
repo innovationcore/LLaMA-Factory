@@ -33,10 +33,10 @@ export TEMPLATE=default
 #export MODEL=TinyLlama-1.1B-Chat-v1.0
 export MODEL=TinyLlama-16x1.1B-Chat-v1.0
 
-#export STAGE=pt
-export STAGE=sft
+export STAGE=pt
+#export STAGE=sft
 
-#export DATASET=medqa-textbooks-dataset
+export DATASET=medqa-textbooks-dataset
 #export DATASET=case-chat-med-train
 #export DATASET=qa-med-train
 export DATASET=multi-choice-med-train
@@ -53,7 +53,7 @@ accelerate launch --main_process_port 25000 --config_file=/workspace/config/acce
     --model_name_or_path /workspace/basemodels/$MODEL \
     --do_train \
     --flash_attn \
-    --dataset lima \
+    --dataset $DATASET \
     --dataset_dir /workspace/data \
     --template default \
     --finetuning_type lora \
