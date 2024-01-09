@@ -30,13 +30,13 @@ export EPOCH=3.0
 export LR=2e-4
 
 export TEMPLATE=default
-#export MODEL=TinyLlama-1.1B-Chat-v1.0
-export MODEL=TinyLlama-16x1.1B-Chat-v1.0
+export MODEL=TinyLlama-1.1B-Chat-v1.0
+#export MODEL=TinyLlama-16x1.1B-Chat-v1.0
 
 export STAGE=pt
 #export STAGE=sft
 
-export DATASET=medqa-textbooks-dataset
+#export DATASET=medqa-textbooks-dataset
 #export DATASET=case-chat-med-train
 #export DATASET=qa-med-train
 export DATASET=multi-choice-med-train
@@ -60,7 +60,7 @@ accelerate launch --main_process_port 25000 --config_file=/workspace/config/acce
     --lora_rank $LORA_RANK \
     --lora_alpha $LORA_RANK \
     --lora_target $LORA_TARGET \
-    --output_dir /workspace/outputmodels/llmfactory \
+    --output_dir /workspace/outputmodels/$OUTPUT_MODEL \
     --overwrite_output_dir \
     --overwrite_cache \
     --per_device_train_batch_size $BATCH_SIZE \
