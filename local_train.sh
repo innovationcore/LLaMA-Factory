@@ -29,7 +29,6 @@ export GRADIENT_ACCUMULATION_STEPS=2
 export EPOCH=3.0
 export LR=2e-4
 
-
 export TEMPLATE=default
 #export MODEL=TinyLlama-1.1B-Chat-v1.0
 export MODEL=TinyLlama-16x1.1B-Chat-v1.0
