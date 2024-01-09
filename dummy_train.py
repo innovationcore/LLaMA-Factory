@@ -1,18 +1,26 @@
 import argparse
+import json
+
 import numpy as np
 
 
 def gen_train_output():
 
+    # 84%|████████▍ | 443/525 [1:58:2{'loss': 0.1842, 'learning_rate': 3.326959847036329e-05, 'epoch': 2.5}
+    junk_text = '84%|████████▍ | 443/525 [1:58:2'
+    learning_rate = 3.326959847036329e-05
     starting_loss = 3.0
     # np.arange() with step parameter
     for i in np.arange(0.0, 3.0, 0.1):
         epoch = round(i,2)
-        loss = epoch - starting_loss
-        print(epoch,loss)
-
-    # 84%|████████▍ | 443/525 [1:58:2{'loss': 0.1842, 'learning_rate': 3.326959847036329e-05, 'epoch': 2.5}
-
+        loss = round(starting_loss - epoch,2)
+        train_output = dict()
+        train_output['loss'] = loss
+        train_output['learning_rate'] = (learning_rate * epoch)
+        train_output['epoch'] = epoch
+        train_output = str(train_output)
+        output = junk_text + train_output
+        print(output)
 
     final_output = """
     wandb: Run summary:
@@ -26,7 +34,7 @@ def gen_train_output():
     wandb: train/train_samples_per_second 44.472
     wandb:   train/train_steps_per_second 0.058
     """
-
+    print(final_output)
     figure_line = 'Figure saved: /workspace/outputmodels/medqa-textbooks-dataset_S-pt_R-64_A-16_E-3_LR-2e-4_M-TinyLlama-16x1.1B-Chat-v1.0-all/training_loss.png'
 
 
