@@ -64,7 +64,8 @@ echo "Running ${RUN_NAME}"
   #export MODEL=Mistral-7B-Instruct-v0.1
   #export MODEL=MELT-Mistral-3x7B-Instruct-v0.1
   #export MODEL=llama-2-3x70b-chat-hf
-  export MODEL=TinyLlama-1.1B-Chat-v1.0
+  #export MODEL=TinyLlama-1.1B-Chat-v1.0
+  export MODEL=TinyLlama-16x1.1B-Chat-v1.0
 
   #export STAGE=pt
   export STAGE=sft
