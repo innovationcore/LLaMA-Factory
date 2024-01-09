@@ -4,10 +4,15 @@ import numpy as np
 
 def gen_train_output():
 
+    starting_loss = 3.0
     # np.arange() with step parameter
     for i in np.arange(0.0, 3.0, 0.1):
-        i = round(i,2)
-        print(i, end=', ')
+        epoch = round(i,2)
+        loss = epoch - starting_loss
+        print(epoch,loss)
+
+    # 84%|████████▍ | 443/525 [1:58:2{'loss': 0.1842, 'learning_rate': 3.326959847036329e-05, 'epoch': 2.5}
+
 
     final_output = """
     wandb: Run summary:
