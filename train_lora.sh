@@ -67,15 +67,11 @@ echo "Running ${RUN_NAME}"
   #export MODEL=TinyLlama-1.1B-Chat-v1.0
   export MODEL=TinyLlama-16x1.1B-Chat-v1.0
 
-  #export STAGE=pt
-  export STAGE=sft
+  export STAGE=pt
+  #export STAGE=sft
 
-  #export DATASET=c4_demo
-  #export DATASET=wiki_demo
-  #export DATASET=medqa-textbooks-dataset
-  #export DATASET=uk-data-train
-  #export DATASET=medal_full
-  export DATASET=case-chat-med-train
+  export DATASET=medqa-textbooks-dataset
+  #export DATASET=case-chat-med-train
   #export DATASET=qa-med-train
   #export DATASET=multi-choice-med-train
 
