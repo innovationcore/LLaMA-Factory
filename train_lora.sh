@@ -37,7 +37,7 @@ echo "Running ${RUN_NAME}"
   echo "LORA_RANK="$LORA_ALPHA
   echo "LORA_TARGET="$LORA_TARGET
 
-  export BATCH_SIZE=128
+  export BATCH_SIZE=48
   #export BATCH_SIZE=4
   echo "BATCH_SIZE="$BATCH_SIZE
 
