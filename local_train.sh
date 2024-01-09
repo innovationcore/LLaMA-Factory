@@ -19,33 +19,31 @@ echo "NCCL_PROTO="$NCCL_PROTO
 echo "LD_PRELOAD="$LD_PRELOAD
 echo "NCCL_DEBUG="$NCCL_DEBUG
 
-#export NV_LIBNCCL_DEV_PACKAGE=libnccl-dev=2.19.3-1+cuda12.3
-#export NV_LIBNCCL_DEV_PACKAGE_NAME=libnccl-dev
-#export NV_LIBNCCL_PACKAGE=libnccl2=2.19.3-1+cuda12.3
-#export NV_LIBNCCL_PACKAGE_NAME=libnccl2
-#export NV_LIBNCCL_DEV_PACKAGE_VERSION=2.19.3-1
-#export NCCL_VERSION=2.19.3-1
-#export NV_LIBNCCL_PACKAGE_VERSION=2.19.3-1
+export LORA_RANK=64
+export LORA_ALPHA=16
 
-export LORA_RANK=8
-#export LORA_TARGET=all
-#export LORA_TARGET=q_proj,k_proj,v_proj,o_proj,gate_proj,up_proj,down_proj
-#export LORA_TARGET=k_proj,w2,o_proj,q_proj,w1,w3,gate,v_proj
-export LORA_TARGET=q_proj,v_proj
+export LORA_TARGET=all
 
-echo "LORA_RANK="$LORA_RANK
-echo "LORA_TARGET="$LORA_TARGET
+export BATCH_SIZE=64
+export GRADIENT_ACCUMULATION_STEPS=2
+export EPOCH=3.0
+export LR=2e-4
 
-export BATCH_SIZE=32
-echo "BATCH_SIZE="$BATCH_SIZE
 
-export GRADIENT_ACCUMULATION_STEPS=4
-echo "GRADIENT_ACCUMULATION_STEPS="$GRADIENT_ACCUMULATION_STEPS
+export TEMPLATE=default
+export MODEL=TinyLlama-1.1B-Chat-v1.0
 
-#export MODEL=/workspace/basemodels/llama-2-7b-chat-hf
-#export MODEL=/workspace/basemodels/llama-2-70b-chat-hf
-#export MODEL=/workspace/basemodels/falcon-180B
-export MODEL=/workspace/basemodels/Mixtral-8x7B-Instruct-v0.1
+#export STAGE=pt
+export STAGE=sft
+
+#export DATASET=medqa-textbooks-dataset
+#export DATASET=case-chat-med-train
+#export DATASET=qa-med-train
+export DATASET=multi-choice-med-train
+
+export OUTPUT_MODEL=$DATASET'_S-'$STAGE'_R-'$LORA_RANK'_A-'$LORA_ALPHA'_E-'${EPOCH%.*}'_LR-'$LR'_M-'$MODEL'-all'
+
+echo "OUTPUT_MODEL="$OUTPUT_MODEL
 
 cd /workspace
 
