@@ -131,8 +131,9 @@ def objective(trial):
     #model = 'Mixtral-8x7B-Instruct-v0.1-all'
     #model = 'MELT-Mistral-3x7B-Instruct-v0.1-all'
     #model = 'llama-2-3x70b-chat-hf-all'
-    model = 'TinyLlama-16x1b'
-    
+    #model = 'TinyLlama-16x1b'
+    model = 'TinyLlama-1.1B-Chat'
+
     #multi-choice-med-train_S-sft_R-128_A-128_E-1_LR-1e-5_M-llamav2-7b
     #case-chat-med-train_S-sft_R-128_A-128_E-1_LR-5e-5_M-mixtral
 
@@ -329,10 +330,11 @@ def objective(trial):
         candiate_adapters['multi-choice-med-train']['rank'] = [64]
         candiate_adapters['multi-choice-med-train']['stage'] = ['sft']
 
-    elif model == 'TinyLlama-16x1b':
+
+    elif model == 'TinyLlama-1.1B-Chat':
 
         candiate_adapters['case-chat-med-train'] = dict()
-        candiate_adapters['case-chat-med-train']['model'] = ['TinyLlama-16x1b']
+        candiate_adapters['case-chat-med-train']['model'] = ['TinyLlama-1.1B-Chat']
         candiate_adapters['case-chat-med-train']['epoch'] = [3]
         candiate_adapters['case-chat-med-train']['lr'] = ['2e-4']
         candiate_adapters['case-chat-med-train']['rank'] = [64]
@@ -340,7 +342,7 @@ def objective(trial):
         candiate_adapters['case-chat-med-train']['target'] = ['all']
 
         candiate_adapters['qa-med-train'] = dict()
-        candiate_adapters['qa-med-train']['model'] = ['TinyLlama-16x1b']
+        candiate_adapters['qa-med-train']['model'] = ['TinyLlama-1.1B-Chat']
         candiate_adapters['qa-med-train']['epoch'] = [3]
         candiate_adapters['qa-med-train']['lr'] = ['2e-4']
         candiate_adapters['qa-med-train']['rank'] = [64]
@@ -348,7 +350,7 @@ def objective(trial):
         candiate_adapters['qa-med-train']['target'] = ['all']
 
         candiate_adapters['medqa-textbooks-dataset'] = dict()
-        candiate_adapters['medqa-textbooks-dataset']['model'] = ['TinyLlama-16x1b']
+        candiate_adapters['medqa-textbooks-dataset']['model'] = ['TinyLlama-1.1B-Chat']
         candiate_adapters['medqa-textbooks-dataset']['epoch'] = [3]
         candiate_adapters['medqa-textbooks-dataset']['lr'] = ['2e-4']
         candiate_adapters['medqa-textbooks-dataset']['rank'] = [64]
@@ -356,7 +358,7 @@ def objective(trial):
         candiate_adapters['medqa-textbooks-dataset']['target'] = ['all']
 
         candiate_adapters['multi-choice-med-train'] = dict()
-        candiate_adapters['multi-choice-med-train']['model'] = ['TinyLlama-16x1b']
+        candiate_adapters['multi-choice-med-train']['model'] = ['TinyLlama-1.1B-Chat']
         candiate_adapters['multi-choice-med-train']['epoch'] = [3]
         candiate_adapters['multi-choice-med-train']['lr'] = ['2e-4']
         candiate_adapters['multi-choice-med-train']['rank'] = [64]
