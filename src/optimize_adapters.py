@@ -132,7 +132,7 @@ def objective(trial):
     #model = 'MELT-Mistral-3x7B-Instruct-v0.1-all'
     #model = 'llama-2-3x70b-chat-hf-all'
     #model = 'TinyLlama-16x1b'
-    model = 'TinyLlama-1.1B-Chat'
+    model = 'TinyLlama-1B-Chat'
 
     #multi-choice-med-train_S-sft_R-128_A-128_E-1_LR-1e-5_M-llamav2-7b
     #case-chat-med-train_S-sft_R-128_A-128_E-1_LR-5e-5_M-mixtral
