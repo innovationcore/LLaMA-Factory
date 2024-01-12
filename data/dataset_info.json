@@ -1,4 +1,19 @@
 {
+  "generic_instruct": {
+  "file_name": "generic_instruct.json",
+  "columns": {
+    "prompt": "instruction",
+    "query": "input",
+    "response": "output",
+    "history": "history"
+    }
+  },
+  "generic_text": {
+    "file_name": "generic_text.txt",
+    "columns": {
+      "prompt": "text"
+    }
+  },
   "case-chat-med-train": {
   "file_name": "case-chat-med-train.json",
   "columns": {
