@@ -1,7 +1,12 @@
 import argparse
 import asyncio
 import json
+import os
 import re
+import pandas as pd
+from clearml import Task
+from clearml import Logger
+
 
 def extract_string_between_curly_braces(text):
 
@@ -44,8 +49,13 @@ def execute(cmd, stdout_cb, stderr_cb):
 def upload_training_stats(training_stats):
     print('upload_training_stats: UPLOAD TRAINING STATS:', training_stats)
 
+    adjusted_epoch = round(training_stats['epoch'] * 10)
+    Logger.current_logger().report_scalar("LOSS", "loss", iteration=adjusted_epoch, value=training_stats['loss'])
+    Logger.current_logger().report_scalar("LR", "lr", iteration=adjusted_epoch, value=training_stats['learning_rate'])
+
 def update_training_metrics(metric_key, metric_value):
     print('update_training_metrics: UPLOAD TRAINING METRIC:','metric_key:', metric_key, 'metric_value:', metric_value)
+    Logger.current_logger().report_single_value(metric_key, metric_value)
 
 def stdout_callback(x):
 
@@ -83,9 +93,26 @@ def stdout_callback(x):
     wandb:   train/train_steps_per_second 0.058
     '''
 
-
 def stderror_callback(x):
     print('stderror', x)
+
+def set_env():
+
+    env_keys = []
+    env_values = []
+
+    for arg in vars(args):
+        env_key = arg.upper()
+        env_value = str(getattr(args, arg))
+        #set env based on all args
+        os.environ[env_key] = env_value
+        #update report DF
+        env_keys.append(env_key)
+        env_values.append(env_value)
+
+    data = {'env_keys': env_keys, 'env_values': env_values}
+    df = pd.DataFrame.from_dict(data)
+    Logger.current_logger().report_table(title='ENV Table', series='ENVs', iteration=0, table_plot=df)
 
 if __name__ == '__main__':
 
@@ -93,12 +120,34 @@ if __name__ == '__main__':
 
     # general args
     parser.add_argument('--project_name', type=str, default='llm_factory_trainer', help='name of project')
-    parser.add_argument('--dataset_path', type=str, default='dataset.csv', help='location of dataset')
+    parser.add_argument('--task_name', type=str, default='trainer_template_v0', help='name of project')
+    parser.add_argument('--lora_rank', type=int, default=64, help='location of dataset')
+    parser.add_argument('--lora_alpha', type=int, default=16, help='location of dataset')
+    parser.add_argument('--lora_targets', type=str, default='all', help='location of dataset')
+    parser.add_argument('--batch_size', type=int, default=48, help='location of dataset')
+    parser.add_argument('--gradient_accumulation_steps', type=int, default=2, help='location of dataset')
+    parser.add_argument('--epoch', type=float, default=3.0, help='location of dataset')
+    parser.add_argument('--lr', type=float, default=2e-4, help='location of dataset')
+    parser.add_argument('--template', type=str, default='default', help='location of dataset')
+    parser.add_argument('--model', type=str, default='TinyLlama-1.1B-Chat-v1.0', help='location of dataset')
+    parser.add_argument('--stage', type=str, default='sft', help='location of dataset')
+    parser.add_argument('--dataset_path', type=str, default='data', help='location of dataset')
+    parser.add_argument('--dataset_name', type=str, default='lima', help='location of dataset')
+    parser.add_argument('--output_model', type=str, default='custom_adapter', help='location of dataset')
 
     # get args
     args = parser.parse_args()
 
     training_cmd = 'python3 dummy_train.py'
+
+    print('Starting ClearML Task')
+
+    task = Task.init(project_name=args.project_name, task_name=args.task_name)
+
+    Logger.current_logger().report_text("Reporting a text string from clearml_training_wrapper.py", print_console=True)
+
+    #set env vars for run
+    set_env()
 
     execute(
         ["bash", "-c", training_cmd],

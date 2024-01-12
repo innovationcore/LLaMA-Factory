@@ -1,5 +1,6 @@
 import argparse
 import json
+import os
 
 import numpy as np
 
@@ -48,6 +49,10 @@ if __name__ == '__main__':
 
     # get args
     args = parser.parse_args()
+
+    print('Print ENV:')
+    for name, value in os.environ.items():
+        print("{0}: {1}".format(name, value))
 
     gen_train_output()
 
