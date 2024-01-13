@@ -54,26 +54,26 @@ echo "Running ${RUN_NAME}"
   export LR=2e-4
 
 
-  export TEMPLATE=default
-  #export TEMPLATE=mistral
+  #export TEMPLATE=default
+  export TEMPLATE=mistral
 
-  export MODEL=llama-2-7b-chat-hf
+  #export MODEL=llama-2-7b-chat-hf
   #export MODEL=llama-2-70b-chat-hf
   #export MODEL=falcon-180B
-  #export MODEL=Mixtral-8x7B-Instruct-v0.1
+  export MODEL=Mixtral-8x7B-Instruct-v0.1
   #export MODEL=Mistral-7B-Instruct-v0.1
   #export MODEL=MELT-Mistral-3x7B-Instruct-v0.1
   #export MODEL=llama-2-3x70b-chat-hf
   #export MODEL=TinyLlama-1.1B-Chat-v1.0
   #export MODEL=TinyLlama-16x1.1B-Chat-v1.0
 
-  export STAGE=pt
-  #export STAGE=sft
+  #export STAGE=pt
+  export STAGE=sft
 
-  export DATASET=generic_text
+  #export DATASET=generic_text
   #export DATASET=medqa-textbooks-dataset
   #export DATASET=case-chat-med-train
-  #export DATASET=qa-med-train
+  export DATASET=qa-med-train
   #export DATASET=multi-choice-med-train
 
 
