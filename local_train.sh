@@ -29,16 +29,19 @@ export GRADIENT_ACCUMULATION_STEPS=2
 export EPOCH=3.0
 export LR=2e-4
 
-export TEMPLATE=default
-export MODEL=TinyLlama-1.1B-Chat-v1.0
+export TEMPLATE=mistral
+#export TEMPLATE=default
+
+#export MODEL=TinyLlama-1.1B-Chat-v1.0
 #export MODEL=TinyLlama-16x1.1B-Chat-v1.0
+export MODEL=Mixtral-8x7B-Instruct-v0.1
 
-export STAGE=pt
-#export STAGE=sft
+#export STAGE=pt
+export STAGE=sft
 
-export DATASET=medqa-textbooks-dataset
+#export DATASET=medqa-textbooks-dataset
 #export DATASET=case-chat-med-train
-#export DATASET=qa-med-train
+export DATASET=qa-med-train
 #export DATASET=multi-choice-med-train
 
 export OUTPUT_MODEL=$DATASET'_S-'$STAGE'_R-'$LORA_RANK'_A-'$LORA_ALPHA'_E-'${EPOCH%.*}'_LR-'$LR'_M-'$MODEL'-all'
