@@ -5,6 +5,8 @@
 #dataset: generic_instruct -> generic_instruct.json (for pretrain and sft)
 #dataset: generic_text -> "generic_text.txt (for pre-train)
 
+export WANDB_MODE=offline
+
 cd /workspace
 
 CUDA_VISIBLE_DEVICES=0,1,2,3 python src/train_bash.py \
