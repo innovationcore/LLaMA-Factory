@@ -64,16 +64,21 @@ def stdout_callback(x):
     #print('stdout', x, end="")
 
     training_stats_keys = ['loss','learning_rate','epoch']
+    training_final_report_keys = ['train_runtime','train_samples_per_second','train_steps_per_second','train_loss', 'epoch']
 
     json_str = extract_string_between_curly_braces(x)
     if json_str is not None:
         json_str = '{' + json_str + '}'
         json_str = json_str.replace('\'','"').lower()
         try:
-            training_stats = json.loads(json_str)
+            training_json_output = json.loads(json_str)
             print('decoded json:', json_str)
-            if training_stats_keys == list(training_stats.keys()):
-                upload_training_stats(training_stats)
+            if training_stats_keys == list(training_json_output.keys()):
+                upload_training_stats(training_json_output)
+            elif training_final_report_keys == list(training_json_output.keys()):
+                for final_key, final_value in training_json_output.items():
+                    update_training_metrics(final_key, final_value)
+
         except:
             print('failed to decode:', json_str)
 
@@ -81,6 +86,7 @@ def stdout_callback(x):
                   'train/total_flos', 'train/train_loss', 'train/train_runtime',
                   'train/train_samples_per_second', 'train/train_steps_per_second']
 
+    #typically disabled
     if 'wandb:' in x:
         for metric_key in wandb_keys:
             if metric_key in x:
