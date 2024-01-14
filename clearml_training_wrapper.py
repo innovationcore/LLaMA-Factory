@@ -89,7 +89,9 @@ def stdout_callback(x):
                     update_training_metrics(final_key, final_value)
 
         except:
-            traceback.print_exc()
+            #some output can't be converted to json, just None it
+            None
+            #traceback.print_exc()
             #print('failed to decode:', json_str)
 
     wandb_keys = ['train/epoch', 'train/global_step', 'train/learning_rate', 'train/loss',
