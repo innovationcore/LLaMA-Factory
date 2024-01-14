@@ -7,9 +7,6 @@ import pandas as pd
 from clearml import Task
 from clearml import Logger
 
-
-step_count = 1
-
 def extract_string_between_curly_braces(text):
 
   match = re.search(r'\{(.*?)\}', text)
@@ -48,13 +45,13 @@ def execute(cmd, stdout_cb, stderr_cb):
     loop.close()
     return rc
 
-def upload_training_stats(training_stats, step_count=None):
+def upload_training_stats(training_stats):
 
-    print('step:', step_count, 'upload_training_stats:', training_stats)
-    Logger.current_logger().report_scalar("STEP_EPOCH", "step_epoch", iteration=step_count, value=training_stats['epoch'])
-    Logger.current_logger().report_scalar("LOSS", "loss", iteration=step_count, value=training_stats['loss'])
-    Logger.current_logger().report_scalar("LR", "lr", iteration=step_count, value=training_stats['learning_rate'])
-    step_count += 1
+    print('upload_training_stats:', training_stats)
+    Logger.current_logger().report_scalar("STEP_EPOCH", "step_epoch", value=training_stats['epoch'])
+    Logger.current_logger().report_scalar("LOSS", "loss", value=training_stats['loss'])
+    Logger.current_logger().report_scalar("LR", "lr", value=training_stats['learning_rate'])
+    
 
 def update_training_metrics(metric_key, metric_value):
     print('update_training_metrics: UPLOAD TRAINING METRIC:','metric_key:', metric_key, 'metric_value:', metric_value)
