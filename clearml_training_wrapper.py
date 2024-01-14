@@ -3,6 +3,8 @@ import asyncio
 import json
 import os
 import re
+from os import listdir
+from os.path import isfile, join
 import pandas as pd
 from clearml import Task
 from clearml import Logger
@@ -170,3 +172,11 @@ if __name__ == '__main__':
 
     # add and upload a folder, artifact_object should be the folder path
     task.upload_artifact('adapter', artifact_object=os.path.join('/workspace/outputmodels/custom_adapter'))
+
+    adapter_path = '/workspace/outputmodels/custom_adapter'
+    adapter_files = [f for f in listdir(adapter_path) if isfile(join(adapter_path, f))]
+
+    for adapter_file in adapter_files:
+        task.upload_artifact(
+            'adapter', artifact_object=os.path.join(adapter_path, adapter_file)
+        )
