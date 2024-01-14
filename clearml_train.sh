@@ -7,6 +7,21 @@
 
 export WANDB_DISABLED=true
 
+#start
+export STAGE=sft
+export MODEL=llama-2-7b-chat-hf
+export EPOCH=1.0
+export DATASET=lima
+export TEMPLATE=default
+export LORA_RANK=8
+export LORA_ALPHA=8
+export LORA_TARGET=all
+export OUTPUT_MODEL=dummy_model
+export BATCH_SIZE=1
+export GRADIENT_ACCUMULATION_STEPS=1
+export LR=2e-4
+#end
+
 cd /workspace
 
 git config --global --add safe.directory /workspace
@@ -32,7 +47,7 @@ CUDA_VISIBLE_DEVICES=0,1,2,3 python src/train_bash.py \
     --lr_scheduler_type cosine \
     --logging_steps 10 \
     --save_steps 1000 \
-    --learning_rate 5e-5 \
-    --num_train_epochs 3.0 \
+    --learning_rate $LR \
+    --num_train_epochs $EPOCH \
     --plot_loss \
     --bf16
