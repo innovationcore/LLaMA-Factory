@@ -61,6 +61,7 @@ def stdout_callback(x):
 
     # 84%|████████▍ | 443/525 [1:58:2{'loss': 0.1842, 'learning_rate': 3.326959847036329e-05, 'epoch': 2.5}
     x = x.decode("utf-8")
+    print('stdout', x, end="")
 
     training_stats_keys = ['loss','learning_rate','epoch']
 
