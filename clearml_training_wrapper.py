@@ -4,6 +4,7 @@ import json
 import os
 import re
 import traceback
+import hashlib
 from os import listdir
 from os.path import isfile, join
 import pandas as pd
@@ -136,6 +137,36 @@ def set_env():
     df = pd.DataFrame.from_dict(data)
     Logger.current_logger().report_table(title='ENV Table', series='ENVs', iteration=0, table_plot=df)
 
+def get_file_sha1(dataset_path):
+
+    # BUF_SIZE is totally arbitrary, change for your app!
+    BUF_SIZE = 65536  # lets read stuff in 64kb chunks!
+
+    sha1 = hashlib.sha1()
+
+    with open(dataset_path, 'rb') as f:
+        while True:
+            data = f.read(BUF_SIZE)
+            if not data:
+                break
+            sha1.update(data)
+
+    return sha1.hexdigest()
+
+def validate_dataset():
+
+    dataset_sha1 = None
+    # JSON file
+    f = open('data/dataset_info.json', "r")
+
+    # Reading from file
+    dataset_info = json.loads(f.read())
+    if args.dataset in dataset_info:
+        dataset_path = os.path.join('data', dataset_info[args.dataset]['file_name'])
+        dataset_sha1 = get_file_sha1(dataset_path)
+
+    return dataset_sha1
+
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='LLM Factory Agent')
@@ -154,46 +185,57 @@ if __name__ == '__main__':
     parser.add_argument('--model', type=str, default='llama-2-7b-chat-hf', help='location of dataset')
     parser.add_argument('--stage', type=str, default='sft', help='location of dataset')
     parser.add_argument('--dataset_path', type=str, default='data', help='location of dataset')
-    parser.add_argument('--dataset', type=str, default='lima', help='location of dataset')
+    parser.add_argument('--dataset', type=str, default='generic_instruct', help='location of dataset')
+    parser.add_argument('--dataset_sha1', type=str, default='bb2844e2293e4aa78acf05e9a7705c8d8deb0d62', help='location of dataset')
     parser.add_argument('--output_model', type=str, default='custom_adapter', help='location of dataset')
 
     # get args
     args = parser.parse_args()
 
-    #{"localhost": [0, 1, 2, 3, 4, 5, 6, 7]}
-
-    #training_cmd = 'python3 dummy_train.py'
     training_cmd = '/workspace/clearml_train.sh'
 
     print('Starting ClearML Task')
 
+    dataset_sha1 = validate_dataset()
+    error_notice = 'dataset: ' + args.dataset + ' dataset_sha1:' + args.dataset_sha1 + " != local_dataset_sha1:" + dataset_sha1
+
     task = Task.init(project_name=args.project_name, task_name=args.task_name)
 
-    Logger.current_logger().report_text("Reporting a text string from clearml_training_wrapper.py", print_console=True)
+    #validate the dataset
+    dataset_sha1 = validate_dataset()
+    if dataset_sha1 is not None:
+        if dataset_sha1 == args.dataset_sha1:
 
-    #set env vars for run
-    set_env()
+            dataset_validation_notice = 'dataset: ' + args.dataset + ' dataset_sha1:' + args.dataset_sha1 + " == local_dataset_sha1:" + dataset_sha1
+            Logger.current_logger().report_text(dataset_validation_notice, print_console=True)
 
-    execute(
-        ["bash", "-c", training_cmd],
-        lambda x: stdout_callback(x),
-        lambda x: stderror_callback(x)
-    )
+            #set env vars for run
+            set_env()
 
-    #at this point might as well upload zip, we will want to run directly from S3 at some point
-    task.upload_artifact('adapter', artifact_object=os.path.join('/workspace/outputmodels/custom_adapter'))
+            execute(
+                ["bash", "-c", training_cmd],
+                lambda x: stdout_callback(x),
+                lambda x: stderror_callback(x)
+            )
 
-    #adapter_config.json
-    #"base_model_name_or_path": "/data/llama-2-7b-chat-hf",
+            #at this point might as well upload zip, we will want to run directly from S3 at some point
+            task.upload_artifact('adapter', artifact_object=os.path.join('/workspace/outputmodels/custom_adapter'))
 
-    '''
-    adapter_path = '/workspace/outputmodels/custom_adapter'
-    adapter_files = [f for f in listdir(adapter_path) if isfile(join(adapter_path, f))]
+            #adapter_config.json
+            #"base_model_name_or_path": "/data/llama-2-7b-chat-hf",
 
-    for adapter_file in adapter_files:
-        task.upload_artifact(
-            'adapter_test', artifact_object=os.path.join(adapter_path, adapter_file)
-        )
-    '''
+            '''
+            adapter_path = '/workspace/outputmodels/custom_adapter'
+            adapter_files = [f for f in listdir(adapter_path) if isfile(join(adapter_path, f))]
+        
+            for adapter_file in adapter_files:
+                task.upload_artifact(
+                    'adapter_test', artifact_object=os.path.join(adapter_path, adapter_file)
+                )
+            '''
+        else:
+            # check dataset
+            dataset_validation_error = 'dataset: ' + args.dataset + ' dataset_sha1:' + args.dataset_sha1 + " != local_dataset_sha1:" + dataset_sha1
+            Logger.current_logger().report_text(dataset_validation_error, print_console=True)
 
 
