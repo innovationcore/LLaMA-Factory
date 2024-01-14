@@ -2,7 +2,6 @@ import argparse
 import uuid
 
 from clearml import Task
-from clearml import Logger
 
 
 if __name__ == '__main__':
@@ -11,7 +10,8 @@ if __name__ == '__main__':
 
     # general args
     parser.add_argument('--base_project_name', type=str, default='llm_factory_trainer', help='name of project')
-    parser.add_argument('--base_task_name', type=str, default='trainer_template_v0', help='name of project')
+    parser.add_argument('--base_task_name', type=str, default='trainer_template_v0_campus_A100', help='name of project')
+    parser.add_argument('--queue_name', type=str, default='campus_A100_llm', help='name of project')
 
     # get args
     args = parser.parse_args()
@@ -33,11 +33,11 @@ if __name__ == '__main__':
 
     # Set parameters (replaces existing hyperparameters in task)
     parameters = template_task.get_parameters(args.base_project_name)
-    parameters['Args/epoch'] = 1.0
+    parameters['Args/epoch'] = 2.0
     cloned_task.set_parameters(parameters)
 
     Task.enqueue(
         task=cloned_task,
-        queue_name='default',
+        queue_name=args.queue_name,
         queue_id=None
     )

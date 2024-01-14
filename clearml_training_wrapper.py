@@ -171,3 +171,6 @@ if __name__ == '__main__':
         lambda x: stdout_callback(x),
         lambda x: stderror_callback(x)
     )
+
+    # add and upload a folder, artifact_object should be the folder path
+    task.upload_artifact('adapter', artifact_object=os.path.join('/workspace/outputmodels/custom_adapter'))
