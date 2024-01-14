@@ -139,7 +139,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     #training_cmd = 'python3 dummy_train.py'
-    training_cmd = 'python3 clearml_train.sh'
+    training_cmd = '/workspace/clearml_train.sh'
 
     print('Starting ClearML Task')
 
