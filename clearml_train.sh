@@ -7,8 +7,7 @@
 
 cd /workspace
 
-accelerate launch --main_process_port 25000 --config_file=/workspace/config/accelerate_config.yaml \
-    /workspace/src/train_bash.py \
+CUDA_VISIBLE_DEVICES=0,1,2,3 python src/train_bash.py \
     --stage $STAGE \
     --model_name_or_path /workspace/basemodels/$MODEL \
     --do_train \
