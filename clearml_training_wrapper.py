@@ -51,7 +51,6 @@ def upload_training_stats(training_stats):
     Logger.current_logger().report_scalar("STEP_EPOCH", "step_epoch", value=training_stats['epoch'])
     Logger.current_logger().report_scalar("LOSS", "loss", value=training_stats['loss'])
     Logger.current_logger().report_scalar("LR", "lr", value=training_stats['learning_rate'])
-    
 
 def update_training_metrics(metric_key, metric_value):
     print('update_training_metrics: UPLOAD TRAINING METRIC:','metric_key:', metric_key, 'metric_value:', metric_value)
