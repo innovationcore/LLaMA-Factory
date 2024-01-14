@@ -68,7 +68,8 @@ def update_training_metrics(metric_key, metric_value):
 def stdout_callback(x):
 
     x = x.decode("utf-8")
-    print('stdout', x, end="")
+    #suppressing for security reasons
+    #print('stdout', x, end="")
 
     training_stats_keys = ['loss','learning_rate','epoch']
     training_final_report_keys = ['train_runtime','train_samples_per_second','train_steps_per_second','train_loss', 'epoch']
@@ -79,7 +80,7 @@ def stdout_callback(x):
         json_str = json_str.replace('\'','"').lower()
         try:
             training_json_output = json.loads(json_str)
-            print('decoded json:', json_str)
+            #print('decoded json:', json_str)
             if training_stats_keys == list(training_json_output.keys()):
                 upload_training_stats(training_json_output)
             elif training_final_report_keys == list(training_json_output.keys()):
@@ -88,7 +89,7 @@ def stdout_callback(x):
 
         except:
             traceback.print_exc()
-            print('failed to decode:', json_str)
+            #print('failed to decode:', json_str)
 
     wandb_keys = ['train/epoch', 'train/global_step', 'train/learning_rate', 'train/loss',
                   'train/total_flos', 'train/train_loss', 'train/train_runtime',
@@ -114,7 +115,8 @@ def stdout_callback(x):
 
 def stderror_callback(x):
     x = x.decode("utf-8")
-    print('stderror', x, end="")
+    #supressing for security reasons
+    #print('stderror', x, end="")
 
 def set_env():
 
