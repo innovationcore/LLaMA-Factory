@@ -178,12 +178,13 @@ if __name__ == '__main__':
         lambda x: stderror_callback(x)
     )
 
-    # add and upload a folder, artifact_object should be the folder path
-    #task.upload_artifact('adapter', artifact_object=os.path.join('/workspace/outputmodels/custom_adapter'))
+    #at this point might as well upload zip, we will want to run directly from S3 at some point
+    task.upload_artifact('adapter', artifact_object=os.path.join('/workspace/outputmodels/custom_adapter'))
 
     #adapter_config.json
     #"base_model_name_or_path": "/data/llama-2-7b-chat-hf",
 
+    '''
     adapter_path = '/workspace/outputmodels/custom_adapter'
     adapter_files = [f for f in listdir(adapter_path) if isfile(join(adapter_path, f))]
 
@@ -191,3 +192,4 @@ if __name__ == '__main__':
         task.upload_artifact(
             'adapter', artifact_object=os.path.join(adapter_path, adapter_file)
         )
+    '''
