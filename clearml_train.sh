@@ -26,7 +26,8 @@ cd /workspace
 
 git config --global --add safe.directory /workspace
 
-CUDA_VISIBLE_DEVICES=0,1,2,3 python src/train_bash.py \
+deepspeed --num_gpus 8 --master_port=9901 src/train_bash.py \
+    --deepspeed config/deep_speed_zero2.json \
     --stage $STAGE \
     --model_name_or_path /workspace/basemodels/$MODEL \
     --do_train \
