@@ -8,6 +8,8 @@ from clearml import Task
 from clearml import Logger
 
 
+step_count = 1
+
 def extract_string_between_curly_braces(text):
 
   match = re.search(r'\{(.*?)\}', text)
@@ -46,12 +48,15 @@ def execute(cmd, stdout_cb, stderr_cb):
     loop.close()
     return rc
 
-def upload_training_stats(training_stats):
-    print('upload_training_stats: UPLOAD TRAINING STATS:', training_stats)
+def upload_training_stats(training_stats, step_count=None):
 
-    adjusted_epoch = round(training_stats['epoch'] * 10)
-    Logger.current_logger().report_scalar("LOSS", "loss", iteration=adjusted_epoch, value=training_stats['loss'])
-    Logger.current_logger().report_scalar("LR", "lr", iteration=adjusted_epoch, value=training_stats['learning_rate'])
+    print('step:', step_count, 'upload_training_stats:', training_stats)
+
+    #adjusted_epoch = round(training_stats['epoch'] * 10)
+    Logger.current_logger().report_scalar("EPOCH", "epoch", iteration=step_count, value=training_stats['epoch'])
+    Logger.current_logger().report_scalar("LOSS", "loss", iteration=step_count, value=training_stats['loss'])
+    Logger.current_logger().report_scalar("LR", "lr", iteration=step_count, value=training_stats['learning_rate'])
+    step_count += 1
 
 def update_training_metrics(metric_key, metric_value):
     print('update_training_metrics: UPLOAD TRAINING METRIC:','metric_key:', metric_key, 'metric_value:', metric_value)
