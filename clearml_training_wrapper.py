@@ -73,6 +73,8 @@ def stdout_callback(x):
             training_stats = json.loads(json_str)
             if training_stats_keys == list(training_stats.keys()):
                 upload_training_stats(training_stats)
+        except:
+            None
 
     wandb_keys = ['train/epoch', 'train/global_step', 'train/learning_rate', 'train/loss',
                   'train/total_flos', 'train/train_loss', 'train/train_runtime',
