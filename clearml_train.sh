@@ -12,6 +12,7 @@ CUDA_VISIBLE_DEVICES=0,1,2,3 python src/train_bash.py \
     --model_name_or_path /workspace/basemodels/$MODEL \
     --do_train \
     --flash_attn \
+    --num_train_epochs $EPOCH \
     --dataset $DATASET \
     --dataset_dir /workspace/data \
     --template $TEMPLATE \
