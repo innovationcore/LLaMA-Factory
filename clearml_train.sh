@@ -9,6 +9,8 @@ export WANDB_MODE=offline
 
 cd /workspace
 
+git config --global --add safe.directory /workspace
+
 CUDA_VISIBLE_DEVICES=0,1,2,3 python src/train_bash.py \
     --stage $STAGE \
     --model_name_or_path /workspace/basemodels/$MODEL \
