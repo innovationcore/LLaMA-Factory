@@ -9,18 +9,33 @@ export WANDB_DISABLED=true
 
 #start
 export STAGE=sft
+echo "STAGE="$STAGE
 export MODEL=llama-2-7b-chat-hf
+echo "MODEL="$MODEL
 export EPOCH=1.0
+echo "EPOCH="$EPOCH
 export DATASET=lima
+echo "DATASET="$DATASET
 export TEMPLATE=default
+echo "TEMPLATE="$TEMPLATE
 export LORA_RANK=8
+echo "LORA_RANK="$LORA_RANK
 export LORA_ALPHA=8
+echo "LORA_ALPHA="$LORA_ALPHA
 export LORA_TARGET=all
+echo "LORA_TARGET="$LORA_TARGET
 export OUTPUT_MODEL=dummy_model
+echo "OUTPUT_MODEL="$OUTPUT_MODEL
 export BATCH_SIZE=1
+echo "BATCH_SIZE="$BATCH_SIZE
 export GRADIENT_ACCUMULATION_STEPS=1
+echo "GRADIENT_ACCUMULATION_STEPS="$GRADIENT_ACCUMULATION_STEPS
 export LR=2e-4
+echo "LR="$LR
 #end
+
+
+
 
 cd /workspace
 
