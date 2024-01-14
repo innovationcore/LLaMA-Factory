@@ -97,7 +97,7 @@ def stdout_callback(x):
 
 def stderror_callback(x):
     x = x.decode("utf-8")
-    print('stderror', x)
+    print('stderror', x, end="")
 
 def set_env():
 
