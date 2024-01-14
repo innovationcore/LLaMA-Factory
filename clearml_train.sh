@@ -59,7 +59,7 @@ deepspeed --num_gpus 4 --master_port=9901 src/train_bash.py \
     --per_device_train_batch_size $BATCH_SIZE \
     --gradient_accumulation_steps $GRADIENT_ACCUMULATION_STEPS \
     --lr_scheduler_type cosine \
-    --logging_steps 10 \
+    --logging_steps 1 \
     --save_steps 1000 \
     --learning_rate $LR \
     --num_train_epochs $EPOCH \
