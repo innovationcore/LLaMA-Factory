@@ -69,10 +69,10 @@ def stdout_callback(x):
         json_str = '{' + json_str + '}'
         json_str = json_str.replace('\'','"')
         print(json_str)
-        training_stats = json.loads(json_str)
-        if training_stats_keys == list(training_stats.keys()):
-            upload_training_stats(training_stats)
-        exit(0)
+        #training_stats = json.loads(json_str)
+        #if training_stats_keys == list(training_stats.keys()):
+        #    upload_training_stats(training_stats)
+        #exit(0)
 
     wandb_keys = ['train/epoch', 'train/global_step', 'train/learning_rate', 'train/loss',
                   'train/total_flos', 'train/train_loss', 'train/train_runtime',
@@ -139,6 +139,8 @@ if __name__ == '__main__':
 
     # get args
     args = parser.parse_args()
+
+    #{"localhost": [0, 1, 2, 3, 4, 5, 6, 7]}
 
     #training_cmd = 'python3 dummy_train.py'
     training_cmd = '/workspace/clearml_train.sh'
