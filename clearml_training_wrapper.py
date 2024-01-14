@@ -173,7 +173,7 @@ if __name__ == '__main__':
     )
 
     # add and upload a folder, artifact_object should be the folder path
-    task.upload_artifact('adapter', artifact_object=os.path.join('/workspace/outputmodels/custom_adapter'))
+    #task.upload_artifact('adapter', artifact_object=os.path.join('/workspace/outputmodels/custom_adapter'))
 
     adapter_path = '/workspace/outputmodels/custom_adapter'
     adapter_files = [f for f in listdir(adapter_path) if isfile(join(adapter_path, f))]
