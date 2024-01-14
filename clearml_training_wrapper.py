@@ -59,9 +59,8 @@ def update_training_metrics(metric_key, metric_value):
 
 def stdout_callback(x):
 
-    # 84%|████████▍ | 443/525 [1:58:2{'loss': 0.1842, 'learning_rate': 3.326959847036329e-05, 'epoch': 2.5}
     x = x.decode("utf-8")
-    #print('stdout', x, end="")
+    print('stdout', x, end="")
 
     training_stats_keys = ['loss','learning_rate','epoch']
     training_final_report_keys = ['train_runtime','train_samples_per_second','train_steps_per_second','train_loss', 'epoch']
@@ -106,7 +105,7 @@ def stdout_callback(x):
 
 def stderror_callback(x):
     x = x.decode("utf-8")
-    #print('stderror', x, end="")
+    print('stderror', x, end="")
 
 def set_env():
 
