@@ -132,7 +132,7 @@ if __name__ == '__main__':
     parser.add_argument('--model', type=str, default='TinyLlama-1.1B-Chat-v1.0', help='location of dataset')
     parser.add_argument('--stage', type=str, default='sft', help='location of dataset')
     parser.add_argument('--dataset_path', type=str, default='data', help='location of dataset')
-    parser.add_argument('--dataset_name', type=str, default='lima', help='location of dataset')
+    parser.add_argument('--dataset', type=str, default='lima', help='location of dataset')
     parser.add_argument('--output_model', type=str, default='custom_adapter', help='location of dataset')
 
     # get args
