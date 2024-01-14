@@ -184,7 +184,7 @@ if __name__ == '__main__':
     #adapter_config.json
     #"base_model_name_or_path": "/data/llama-2-7b-chat-hf",
 
-
+    '''
     adapter_path = '/workspace/outputmodels/custom_adapter'
     adapter_files = [f for f in listdir(adapter_path) if isfile(join(adapter_path, f))]
 
@@ -192,5 +192,6 @@ if __name__ == '__main__':
         task.upload_artifact(
             'adapter_test', artifact_object=os.path.join(adapter_path, adapter_file)
         )
+    '''
 
 
