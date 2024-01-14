@@ -68,6 +68,7 @@ def stdout_callback(x):
     if json_str is not None:
         json_str = '{' + json_str + '}'
         json_str = json_str.replace('\'','"')
+        print(json_str)
         training_stats = json.loads(json_str)
         if training_stats_keys == list(training_stats.keys()):
             upload_training_stats(training_stats)
