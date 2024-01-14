@@ -4,7 +4,7 @@ export PYTHONPATH=.
 RUN_NAME="Training Distributed"
 #for lrank in 8 16 32 64 128 256
 
-export WANDB_MODE=offline
+export WANDB_DISABLED=true
 
 echo "Running ${RUN_NAME}"
   for lrank in 64

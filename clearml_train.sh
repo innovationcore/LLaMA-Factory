@@ -5,7 +5,7 @@
 #dataset: generic_instruct -> generic_instruct.json (for pretrain and sft)
 #dataset: generic_text -> "generic_text.txt (for pre-train)
 
-export WANDB_MODE=offline
+export WANDB_DISABLED=true
 
 cd /workspace
 
