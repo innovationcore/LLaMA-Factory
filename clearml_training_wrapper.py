@@ -96,6 +96,7 @@ def stdout_callback(x):
     '''
 
 def stderror_callback(x):
+    x = x.decode("utf-8")
     print('stderror', x)
 
 def set_env():
@@ -126,7 +127,7 @@ if __name__ == '__main__':
     parser.add_argument('--lora_rank', type=int, default=8, help='location of dataset')
     parser.add_argument('--lora_alpha', type=int, default=16, help='location of dataset')
     parser.add_argument('--lora_target', type=str, default='all', help='location of dataset')
-    parser.add_argument('--batch_size', type=int, default=48, help='location of dataset')
+    parser.add_argument('--batch_size', type=int, default=8, help='location of dataset')
     parser.add_argument('--gradient_accumulation_steps', type=int, default=2, help='location of dataset')
     parser.add_argument('--epoch', type=float, default=1.0, help='location of dataset')
     parser.add_argument('--lr', type=float, default=2e-4, help='location of dataset')
