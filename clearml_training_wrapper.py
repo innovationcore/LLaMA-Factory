@@ -123,7 +123,7 @@ if __name__ == '__main__':
     parser.add_argument('--task_name', type=str, default='trainer_template_v0', help='name of project')
     parser.add_argument('--lora_rank', type=int, default=64, help='location of dataset')
     parser.add_argument('--lora_alpha', type=int, default=16, help='location of dataset')
-    parser.add_argument('--lora_targets', type=str, default='all', help='location of dataset')
+    parser.add_argument('--lora_target', type=str, default='all', help='location of dataset')
     parser.add_argument('--batch_size', type=int, default=48, help='location of dataset')
     parser.add_argument('--gradient_accumulation_steps', type=int, default=2, help='location of dataset')
     parser.add_argument('--epoch', type=float, default=3.0, help='location of dataset')
