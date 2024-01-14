@@ -7,35 +7,33 @@
 
 export WANDB_DISABLED=true
 
-#start
-export STAGE=sft
-echo "STAGE="$STAGE
-export MODEL=llama-2-7b-chat-hf
-echo "MODEL="$MODEL
-export EPOCH=1.0
-echo "EPOCH="$EPOCH
-export DATASET=lima
-echo "DATASET="$DATASET
-export TEMPLATE=default
-echo "TEMPLATE="$TEMPLATE
-export LORA_RANK=8
-echo "LORA_RANK="$LORA_RANK
-export LORA_ALPHA=8
-echo "LORA_ALPHA="$LORA_ALPHA
-export LORA_TARGET=all
-echo "LORA_TARGET="$LORA_TARGET
-export OUTPUT_MODEL=dummy_model
-echo "OUTPUT_MODEL="$OUTPUT_MODEL
-export BATCH_SIZE=8
-echo "BATCH_SIZE="$BATCH_SIZE
-export GRADIENT_ACCUMULATION_STEPS=2
-echo "GRADIENT_ACCUMULATION_STEPS="$GRADIENT_ACCUMULATION_STEPS
-export LR=2e-4
-echo "LR="$LR
+#start manual test
+#export STAGE=sft
+#export MODEL=llama-2-7b-chat-hf
+#export EPOCH=1.0
+#export DATASET=lima
+#export TEMPLATE=default
+#export LORA_RANK=8
+#export LORA_ALPHA=8
+#export LORA_TARGET=all
+#export OUTPUT_MODEL=dummy_model
+#export BATCH_SIZE=8
+#export GRADIENT_ACCUMULATION_STEPS=2
+#export LR=2e-4
 #end
 
-
-
+echo "STAGE="$STAGE
+echo "MODEL="$MODEL
+echo "EPOCH="$EPOCH
+echo "DATASET="$DATASET
+echo "TEMPLATE="$TEMPLATE
+echo "LORA_RANK="$LORA_RANK
+echo "LORA_ALPHA="$LORA_ALPHA
+echo "LORA_TARGET="$LORA_TARGET
+echo "OUTPUT_MODEL="$OUTPUT_MODEL
+echo "BATCH_SIZE="$BATCH_SIZE
+echo "GRADIENT_ACCUMULATION_STEPS="$GRADIENT_ACCUMULATION_STEPS
+echo "LR="$LR
 
 cd /workspace
 
