@@ -129,7 +129,7 @@ if __name__ == '__main__':
     parser.add_argument('--epoch', type=float, default=3.0, help='location of dataset')
     parser.add_argument('--lr', type=float, default=2e-4, help='location of dataset')
     parser.add_argument('--template', type=str, default='default', help='location of dataset')
-    parser.add_argument('--model', type=str, default='TinyLlama-1.1B-Chat-v1.0', help='location of dataset')
+    parser.add_argument('--model', type=str, default='llama-2-7b-chat-hf', help='location of dataset')
     parser.add_argument('--stage', type=str, default='sft', help='location of dataset')
     parser.add_argument('--dataset_path', type=str, default='data', help='location of dataset')
     parser.add_argument('--dataset', type=str, default='lima', help='location of dataset')
