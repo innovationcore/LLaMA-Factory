@@ -68,7 +68,7 @@ def stdout_callback(x):
     json_str = extract_string_between_curly_braces(x)
     if json_str is not None:
         json_str = '{' + json_str + '}'
-        json_str = json_str.replace('\'','"')
+        json_str = json_str.replace('\'','"').lower()
         try:
             training_stats = json.loads(json_str)
             print('decoded json:', json_str)
