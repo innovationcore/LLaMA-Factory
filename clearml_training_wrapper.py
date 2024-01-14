@@ -3,6 +3,7 @@ import asyncio
 import json
 import os
 import re
+import traceback
 from os import listdir
 from os.path import isfile, join
 import pandas as pd
@@ -80,6 +81,7 @@ def stdout_callback(x):
                     update_training_metrics(final_key, final_value)
 
         except:
+            traceback.print_exc()
             print('failed to decode:', json_str)
 
     wandb_keys = ['train/epoch', 'train/global_step', 'train/learning_rate', 'train/loss',
