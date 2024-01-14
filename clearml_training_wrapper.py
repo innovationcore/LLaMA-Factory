@@ -69,11 +69,13 @@ def stdout_callback(x):
     if json_str is not None:
         json_str = '{' + json_str + '}'
         json_str = json_str.replace('\'','"')
-        print(json_str)
-        training_stats = json.loads(json_str)
-        if training_stats_keys == list(training_stats.keys()):
-            upload_training_stats(training_stats)
-
+        try:
+            training_stats = json.loads(json_str)
+            print('decoded json:', json_str)
+            if training_stats_keys == list(training_stats.keys()):
+                upload_training_stats(training_stats)
+        except:
+            print('failed to decode:', json_str)
 
     wandb_keys = ['train/epoch', 'train/global_step', 'train/learning_rate', 'train/loss',
                   'train/total_flos', 'train/train_loss', 'train/train_runtime',
