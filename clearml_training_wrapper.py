@@ -53,7 +53,7 @@ def upload_training_stats(training_stats, step_count=None):
     print('step:', step_count, 'upload_training_stats:', training_stats)
 
     #adjusted_epoch = round(training_stats['epoch'] * 10)
-    Logger.current_logger().report_scalar("EPOCH", "epoch", iteration=step_count, value=training_stats['epoch'])
+    Logger.current_logger().report_scalar("EPOCH", "step_epoch", iteration=step_count, value=training_stats['epoch'])
     Logger.current_logger().report_scalar("LOSS", "loss", iteration=step_count, value=training_stats['loss'])
     Logger.current_logger().report_scalar("LR", "lr", iteration=step_count, value=training_stats['learning_rate'])
     step_count += 1
