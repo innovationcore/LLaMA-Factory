@@ -51,9 +51,9 @@ def execute(cmd, stdout_cb, stderr_cb):
 def upload_training_stats(training_stats):
 
     print('upload_training_stats:', training_stats)
-    Logger.current_logger().report_scalar("STEP_EPOCH", "step_epoch", value=training_stats['epoch'])
-    Logger.current_logger().report_scalar("LOSS", "loss", value=training_stats['loss'])
-    Logger.current_logger().report_scalar("LR", "lr", value=training_stats['learning_rate'])
+    Logger.current_logger().report_scalar("STEP_EPOCH", "step_epoch", iteration=None, value=training_stats['epoch'])
+    Logger.current_logger().report_scalar("LOSS", "loss", iteration=None, value=training_stats['loss'])
+    Logger.current_logger().report_scalar("LR", "lr", iteration=None, value=training_stats['learning_rate'])
 
 def update_training_metrics(metric_key, metric_value):
     print('update_training_metrics: UPLOAD TRAINING METRIC:','metric_key:', metric_key, 'metric_value:', metric_value)
@@ -174,6 +174,9 @@ if __name__ == '__main__':
 
     # add and upload a folder, artifact_object should be the folder path
     #task.upload_artifact('adapter', artifact_object=os.path.join('/workspace/outputmodels/custom_adapter'))
+
+    #adapter_config.json
+    #"base_model_name_or_path": "/data/llama-2-7b-chat-hf",
 
     adapter_path = '/workspace/outputmodels/custom_adapter'
     adapter_files = [f for f in listdir(adapter_path) if isfile(join(adapter_path, f))]
