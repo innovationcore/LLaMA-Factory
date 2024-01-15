@@ -1,5 +1,23 @@
 # ClearML
 
+# Infrastrcture 
+
+## Training
+### Server: 10.33.31.21
+### Container: llmfactory-clearml  
+### Launch script: /mnt/scratch/cody/llm/run_llmfactory_clearml.sh
+
+## Inference
+### Server: 10.33.31.21
+### Container: ghcr.io/predibase/lorax  
+### Launch script: /mnt/scratch/cody/llm/run_lorax_background.sh
+
+## Adapters
+### Server: 10.33.31.21
+### Adapter repo: /mnt/scratch/cody/llm/models/adapters
+
+# Process 
+
 ## (1) clearml.conf must be placed in ~/clearml.conf
 
 ```json
