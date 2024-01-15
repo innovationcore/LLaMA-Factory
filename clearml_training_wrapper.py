@@ -72,7 +72,7 @@ def stdout_callback(x):
 
     x = x.decode("utf-8")
     #suppressing for security reasons
-    #print('stdout', x, end="")
+    print('stdout', x, end="")
 
     training_stats_keys = ['loss','learning_rate','epoch']
     training_final_report_keys = ['train_runtime','train_samples_per_second','train_steps_per_second','train_loss', 'epoch']
@@ -121,7 +121,7 @@ def stdout_callback(x):
 def stderror_callback(x):
     x = x.decode("utf-8")
     #supressing for security reasons
-    #print('stderror', x, end="")
+    print('stderror', x, end="")
 
 def set_env():
 
