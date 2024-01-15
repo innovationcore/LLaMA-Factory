@@ -200,6 +200,8 @@ def prepare_dataset():
         dataset_name=args.dataset_name, dataset_project=args.dataset_project
     ).get_mutable_local_copy(temp_download_dir)
 
+    print('Downloaded', args.dataset_name, 'to', temp_download_dir)
+
     #prepare custom dataset location
 
     custom_dataset_path = get_dataset_path()
@@ -216,6 +218,7 @@ def prepare_dataset():
         #print(tmp_custom_dataset_path)
         shutil.move(tmp_custom_dataset_path, custom_dataset_path)
         is_prepaired = True
+        print('tmp_custom_dataset_path:', tmp_custom_dataset_path, 'moved to custom_dataset_path:', custom_dataset_path)
     else:
         print('Error: tmp_custom_dataset_path:' ,tmp_custom_dataset_path,'does not exist!')
 
