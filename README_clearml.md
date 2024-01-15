@@ -91,4 +91,29 @@ python adapter_downloader.py
 - Download any new adapter
 - Save adapters to location where they can be used by LoraX dynamically
 
+## (6) Start Lorax server with specific base model
 
+```
+docker run --gpus all -d --shm-size 1g -p 8080:80 -v <path to data>:/data ghcr.io/predibase/lorax:latest --model-id $model
+```
+
+## (7) Reference specific Lora adapter on api request
+
+- adapter_id: The path of the adapter local to the inference server
+- adapter_source: use local, we need to get S3 to work
+
+```
+curl 10.33.31.21:8080/generate \
+    -X POST \
+    -d '{
+        "inputs": "[INST] Is it better to burn out, or fade away? [/INST]",
+        "parameters": {
+        	   "best_of": 2,
+            "do_sample": true,
+            "max_new_tokens": 75,
+            "adapter_id": "/data/adapters/llm_factory_trainer-3958082d-117e-4fff-9293-23d0c6250d77",
+            "adapter_source":"local"
+        }
+    }' \
+    -H 'Content-Type: application/json'    
+```
