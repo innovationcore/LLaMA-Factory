@@ -205,6 +205,10 @@ def prepare_dataset():
     #prepare custom dataset location
 
     custom_dataset_path = get_dataset_path()
+    #adjust for fixed path of container
+    custom_dataset_path = os.path.join('/workspace/',custom_dataset_path)
+
+    #/workspace/data/custom_data/generic_instruct.json
     custom_dataset_filename = os.path.basename(custom_dataset_path)
     custom_dataset_dir = os.path.dirname(custom_dataset_path)
 
