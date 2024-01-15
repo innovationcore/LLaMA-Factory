@@ -18,11 +18,7 @@ def init_clone_task():
         project=template_project_id,
     )
 
-    cloned_task.upload_artifact(name='dataset', artifact_object='data/custom_data/generic_instruct.json')
-
-    cloned_task.close()
-
-    return trainer_task_name
+    return trainer_task_name, cloned_task
 
 if __name__ == '__main__':
 
@@ -36,12 +32,6 @@ if __name__ == '__main__':
     # get args
     args = parser.parse_args()
 
-    trainer_task_name = init_clone_task()
-    trainer_task = Task.get_task(project_name=args.base_project_name, task_name=trainer_task_name)
-    local_json = trainer_task.artifacts['dataset'].get_local_copy()
-    print(local_json)
-
-    '''
     print('Get ClearML Template:', 'project_name:', args.base_project_name, 'task_name:', args.base_task_name)
     template_task = Task.get_task(project_name=args.base_project_name, task_name=args.base_task_name)
     project_id = template_task.get_project_id(args.base_project_name)
@@ -58,12 +48,6 @@ if __name__ == '__main__':
     
     # Set parameters (replaces existing hyperparameters in task)
     parameters = template_task.get_parameters(args.base_project_name)
-    print(parameters)
-
-    cloned_task.upload_artifact(name='dataset', artifact_object='data/custom_data/generic_instruct.json')
-
-    local_json = cloned_task.artifacts['dataset'].get_local_copy()
-    #print(local_json)
     
     parameters['Args/epoch'] = 2.0
     cloned_task.set_parameters(parameters)
@@ -73,5 +57,4 @@ if __name__ == '__main__':
         queue_name=args.queue_name,
         queue_id=None
     )
-    
-    '''
+
