@@ -3,12 +3,14 @@ import asyncio
 import json
 import os
 import re
+import shutil
 import traceback
 import hashlib
+import uuid
 from os import listdir
 from os.path import isfile, join
 import pandas as pd
-from clearml import Task
+from clearml import Task, Dataset
 from clearml import Logger
 
 step_count = 1
@@ -169,6 +171,59 @@ def validate_dataset():
 
     return dataset_sha1
 
+def get_dataset_path():
+
+    dataset_path = None
+    # JSON file
+    f = open(os.path.join(args.dataset_path,'dataset_info.json'), "r")
+
+    # Reading from file
+    dataset_info = json.loads(f.read())
+    if args.dataset in dataset_info:
+        dataset_path = os.path.join('data', dataset_info[args.dataset]['file_name'])
+
+    return dataset_path
+
+def prepare_dataset():
+
+    is_prepaired = False
+
+    #args.dataset -> generic_instruct
+    #args.dataset_path -> data
+    #args.dataset_name -> custom_dataset
+    #args.dataset_project -> datasets
+
+    #download the dataset
+    temp_download_dir = os.path.join(args.dataset_path, str(uuid.uuid4()))
+
+    local_dataset = Dataset.get(
+        dataset_name=args.dataset_name, dataset_project=args.dataset_project
+    ).get_mutable_local_copy(temp_download_dir)
+
+    #prepare custom dataset location
+
+    custom_dataset_path = get_dataset_path()
+    custom_dataset_filename = os.path.basename(custom_dataset_path)
+    custom_dataset_dir = os.path.dirname(custom_dataset_path)
+
+    if os.path.exists(custom_dataset_dir):
+        shutil.rmtree(custom_dataset_dir)
+    os.makedirs(custom_dataset_dir)
+
+    tmp_custom_dataset_path = os.path.join(temp_download_dir, args.dataset_name, args.dataset_name, custom_dataset_filename)
+    if os.path.exists(tmp_custom_dataset_path):
+        #print(custom_dataset_path)
+        #print(tmp_custom_dataset_path)
+        shutil.move(tmp_custom_dataset_path, custom_dataset_path)
+        is_prepaired = True
+    else:
+        print('Error: tmp_custom_dataset_path:' ,tmp_custom_dataset_path,'does not exist!')
+
+    #clean up tmp dir
+    shutil.rmtree(temp_download_dir)
+
+    return is_prepaired
+
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='LLM Factory Agent')
@@ -188,8 +243,12 @@ if __name__ == '__main__':
     parser.add_argument('--stage', type=str, default='sft', help='location of dataset')
     parser.add_argument('--dataset_path', type=str, default='data', help='location of dataset')
     parser.add_argument('--dataset', type=str, default='generic_instruct', help='location of dataset')
-    parser.add_argument('--dataset_sha1', type=str, default='bb2844e2293e4aa78acf05e9a7705c8d8deb0d62', help='location of dataset')
+    #parser.add_argument('--dataset_sha1', type=str, default='bb2844e2293e4aa78acf05e9a7705c8d8deb0d62', help='location of dataset')
     parser.add_argument('--output_model', type=str, default='custom_adapter', help='location of dataset')
+
+    #dataset params
+    parser.add_argument('--dataset_name', type=str, default='custom_dataset', help='location of dataset')
+    parser.add_argument('--dataset_project', type=str, default='datasets', help='location of dataset')
 
     # get args
     args = parser.parse_args()
@@ -198,46 +257,41 @@ if __name__ == '__main__':
 
     print('Starting ClearML Task')
 
-    dataset_sha1 = validate_dataset()
-    error_notice = 'dataset: ' + args.dataset + ' dataset_sha1:' + args.dataset_sha1 + " != local_dataset_sha1:" + dataset_sha1
-
     task = Task.init(project_name=args.project_name, task_name=args.task_name)
 
-    #validate the dataset
-    dataset_sha1 = validate_dataset()
-    if dataset_sha1 is not None:
-        if dataset_sha1 == args.dataset_sha1:
+    is_dataset_prepared = prepare_dataset()
 
-            dataset_validation_notice = 'dataset: ' + args.dataset + ' dataset_sha1:' + args.dataset_sha1 + " == local_dataset_sha1:" + dataset_sha1
-            Logger.current_logger().report_text(dataset_validation_notice, print_console=True)
+    if is_dataset_prepared:
 
-            #set env vars for run
-            set_env()
+        Logger.current_logger().report_text("Dataset prepared, starting training.", print_console=True)
 
-            execute(
-                ["bash", "-c", training_cmd],
-                lambda x: stdout_callback(x),
-                lambda x: stderror_callback(x)
+        # set env vars for run
+        set_env()
+
+        execute(
+            ["bash", "-c", training_cmd],
+            lambda x: stdout_callback(x),
+            lambda x: stderror_callback(x)
+        )
+
+        # at this point might as well upload zip, we will want to run directly from S3 at some point
+        task.upload_artifact('adapter', artifact_object=os.path.join('/workspace/outputmodels/custom_adapter'))
+
+        # adapter_config.json
+        # "base_model_name_or_path": "/data/llama-2-7b-chat-hf",
+
+        '''
+        adapter_path = '/workspace/outputmodels/custom_adapter'
+        adapter_files = [f for f in listdir(adapter_path) if isfile(join(adapter_path, f))]
+
+        for adapter_file in adapter_files:
+            task.upload_artifact(
+                'adapter_test', artifact_object=os.path.join(adapter_path, adapter_file)
             )
-
-            #at this point might as well upload zip, we will want to run directly from S3 at some point
-            task.upload_artifact('adapter', artifact_object=os.path.join('/workspace/outputmodels/custom_adapter'))
-
-            #adapter_config.json
-            #"base_model_name_or_path": "/data/llama-2-7b-chat-hf",
-
-            '''
-            adapter_path = '/workspace/outputmodels/custom_adapter'
-            adapter_files = [f for f in listdir(adapter_path) if isfile(join(adapter_path, f))]
-        
-            for adapter_file in adapter_files:
-                task.upload_artifact(
-                    'adapter_test', artifact_object=os.path.join(adapter_path, adapter_file)
-                )
-            '''
-        else:
-            # check dataset
-            dataset_validation_error = 'dataset: ' + args.dataset + ' dataset_sha1:' + args.dataset_sha1 + " != local_dataset_sha1:" + dataset_sha1
-            Logger.current_logger().report_text(dataset_validation_error, print_console=True)
+        '''
+    else:
+        # check dataset
+        #dataset_validation_error = 'dataset: ' + args.dataset + ' dataset_sha1:' + args.dataset_sha1 + " != local_dataset_sha1:" + dataset_sha1
+        Logger.current_logger().report_text('Was unable to prepare datasets.', print_console=True)
 
 

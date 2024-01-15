@@ -13,10 +13,13 @@ if __name__ == '__main__':
 
     # general args
     parser.add_argument('--project_name', type=str, default='llm_factory_trainer', help='name of project')
+    # WARNING
+    # I should not be putting this here, but it is a local debug S3, default needs to be removed
     parser.add_argument('--aws_endpoint_url', type=str, default='http://10.33.31.21:9000', help='name of project')
     parser.add_argument('--aws_access_key_id', type=str, default='hQYiBAhIGNP5xIIU79yO', help='location of dataset')
     parser.add_argument('--aws_secret_access_key', type=str, default='jWNVPYT6zkxamILIG4YYIXGUQZkeJC39wJO2yQRb', help='location of dataset')
     parser.add_argument('--adapter_repo_path', type=str, default='adapters', help='location of dataset')
+    # WARNING
 
     # get args
     args = parser.parse_args()
