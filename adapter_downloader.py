@@ -29,6 +29,28 @@ def set_adapter_info(adapter_info):
     with open(adapter_info_path, "w") as outfile:
         outfile.write(json_object)
 
+def fix_adapter_config(adapter_path):
+
+    adapter_config_path = os.path.join(adapter_path, 'adapter_config.json')
+
+    #base_model_repo
+    if os.path.exists(adapter_config_path):
+        f = open(adapter_config_path, "r")
+        adapter_config = json.loads(f.read())
+        #get base path
+        original_base_model_name_or_path = adapter_config['base_model_name_or_path']
+        base_model_name = os.path.basename(os.path.normpath(original_base_model_name_or_path))
+        print('original base_model_name_or_path:', original_base_model_name_or_path)
+        print('base_model_name:', base_model_name)
+        new_base_model_name_or_path = os.path.join(args.base_model_repo, base_model_name)
+        print('new base_model_name_or_path:', new_base_model_name_or_path)
+        adapter_config['base_model_name_or_path'] = new_base_model_name_or_path
+
+        json_object = json.dumps(adapter_config, indent=4)
+        with open(adapter_config_path, "w") as outfile:
+            outfile.write(json_object)
+
+
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description='LLM Factory Agent')
@@ -40,9 +62,10 @@ if __name__ == '__main__':
     parser.add_argument('--aws_endpoint_url', type=str, default='http://10.33.31.21:9000', help='name of project')
     parser.add_argument('--aws_access_key_id', type=str, default='hQYiBAhIGNP5xIIU79yO', help='location of dataset')
     parser.add_argument('--aws_secret_access_key', type=str, default='jWNVPYT6zkxamILIG4YYIXGUQZkeJC39wJO2yQRb', help='location of dataset')
+    # WARNING
     parser.add_argument('--adapter_repo_path', type=str, default='adapters', help='location of dataset')
     parser.add_argument('--adapter_info', type=str, default='adapter_info.json', help='location of dataset')
-    # WARNING
+    parser.add_argument('--base_model_repo', type=str, default='/data', help='location of dataset')
 
     # get args
     args = parser.parse_args()
@@ -80,13 +103,17 @@ if __name__ == '__main__':
                     tmp_adapter_save_path = os.path.join(tempfile.gettempdir(), job_id + '.zip')
                     print('Downloading: ', tmp_adapter_save_path)
                     my_bucket.download_file(object.key, tmp_adapter_save_path)
-                    print('Saving adapter to repo')
                     adapter_save_path = os.path.join(args.adapter_repo_path, job_id)
+                    print('Saving adapter to repo:', adapter_save_path)
                     with zipfile.ZipFile(tmp_adapter_save_path, 'r') as zip_ref:
                         zip_ref.extractall(adapter_save_path)
                     print('Removing temporary files:', tmp_adapter_save_path)
                     #remove temp file
                     os.remove(tmp_adapter_save_path)
+
+                    #modifying
+                    print('Modifying adapter_config.json model path:', adapter_save_path)
+                    fix_adapter_config(adapter_save_path)
 
                     #record
                     adapter_info[job_id] = adapter_save_path
