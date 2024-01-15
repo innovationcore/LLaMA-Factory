@@ -192,6 +192,7 @@ def prepare_dataset():
     #args.dataset_path -> data
     #args.dataset_name -> custom_dataset
     #args.dataset_project -> datasets
+    #args.dataset_file -> example_generic_instruct.json
 
     #download the dataset
     temp_download_dir = os.path.join(args.dataset_path, str(uuid.uuid4()))
@@ -206,17 +207,18 @@ def prepare_dataset():
 
     custom_dataset_path = get_dataset_path()
     #adjust for fixed path of container
-    custom_dataset_path = os.path.join('/workspace/',custom_dataset_path)
+    custom_dataset_path = os.path.join(args.training_root, custom_dataset_path)
 
     #/workspace/data/custom_data/generic_instruct.json
-    custom_dataset_filename = os.path.basename(custom_dataset_path)
+
+    #custom_dataset_filename = os.path.basename(custom_dataset_path)
     custom_dataset_dir = os.path.dirname(custom_dataset_path)
 
     if os.path.exists(custom_dataset_dir):
         shutil.rmtree(custom_dataset_dir)
     os.makedirs(custom_dataset_dir)
 
-    tmp_custom_dataset_path = os.path.join(temp_download_dir, args.dataset_name, args.dataset_name, custom_dataset_filename)
+    tmp_custom_dataset_path = os.path.join(temp_download_dir, args.dataset_name, args.dataset_name, args.dataset_file)
     if os.path.exists(tmp_custom_dataset_path):
         #print(custom_dataset_path)
         #print(tmp_custom_dataset_path)
@@ -254,13 +256,16 @@ if __name__ == '__main__':
     parser.add_argument('--output_model', type=str, default='custom_adapter', help='location of dataset')
 
     #dataset params
-    parser.add_argument('--dataset_name', type=str, default='custom_dataset', help='location of dataset')
     parser.add_argument('--dataset_project', type=str, default='datasets', help='location of dataset')
+    parser.add_argument('--dataset_name', type=str, default='example_custom_dataset', help='location of dataset')
+    parser.add_argument('--dataset_file', type=str, default='example_generic_instruct.json', help='location of dataset')
+    parser.add_argument('--training_root', type=str, default='/workspace', help='location of dataset')
 
     # get args
     args = parser.parse_args()
 
-    training_cmd = '/workspace/clearml_train.sh'
+    training_cmd = 'clearml_train.sh'
+    training_cmd = os.path.join(args.training_root, training_cmd)
 
     print('Starting ClearML Task')
 

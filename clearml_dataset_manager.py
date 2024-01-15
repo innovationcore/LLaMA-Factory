@@ -22,8 +22,7 @@ if __name__ == '__main__':
     #WARNING
     parser.add_argument('--local_dataset_path', type=str, default='data/example_custom_dataset', help='location of dataset')
     parser.add_argument('--bucket', type=str, default='datasets', help='location of dataset')
-    parser.add_argument('--remote_dataset_path', type=str, default='custom_dataset',
-                        help='location of dataset')
+    parser.add_argument('--remote_dataset_path', type=str, default='example_custom_dataset', help='location of dataset')
 
     # get args
     args = parser.parse_args()

@@ -1,4 +1,5 @@
 import argparse
+import json
 import uuid
 
 from clearml import Task
@@ -46,11 +47,22 @@ if __name__ == '__main__':
         project=project_id,
     )
     
-    # Set parameters (replaces existing hyperparameters in task)
+    # get parameters from template
     parameters = template_task.get_parameters(args.base_project_name)
 
+    #dump template params
+    '''
+    json_object = json.dumps(parameters, indent=4)
+    with open('training_parameters.json', "w") as outfile:
+        outfile.write(json_object)
+    '''
+    #set parameters for training
+
+    #do pre-training, which requires changing stage and dataset def
     parameters['Args/stage'] = 'pt'
     parameters['Args/dataset'] = 'generic_text'
+
+    #set new params
     cloned_task.set_parameters(parameters)
 
     Task.enqueue(
