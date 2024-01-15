@@ -48,8 +48,9 @@ if __name__ == '__main__':
     
     # Set parameters (replaces existing hyperparameters in task)
     parameters = template_task.get_parameters(args.base_project_name)
-    
-    parameters['Args/epoch'] = 2.0
+
+    parameters['Args/stage'] = 'pt'
+    parameters['Args/dataset'] = 'generic_text'
     cloned_task.set_parameters(parameters)
 
     Task.enqueue(
