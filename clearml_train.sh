@@ -42,7 +42,7 @@ rm -rf /workspace/outputmodels/custom_adapter
 git config --global --add safe.directory /workspace
 
 
-deepspeed --num_gpus 4 --master_port=9901 src/train_bash.py \
+deepspeed --num_gpus 3 --master_port=9901 src/train_bash.py \
     --deepspeed config/deep_speed_zero2.json \
     --stage $STAGE \
     --model_name_or_path /workspace/basemodels/$MODEL \
