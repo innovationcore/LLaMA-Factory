@@ -72,7 +72,7 @@ if __name__ == '__main__':
 
         for object in my_bucket.objects.filter(Prefix=prefix):
             if 'custom_adapter.zip' in object.key:
-                job_id = object.key.split('/')[1]
+                job_id = object.key.split('/')[1].split('.')[0]
 
                 if job_id not in adapter_info:
 
