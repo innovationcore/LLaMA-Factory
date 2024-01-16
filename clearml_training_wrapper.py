@@ -273,6 +273,7 @@ if __name__ == '__main__':
     parser.add_argument('--dataset_name', type=str, default='example_custom_dataset', help='location of dataset')
     parser.add_argument('--dataset_file', type=str, default='example_generic_instruct.json', help='location of dataset')
     parser.add_argument('--training_root', type=str, default='/workspace', help='location of dataset')
+    parser.add_argument('--clearml_cache', type=str, default='/root/.clearml/cache', help='location of dataset')
 
     # get args
     args = parser.parse_args()
@@ -301,9 +302,10 @@ if __name__ == '__main__':
             lambda x: stderror_callback(x)
         )
 
-        Logger.current_logger().report_text("Removing custom dataset.", print_console=True)
+        Logger.current_logger().report_text("Cleaning up", print_console=True)
         shutil.rmtree(os.path.join(args.training_root, get_dataset_path()))
-
+        shutil.rmtree(args.clearml_cache)
+        
         Logger.current_logger().report_text("Uploading adapter.", print_console=True)
 
         # at this point might as well upload zip, we will want to run directly from S3 at some point
