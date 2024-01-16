@@ -28,6 +28,8 @@ if __name__ == '__main__':
     # general args
     parser.add_argument('--base_project_name', type=str, default='llm_factory_trainer', help='name of project')
     parser.add_argument('--base_task_name', type=str, default='trainer_template_v0', help='name of project')
+    #parser.add_argument('--base_task_name', type=str, default='trainer_template_v0_campus_A100', help='name of project')
+
     parser.add_argument('--queue_name', type=str, default='campus_A100_llm', help='name of project')
 
     # get args
