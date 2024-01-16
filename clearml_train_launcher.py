@@ -79,4 +79,3 @@ if __name__ == '__main__':
         queue_name=args.queue_name,
         queue_id=None
     )
-
