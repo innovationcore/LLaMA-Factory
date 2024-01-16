@@ -233,7 +233,7 @@ def prepare_dataset():
         print('Error: tmp_custom_dataset_path:' ,tmp_custom_dataset_path,'does not exist!')
 
     #clean up tmp dir
-    shutil.rmtree(temp_download_dir)
+    #shutil.rmtree(temp_download_dir)
 
     return is_prepaired
 
