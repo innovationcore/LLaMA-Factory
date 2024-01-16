@@ -303,9 +303,9 @@ if __name__ == '__main__':
         )
 
         Logger.current_logger().report_text("Cleaning up", print_console=True)
-        shutil.rmtree(os.path.join(args.training_root, get_dataset_path()))
+        shutil.rmtree(os.path.dirname(os.path.join(args.training_root, get_dataset_path())))
         shutil.rmtree(args.clearml_cache)
-        
+
         Logger.current_logger().report_text("Uploading adapter.", print_console=True)
 
         # at this point might as well upload zip, we will want to run directly from S3 at some point
