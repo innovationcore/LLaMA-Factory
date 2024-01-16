@@ -10,7 +10,7 @@ import uuid
 from os import listdir
 from os.path import isfile, join
 import pandas as pd
-from clearml import Task, Dataset
+from clearml import Task, Dataset, StorageManager
 from clearml import Logger
 
 step_count = 1
@@ -186,6 +186,9 @@ def get_dataset_path():
 
 def prepare_dataset():
 
+    #disable cache
+    new_cache_limit = StorageManager.set_cache_file_limit(cache_file_limit=0)
+
     is_prepaired = False
 
     #args.dataset -> generic_instruct
@@ -237,7 +240,9 @@ def prepare_dataset():
         print('Error: tmp_custom_dataset_path:' ,tmp_custom_dataset_path,'does not exist!')
 
     #clean up tmp dir
-    #shutil.rmtree(temp_download_dir)
+    print('removing tmp_custom_dataset_path:', tmp_custom_dataset_path)
+    shutil.rmtree(temp_download_dir)
+    print('remove clearml storage cache:')
 
     return is_prepaired
 

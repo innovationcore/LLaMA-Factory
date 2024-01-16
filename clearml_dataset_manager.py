@@ -50,10 +50,7 @@ if __name__ == '__main__':
                 dataset_name=args.remote_dataset_path, dataset_project="datasets"
             )
 
-            #source_url = args.aws_endpoint_url.replace('http://','s3://') + '/' + args.bucket
-            #dataset_path = args.remote_dataset_path
-            #dataset.add_external_files(source_url=source_url, dataset_path=dataset_path)
-
+            #add files to clearml
             dataset_path = args.remote_dataset_path
             source_url = args.aws_endpoint_url.replace('http://', 's3://') + '/' + args.bucket + '/' + dataset_path
             dataset.add_external_files(source_url=source_url, dataset_path=dataset_path)
