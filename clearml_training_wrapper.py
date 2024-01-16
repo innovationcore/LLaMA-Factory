@@ -289,21 +289,20 @@ if __name__ == '__main__':
     print('post-dataset')
 
     if is_dataset_prepared:
-        print('is prepared 0')
 
         Logger.current_logger().report_text("Dataset prepared, starting training.", print_console=True)
 
-        print('is prepared 1')
         # set env vars for run
         set_env()
 
-        print('is prepared 2')
         execute(
             ["bash", "-c", training_cmd],
             lambda x: stdout_callback(x),
             lambda x: stderror_callback(x)
         )
-        print('is prepared 3')
+
+        Logger.current_logger().report_text("Uploading adapter.", print_console=True)
+
         # at this point might as well upload zip, we will want to run directly from S3 at some point
         task.upload_artifact('adapter', artifact_object=os.path.join('/workspace/outputmodels/custom_adapter'))
 
