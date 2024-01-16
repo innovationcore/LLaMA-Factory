@@ -187,7 +187,7 @@ def get_dataset_path():
 def prepare_dataset():
 
     #disable cache
-    new_cache_limit = StorageManager.set_cache_file_limit(cache_file_limit=0)
+    new_cache_limit = StorageManager.set_cache_file_limit(cache_file_limit=1)
 
     is_prepaired = False
 
