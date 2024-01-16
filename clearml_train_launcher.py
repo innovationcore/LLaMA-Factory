@@ -27,9 +27,12 @@ if __name__ == '__main__':
 
     # general args
     parser.add_argument('--base_project_name', type=str, default='llm_factory_trainer', help='name of project')
-    parser.add_argument('--base_task_name', type=str, default='trainer_template_v0', help='name of project')
+    #parser.add_argument('--base_task_name', type=str, default='trainer_template_v0', help='name of project')
+    parser.add_argument('--base_task_name', type=str, default='trainer_template_v0_campus_A100', help='name of project')
 
     parser.add_argument('--queue_name', type=str, default='campus_A100_llm', help='name of project')
+
+
 
     # get args
     args = parser.parse_args()
@@ -51,8 +54,8 @@ if __name__ == '__main__':
     # get parameters from template
     parameters = template_task.get_parameters(args.base_project_name)
 
-    #dump template params
     '''
+    #dump template params
     json_object = json.dumps(parameters, indent=4)
     with open('training_parameters.json', "w") as outfile:
         outfile.write(json_object)
@@ -65,8 +68,12 @@ if __name__ == '__main__':
     #parameters['Args/dataset'] = 'generic_text'
 
     # example settings for a custom instruction set
-    parameters['Args/dataset_name'] = 'example-case_chat_datasets'
-    parameters['Args/dataset_file'] = 'case-chat-med-train.json'
+    #parameters['Args/dataset_name'] = 'example-case_chat_datasets'
+    #parameters['Args/dataset_file'] = 'case-chat-med-train.json'
+
+    parameters['Args/dataset_name'] = '719d7504070eb988f707a44f187c12ac'
+    parameters['Args/dataset_file'] = '7a81d6d4-5a4d-4322-af7c-09489d0f9c79.json'
+
 
     #set new params
     cloned_task.set_parameters(parameters)
