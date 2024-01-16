@@ -57,11 +57,16 @@ if __name__ == '__main__':
     with open('training_parameters.json', "w") as outfile:
         outfile.write(json_object)
     '''
-    #change parameters related to dataset and training file
-    parameters['Args/dataset_name'] = 'example_custom_dataset'
-    parameters['Args/dataset_file'] = 'example_generic_text.txt'
-    parameters['Args/stage'] = 'pt'
-    parameters['Args/dataset'] = 'generic_text'
+
+    #example settings for custom text pre-training
+    #parameters['Args/dataset_name'] = 'example_custom_dataset'
+    #parameters['Args/dataset_file'] = 'example_generic_text.txt'
+    #parameters['Args/stage'] = 'pt'
+    #parameters['Args/dataset'] = 'generic_text'
+
+    # example settings for a custom instruction set
+    parameters['Args/dataset_name'] = 'example-case_chat_datasets'
+    parameters['Args/dataset_file'] = 'case-chat-med-train.json'
 
     #set new params
     cloned_task.set_parameters(parameters)
