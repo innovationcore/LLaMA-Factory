@@ -223,6 +223,9 @@ def prepare_dataset():
 
     tmp_custom_dataset_path = os.path.join(temp_download_dir, args.dataset_name, args.dataset_name, args.dataset_file)
     print('tmp_custom_dataset_path:', tmp_custom_dataset_path)
+    tmp_custom_dataset_path = os.path.join(temp_download_dir, args.dataset_name, args.dataset_name, args.dataset_file)
+    tmp_custom_dataset_path = os.path.join(args.training_root, tmp_custom_dataset_path)
+    print('fixed tmp_custom_dataset_path:', tmp_custom_dataset_path)
     if os.path.exists(tmp_custom_dataset_path):
         #print(custom_dataset_path)
         #print(tmp_custom_dataset_path)
