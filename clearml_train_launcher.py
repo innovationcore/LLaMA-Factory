@@ -58,13 +58,10 @@ if __name__ == '__main__':
         outfile.write(json_object)
     '''
     #change parameters related to dataset and training file
-    #parameters['Args/dataset_name'] = 'example_custom_dataset'
-    #parameters['Args/dataset_file'] = 'example_generic_text.txt'
-
-    #if you are doing pre-training, you must also change stage and dataset name
+    parameters['Args/dataset_name'] = 'example_custom_dataset'
+    parameters['Args/dataset_file'] = 'example_generic_text.txt'
     parameters['Args/stage'] = 'pt'
     parameters['Args/dataset'] = 'generic_text'
-    parameters['Args/dataset_file'] = 'example_generic_text.txt'
 
     #set new params
     cloned_task.set_parameters(parameters)
