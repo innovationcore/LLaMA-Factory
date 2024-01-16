@@ -70,7 +70,6 @@ if __name__ == '__main__':
     parameters['Args/dataset_name'] = '719d7504070eb988f707a44f187c12ac'
     parameters['Args/dataset_file'] = '7a81d6d4-5a4d-4322-af7c-09489d0f9c79.json'
 
-
     #set new params
     cloned_task.set_parameters(parameters)
 
