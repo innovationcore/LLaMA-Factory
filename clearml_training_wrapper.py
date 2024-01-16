@@ -33,7 +33,9 @@ async def _read_stream(stream, cb):
 
 async def _stream_subprocess(cmd, stdout_cb, stderr_cb):
     process = await asyncio.create_subprocess_exec(*cmd,
-            stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
+            limit=1024 * 1024 * 10,  # 10M buffer
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE)
 
     await asyncio.gather(
         _read_stream(process.stdout, stdout_cb),
