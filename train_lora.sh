@@ -47,7 +47,7 @@ echo "Running ${RUN_NAME}"
   export GRADIENT_ACCUMULATION_STEPS=2
   echo "GRADIENT_ACCUMULATION_STEPS="$GRADIENT_ACCUMULATION_STEPS
 
-  export EPOCH=10.0
+  export EPOCH=5.0
   #export EPOCH=1.0
   #export LR=1e-4
   #export LR=5e-5
@@ -56,14 +56,14 @@ echo "Running ${RUN_NAME}"
   export LR=2e-4
 
 
-  export TEMPLATE=default
-  #export TEMPLATE=mistral
+  #export TEMPLATE=default
+  export TEMPLATE=mistral
 
-  export MODEL=llama-2-7b-chat-hf
+  #export MODEL=llama-2-7b-chat-hf
   #export MODEL=llama-2-70b-chat-hf
   #export MODEL=falcon-180B
-  #export MODEL=Mixtral-8x7B-Instruct-v0.1
-  ##export MODEL=Mistral-7B-Instruct-v0.1
+  export MODEL=Mixtral-8x7B-Instruct-v0.1
+  #export MODEL=Mistral-7B-Instruct-v0.1
   #export MODEL=MELT-Mistral-3x7B-Instruct-v0.1
   #export MODEL=llama-2-3x70b-chat-hf
   #export MODEL=TinyLlama-1.1B-Chat-v1.0
