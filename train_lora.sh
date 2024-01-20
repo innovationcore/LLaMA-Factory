@@ -47,7 +47,7 @@ echo "Running ${RUN_NAME}"
   export GRADIENT_ACCUMULATION_STEPS=2
   echo "GRADIENT_ACCUMULATION_STEPS="$GRADIENT_ACCUMULATION_STEPS
 
-  export EPOCH=3.0
+  export EPOCH=10.0
   #export EPOCH=1.0
   #export LR=1e-4
   #export LR=5e-5
