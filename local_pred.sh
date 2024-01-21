@@ -23,7 +23,7 @@ CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python src/train_bash.py \
     --template $TEMPLATE \
     --finetuning_type lora \
     --output_dir path_to_predict_result \
-    --per_device_eval_batch_size 8 \
+    --per_device_eval_batch_size 1 \
     --predict_with_generate \
     --fp16
 
