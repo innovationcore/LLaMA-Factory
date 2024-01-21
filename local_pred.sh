@@ -17,7 +17,7 @@ start=$(date +%s)
 CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python src/train_bash.py \
     --stage $STAGE \
     --do_predict \
-    --model_name_or_path $MODEL \
+    --model_name_or_path /workspace/basemodels/$MODEL \
     --adapter_name_or_path $ADAPTER \
     --dataset $DATASET \
     --template $TEMPLATE \
