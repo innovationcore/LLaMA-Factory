@@ -3,7 +3,7 @@
 
 export STAGE=sft
 
-export MODEL=llama-2-7b-hf
+export MODEL=llama-2-7b-chat-hf
 #export MODEL=Mixtral-8x7B-Instruct-v0.1
 export ADAPTER=/workspace/outputmodels/generic_instruct_S-sft_R-64_A-16_E-3_LR-2e-4_M-llama-2-7b-chat-hf-all
 
