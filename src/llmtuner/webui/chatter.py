@@ -1,52 +1,42 @@
-import gradio as gr
-from gradio.components import Component # cannot use TYPE_CHECKING here
-from typing import TYPE_CHECKING, Any, Dict, Generator, List, Optional, Tuple
+import json
+import os
+from typing import TYPE_CHECKING, Any, Dict, Generator, List, Optional, Sequence, Tuple
 
-from llmtuner.chat import ChatModel
-from llmtuner.extras.misc import torch_gc
-from llmtuner.hparams import GeneratingArguments
-from llmtuner.webui.common import get_save_dir
-from llmtuner.webui.locales import ALERTS
+import gradio as gr
+from gradio.components import Component  # cannot use TYPE_CHECKING here
+
+from ..chat import ChatModel
+from ..data import Role
+from ..extras.misc import torch_gc
+from .common import get_save_dir
+from .locales import ALERTS
+
 
 if TYPE_CHECKING:
-    from llmtuner.webui.manager import Manager
+    from ..chat import BaseEngine
+    from .manager import Manager
 
 
 class WebChatModel(ChatModel):
-
-    def __init__(
-        self,
-        manager: "Manager",
-        demo_mode: Optional[bool] = False,
-        lazy_init: Optional[bool] = True
-    ) -> None:
+    def __init__(self, manager: "Manager", demo_mode: bool = False, lazy_init: bool = True) -> None:
         self.manager = manager
         self.demo_mode = demo_mode
-        self.model = None
-        self.tokenizer = None
-        self.generating_args = GeneratingArguments()
+        self.engine: Optional["BaseEngine"] = None
 
-        if not lazy_init: # read arguments from command line
+        if not lazy_init:  # read arguments from command line
             super().__init__()
 
-        if demo_mode: # load demo_config.json if exists
-            import json
-            try:
-                with open("demo_config.json", "r", encoding="utf-8") as f:
-                    args = json.load(f)
-                assert args.get("model_name_or_path", None) and args.get("template", None)
-                super().__init__(args)
-            except AssertionError:
-                print("Please provided model name and template in `demo_config.json`.")
-            except:
-                print("Cannot find `demo_config.json` at current directory.")
+        if demo_mode and os.environ.get("DEMO_MODEL") and os.environ.get("DEMO_TEMPLATE"):  # load demo model
+            model_name_or_path = os.environ.get("DEMO_MODEL")
+            template = os.environ.get("DEMO_TEMPLATE")
+            super().__init__(dict(model_name_or_path=model_name_or_path, template=template))
 
     @property
     def loaded(self) -> bool:
-        return self.model is not None
+        return self.engine is not None
 
     def load_model(self, data: Dict[Component, Any]) -> Generator[str, None, None]:
-        get = lambda name: data[self.manager.get_elem_by_name(name)]
+        get = lambda elem_id: data[self.manager.get_elem_by_id(elem_id)]
         lang = get("top.lang")
         error = ""
         if self.loaded:
@@ -64,9 +54,12 @@ class WebChatModel(ChatModel):
             return
 
         if get("top.adapter_path"):
-            adapter_name_or_path = ",".join([
-                get_save_dir(get("top.model_name"), get("top.finetuning_type"), adapter)
-            for adapter in get("top.adapter_path")])
+            adapter_name_or_path = ",".join(
+                [
+                    get_save_dir(get("top.model_name"), get("top.finetuning_type"), adapter)
+                    for adapter in get("top.adapter_path")
+                ]
+            )
         else:
             adapter_name_or_path = None
 
@@ -79,14 +72,15 @@ class WebChatModel(ChatModel):
             template=get("top.template"),
             flash_attn=(get("top.booster") == "flash_attn"),
             use_unsloth=(get("top.booster") == "unsloth"),
-            rope_scaling=get("top.rope_scaling") if get("top.rope_scaling") in ["linear", "dynamic"] else None
+            rope_scaling=get("top.rope_scaling") if get("top.rope_scaling") in ["linear", "dynamic"] else None,
+            infer_backend=get("infer.infer_backend"),
         )
         super().__init__(args)
 
         yield ALERTS["info_loaded"][lang]
 
     def unload_model(self, data: Dict[Component, Any]) -> Generator[str, None, None]:
-        lang = data[self.manager.get_elem_by_name("top.lang")]
+        lang = data[self.manager.get_elem_by_id("top.lang")]
 
         if self.demo_mode:
             gr.Warning(ALERTS["err_demo"][lang])
@@ -94,34 +88,43 @@ class WebChatModel(ChatModel):
             return
 
         yield ALERTS["info_unloading"][lang]
-        self.model = None
-        self.tokenizer = None
+        self.engine = None
         torch_gc()
         yield ALERTS["info_unloaded"][lang]
 
     def predict(
         self,
         chatbot: List[Tuple[str, str]],
+        role: str,
         query: str,
-        history: List[Tuple[str, str]],
+        messages: Sequence[Dict[str, str]],
         system: str,
+        tools: str,
         max_new_tokens: int,
         top_p: float,
-        temperature: float
-    ) -> Generator[Tuple[List[Tuple[str, str]], List[Tuple[str, str]]], None, None]:
+        temperature: float,
+    ) -> Generator[Tuple[List[Tuple[str, str]], List[Dict[str, str]]], None, None]:
         chatbot.append([query, ""])
+        query_messages = messages + [{"role": role, "content": query}]
         response = ""
         for new_text in self.stream_chat(
-            query, history, system, max_new_tokens=max_new_tokens, top_p=top_p, temperature=temperature
+            query_messages, system, tools, max_new_tokens=max_new_tokens, top_p=top_p, temperature=temperature
         ):
             response += new_text
-            new_history = history + [(query, response)]
-            chatbot[-1] = [query, self.postprocess(response)]
-            yield chatbot, new_history
+            if tools:
+                result = self.engine.template.format_tools.extract(response)
+            else:
+                result = response
 
-    def postprocess(self, response: str) -> str:
-        blocks = response.split("```")
-        for i, block in enumerate(blocks):
-            if i % 2 == 0:
-                blocks[i] = block.replace("<", "&lt;").replace(">", "&gt;")
-        return "```".join(blocks)
+            if isinstance(result, tuple):
+                name, arguments = result
+                arguments = json.loads(arguments)
+                tool_call = json.dumps({"name": name, "arguments": arguments}, ensure_ascii=False)
+                output_messages = query_messages + [{"role": Role.FUNCTION.value, "content": tool_call}]
+                bot_text = "```json\n" + tool_call + "\n```"
+            else:
+                output_messages = query_messages + [{"role": Role.ASSISTANT.value, "content": result}]
+                bot_text = result
+
+            chatbot[-1] = [query, bot_text]
+            yield chatbot, output_messages

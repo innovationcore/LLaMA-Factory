@@ -1,11 +1,13 @@
-import os
-import math
 import json
-from typing import List, Optional
+import math
+import os
+from typing import List
+
 from transformers.trainer import TRAINER_STATE_NAME
 
-from llmtuner.extras.logging import get_logger
-from llmtuner.extras.packages import is_matplotlib_available
+from .logging import get_logger
+from .packages import is_matplotlib_available
+
 
 if is_matplotlib_available():
     import matplotlib.pyplot as plt
@@ -20,7 +22,7 @@ def smooth(scalars: List[float]) -> List[float]:
     """
     last = scalars[0]
     smoothed = list()
-    weight = 1.8 * (1 / (1 + math.exp(-0.05 * len(scalars))) - 0.5) # a sigmoid function
+    weight = 1.8 * (1 / (1 + math.exp(-0.05 * len(scalars))) - 0.5)  # a sigmoid function
     for next_val in scalars:
         smoothed_val = last * weight + (1 - weight) * next_val
         smoothed.append(smoothed_val)
@@ -28,8 +30,7 @@ def smooth(scalars: List[float]) -> List[float]:
     return smoothed
 
 
-def plot_loss(save_dictionary: os.PathLike, keys: Optional[List[str]] = ["loss"]) -> None:
-
+def plot_loss(save_dictionary: os.PathLike, keys: List[str] = ["loss"]) -> None:
     with open(os.path.join(save_dictionary, TRAINER_STATE_NAME), "r", encoding="utf-8") as f:
         data = json.load(f)
 
@@ -45,11 +46,12 @@ def plot_loss(save_dictionary: os.PathLike, keys: Optional[List[str]] = ["loss"]
             continue
 
         plt.figure()
-        plt.plot(steps, metrics, alpha=0.4, label="original")
-        plt.plot(steps, smooth(metrics), label="smoothed")
+        plt.plot(steps, metrics, color="#1f77b4", alpha=0.4, label="original")
+        plt.plot(steps, smooth(metrics), color="#1f77b4", label="smoothed")
         plt.title("training {} of {}".format(key, save_dictionary))
         plt.xlabel("step")
         plt.ylabel(key)
         plt.legend()
-        plt.savefig(os.path.join(save_dictionary, "training_{}.png".format(key)), format="png", dpi=100)
-        print("Figure saved:", os.path.join(save_dictionary, "training_{}.png".format(key)))
+        figure_path = os.path.join(save_dictionary, "training_{}.png".format(key.replace(os.path.sep, "_")))
+        plt.savefig(figure_path, format="png", dpi=100)
+        print("Figure saved at:", figure_path)

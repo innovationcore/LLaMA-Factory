@@ -1,14 +1,19 @@
-import os
 import json
-import torch
+import os
 from typing import TYPE_CHECKING, Dict, List, Optional, Tuple, Union
+
+import torch
 from transformers import Trainer
 
-from llmtuner.extras.logging import get_logger
+from ...extras.logging import get_logger
+from ..utils import create_custom_optimzer, create_custom_scheduler
+
 
 if TYPE_CHECKING:
-    from transformers.trainer import PredictionOutput
     from transformers.modeling_utils import PreTrainedModel
+    from transformers.trainer import PredictionOutput
+
+    from ...hparams import FinetuningArguments
 
 
 logger = get_logger(__name__)
@@ -16,18 +21,27 @@ logger = get_logger(__name__)
 
 class PairwiseTrainer(Trainer):
     r"""
-    Inherits PeftTrainer to compute pairwise loss.
+    Inherits Trainer to compute pairwise loss.
     """
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.can_return_loss = True # override property to return eval_loss
+    def __init__(self, finetuning_args: "FinetuningArguments", **kwargs) -> None:
+        super().__init__(**kwargs)
+        self.finetuning_args = finetuning_args
+        self.can_return_loss = True  # override property to return eval_loss
+
+    def create_optimizer(self) -> "torch.optim.Optimizer":
+        if self.optimizer is None:
+            self.optimizer = create_custom_optimzer(self.model, self.args, self.finetuning_args)
+        return super().create_optimizer()
+
+    def create_scheduler(
+        self, num_training_steps: int, optimizer: Optional["torch.optim.Optimizer"] = None
+    ) -> "torch.optim.lr_scheduler.LRScheduler":
+        create_custom_scheduler(self.args, num_training_steps, optimizer)
+        return super().create_scheduler(num_training_steps, optimizer)
 
     def compute_loss(
-        self,
-        model: "PreTrainedModel",
-        inputs: Dict[str, torch.Tensor],
-        return_outputs: Optional[bool] = False
+        self, model: "PreTrainedModel", inputs: Dict[str, torch.Tensor], return_outputs: bool = False
     ) -> Union[torch.Tensor, Tuple[torch.Tensor, List[torch.Tensor]]]:
         r"""
         Computes pairwise loss. The first n examples are chosen and the last n examples are rejected.
@@ -35,7 +49,7 @@ class PairwiseTrainer(Trainer):
         Subclass and override to inject custom behavior.
 
         Note that the first element will be removed from the output tuple.
-        See: https://github.com/huggingface/transformers/blob/v4.30.2/src/transformers/trainer.py#L3509
+        See: https://github.com/huggingface/transformers/blob/v4.39.1/src/transformers/trainer.py#L3777
         """
         # Compute rewards
         _, _, values = model(**inputs, output_hidden_states=True, return_dict=True)
@@ -68,9 +82,9 @@ class PairwiseTrainer(Trainer):
             assert div_index > 0
             chosen_trunc_rewards = chosen_rewards[i, div_index:end_index]
             rejected_trunc_rewards = rejected_rewards[i, div_index:end_index]
-            if return_outputs: # use the score on the last token except pad token for inference
-                chosen_scores.append(chosen_rewards[i, chosen_length-1])
-                rejected_scores.append(rejected_rewards[i, rejected_length-1])
+            if return_outputs:  # use the score on the last token except pad token for inference
+                chosen_scores.append(chosen_rewards[i, chosen_length - 1])
+                rejected_scores.append(rejected_rewards[i, rejected_length - 1])
             loss += -torch.nn.functional.logsigmoid(chosen_trunc_rewards - rejected_trunc_rewards).mean()
 
         loss = loss / batch_size
@@ -80,10 +94,7 @@ class PairwiseTrainer(Trainer):
 
         return loss
 
-    def save_predictions(
-        self,
-        predict_results: "PredictionOutput"
-    ) -> None:
+    def save_predictions(self, predict_results: "PredictionOutput") -> None:
         r"""
         Saves model predictions to `output_dir`.
 

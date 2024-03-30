@@ -1,13 +1,16 @@
-import gradio as gr
 from typing import TYPE_CHECKING, Dict, Generator, List
 
-from llmtuner.train import export_model
-from llmtuner.webui.common import get_save_dir
-from llmtuner.webui.locales import ALERTS
+import gradio as gr
+
+from ...train import export_model
+from ..common import get_save_dir
+from ..locales import ALERTS
+
 
 if TYPE_CHECKING:
     from gradio.components import Component
-    from llmtuner.webui.engine import Engine
+
+    from ..engine import Engine
 
 
 GPTQ_BITS = ["8", "4", "3", "2"]
@@ -23,7 +26,9 @@ def save_model(
     max_shard_size: int,
     export_quantization_bit: int,
     export_quantization_dataset: str,
-    export_dir: str
+    export_legacy_format: bool,
+    export_dir: str,
+    export_hub_model_id: str,
 ) -> Generator[str, None, None]:
     error = ""
     if not model_name:
@@ -43,7 +48,9 @@ def save_model(
         return
 
     if adapter_path:
-        adapter_name_or_path = ",".join([get_save_dir(model_name, finetuning_type, adapter) for adapter in adapter_path])
+        adapter_name_or_path = ",".join(
+            [get_save_dir(model_name, finetuning_type, adapter) for adapter in adapter_path]
+        )
     else:
         adapter_name_or_path = None
 
@@ -53,9 +60,11 @@ def save_model(
         finetuning_type=finetuning_type,
         template=template,
         export_dir=export_dir,
+        export_hub_model_id=export_hub_model_id or None,
         export_size=max_shard_size,
         export_quantization_bit=int(export_quantization_bit) if export_quantization_bit in GPTQ_BITS else None,
-        export_quantization_dataset=export_quantization_dataset
+        export_quantization_dataset=export_quantization_dataset,
+        export_legacy_format=export_legacy_format,
     )
 
     yield ALERTS["info_exporting"][lang]
@@ -65,36 +74,44 @@ def save_model(
 
 def create_export_tab(engine: "Engine") -> Dict[str, "Component"]:
     with gr.Row():
-        max_shard_size = gr.Slider(value=1, minimum=1, maximum=100)
+        max_shard_size = gr.Slider(value=1, minimum=1, maximum=100, step=1)
         export_quantization_bit = gr.Dropdown(choices=["none", "8", "4", "3", "2"], value="none")
         export_quantization_dataset = gr.Textbox(value="data/c4_demo.json")
+        export_legacy_format = gr.Checkbox()
 
-    export_dir = gr.Textbox()
+    with gr.Row():
+        export_dir = gr.Textbox()
+        export_hub_model_id = gr.Textbox()
+
     export_btn = gr.Button()
     info_box = gr.Textbox(show_label=False, interactive=False)
 
     export_btn.click(
         save_model,
         [
-            engine.manager.get_elem_by_name("top.lang"),
-            engine.manager.get_elem_by_name("top.model_name"),
-            engine.manager.get_elem_by_name("top.model_path"),
-            engine.manager.get_elem_by_name("top.adapter_path"),
-            engine.manager.get_elem_by_name("top.finetuning_type"),
-            engine.manager.get_elem_by_name("top.template"),
+            engine.manager.get_elem_by_id("top.lang"),
+            engine.manager.get_elem_by_id("top.model_name"),
+            engine.manager.get_elem_by_id("top.model_path"),
+            engine.manager.get_elem_by_id("top.adapter_path"),
+            engine.manager.get_elem_by_id("top.finetuning_type"),
+            engine.manager.get_elem_by_id("top.template"),
             max_shard_size,
             export_quantization_bit,
             export_quantization_dataset,
-            export_dir
+            export_legacy_format,
+            export_dir,
+            export_hub_model_id,
         ],
-        [info_box]
+        [info_box],
     )
 
     return dict(
         max_shard_size=max_shard_size,
         export_quantization_bit=export_quantization_bit,
         export_quantization_dataset=export_quantization_dataset,
+        export_legacy_format=export_legacy_format,
         export_dir=export_dir,
+        export_hub_model_id=export_hub_model_id,
         export_btn=export_btn,
-        info_box=info_box
+        info_box=info_box,
     )

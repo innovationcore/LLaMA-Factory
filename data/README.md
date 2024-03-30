@@ -11,15 +11,23 @@ If you are using a custom dataset, please provide your dataset definition in the
   "folder": "the name of the folder of the dataset repository on the Hugging Face hub. (optional, default: None)",
   "ranking": "whether the dataset is a preference dataset or not. (default: false)",
   "formatting": "the format of the dataset. (optional, default: alpaca, can be chosen from {alpaca, sharegpt})",
-  "columns": {
-    "prompt": "the column name in the dataset containing the prompts. (default: instruction, for alpaca)",
-    "query": "the column name in the dataset containing the queries. (default: input, for alpaca)",
-    "response": "the column name in the dataset containing the responses. (default: output, for alpaca)",
-    "history": "the column name in the dataset containing the histories. (default: None, for alpaca)",
-    "messages": "the column name in the dataset containing the messages. (default: conversations, for sharegpt)",
-    "role": "the key in the message represents the identity. (default: from, for sharegpt)",
-    "content": "the key in the message represents the content. (default: value, for sharegpt)",
-    "system": "the column name in the dataset containing the system prompts. (default: None, for both)"
+  "columns (optional)": {
+    "prompt": "the column name in the dataset containing the prompts. (default: instruction)",
+    "query": "the column name in the dataset containing the queries. (default: input)",
+    "response": "the column name in the dataset containing the responses. (default: output)",
+    "history": "the column name in the dataset containing the histories. (default: None)",
+    "messages": "the column name in the dataset containing the messages. (default: conversations)",
+    "system": "the column name in the dataset containing the system prompts. (default: None)",
+    "tools": "the column name in the dataset containing the tool description. (default: None)"
+  },
+  "tags (optional, used for the sharegpt format)": {
+    "role_tag": "the key in the message represents the identity. (default: from)",
+    "content_tag": "the key in the message represents the content. (default: value)",
+    "user_tag": "the value of the role_tag represents the user. (default: human)",
+    "assistant_tag": "the value of the role_tag represents the assistant. (default: gpt)",
+    "observation_tag": "the value of the role_tag represents the tool results. (default: observation)",
+    "function_tag": "the value of the role_tag represents the function call. (default: function_call)",
+    "system_tag": "the value of the role_tag represents the system prompt. (default: system, can override system column)"
   }
 }
 ```
@@ -57,9 +65,9 @@ Regarding the above dataset, the `columns` in `dataset_info.json` should be:
 }
 ```
 
-where the `prompt` and `response` columns should contain non-empty values, represent instruction and response respectively. The `query` column will be concatenated with the `prompt` column and used as input for the model.
+The `query` column will be concatenated with the `prompt` column and used as the user prompt, then the user prompt would be `prompt\nquery`. The `response` column represents the model response.
 
-The `system` column will be used as the system prompt in the template. The `history` column is a list consisting string tuples representing query-response pairs in history. Note that the responses **in each round will be used for training**.
+The `system` column will be used as the system prompt. The `history` column is a list consisting string tuples representing prompt-response pairs in the history. Note that the responses in the history **will also be used for training**.
 
 For the pre-training datasets, only the `prompt` column will be used for training.
 
@@ -91,7 +99,8 @@ The dataset in sharegpt format should follow the below format:
         "value": "model response"
       }
     ],
-    "system": "system prompt (optional)"
+    "system": "system prompt (optional)",
+    "tools": "tool description (optional)"
   }
 ]
 ```
@@ -102,13 +111,18 @@ Regarding the above dataset, the `columns` in `dataset_info.json` should be:
 "dataset_name": {
   "columns": {
     "messages": "conversations",
-    "role": "from",
-    "content": "value",
-    "system": "system"
+    "system": "system",
+    "tools": "tools"
+  },
+  "tags": {
+    "role_tag": "from",
+    "content_tag": "value",
+    "user_tag": "human",
+    "assistant_tag": "gpt"
   }
 }
 ```
 
-where the `messages` column should be a list whose length is even, and follow the `u/a/u/a/u/a` order.
+where the `messages` column should be a list following the `u/a/u/a/u/a` order.
 
 Pre-training datasets and preference datasets are incompatible with the sharegpt format yet.
