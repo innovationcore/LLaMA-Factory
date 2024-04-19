@@ -1,8 +1,11 @@
 from typing import TYPE_CHECKING, Dict
 
-import gradio as gr
-
+from ...extras.packages import is_gradio_available
 from .chatbot import create_chat_box
+
+
+if is_gradio_available():
+    import gradio as gr
 
 
 if TYPE_CHECKING:
@@ -25,7 +28,7 @@ def create_infer_tab(engine: "Engine") -> Dict[str, "Component"]:
     input_elems.update({infer_backend})
     elem_dict.update(dict(infer_backend=infer_backend, load_btn=load_btn, unload_btn=unload_btn, info_box=info_box))
 
-    chat_box, chatbot, history, chat_elems = create_chat_box(engine, visible=False)
+    chat_box, chatbot, messages, chat_elems = create_chat_box(engine, visible=False)
     elem_dict.update(dict(chat_box=chat_box, **chat_elems))
 
     load_btn.click(engine.chatter.load_model, input_elems, [info_box]).then(
@@ -33,7 +36,7 @@ def create_infer_tab(engine: "Engine") -> Dict[str, "Component"]:
     )
 
     unload_btn.click(engine.chatter.unload_model, input_elems, [info_box]).then(
-        lambda: ([], []), outputs=[chatbot, history]
+        lambda: ([], []), outputs=[chatbot, messages]
     ).then(lambda: gr.Column(visible=engine.chatter.loaded), outputs=[chat_box])
 
     return elem_dict

@@ -1,6 +1,7 @@
 import math
 import os
 import sys
+from types import MethodType
 from typing import TYPE_CHECKING, Dict, List, Optional, Tuple
 
 import torch
@@ -66,7 +67,7 @@ class CustomPPOTrainer(PPOTrainer, Trainer):
             use_score_norm=finetuning_args.ppo_score_norm,
             whiten_rewards=finetuning_args.ppo_whiten_rewards,
             accelerator_kwargs={"step_scheduler_with_optimizer": False},
-            log_with=training_args.report_to[0] if training_args.report_to is not None else None,
+            log_with=training_args.report_to[0] if training_args.report_to else None,
             project_kwargs={"logging_dir": training_args.logging_dir},
         )
 
@@ -123,6 +124,11 @@ class CustomPPOTrainer(PPOTrainer, Trainer):
                     self.reward_model = self._prepare_deepspeed(self.reward_model)
             else:
                 self.reward_model = self.accelerator.prepare_model(self.reward_model, evaluation_mode=True)
+
+        if finetuning_args.use_badam:
+            from badam import clip_grad_norm_for_sparse_tensor
+
+            self.accelerator.clip_grad_norm_ = MethodType(clip_grad_norm_for_sparse_tensor, self.accelerator)
 
     def ppo_train(self, resume_from_checkpoint: Optional[str] = None) -> None:
         r"""
@@ -353,7 +359,7 @@ class CustomPPOTrainer(PPOTrainer, Trainer):
         batch = self.prepare_model_inputs(queries, responses)
 
         with torch.cuda.amp.autocast(dtype=self.model_args.compute_dtype):  # support bf16
-            _, _, values = reward_model(**batch, output_hidden_states=True, return_dict=True)
+            _, _, values = reward_model(**batch, output_hidden_states=True, return_dict=True, use_cache=False)
 
         if getattr(unwrapped_model.config, "model_type", None) == "chatglm":  # assume same architecture
             values = torch.transpose(values, 0, 1)

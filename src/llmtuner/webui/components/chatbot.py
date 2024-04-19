@@ -1,9 +1,12 @@
 from typing import TYPE_CHECKING, Dict, Tuple
 
-import gradio as gr
-
 from ...data import Role
+from ...extras.packages import is_gradio_available
 from ..utils import check_json_schema
+
+
+if is_gradio_available():
+    import gradio as gr
 
 
 if TYPE_CHECKING:
@@ -35,13 +38,15 @@ def create_chat_box(
     tools.input(check_json_schema, inputs=[tools, engine.manager.get_elem_by_id("top.lang")])
 
     submit_btn.click(
-        engine.chatter.predict,
-        [chatbot, role, query, messages, system, tools, max_new_tokens, top_p, temperature],
+        engine.chatter.append,
+        [chatbot, messages, role, query],
+        [chatbot, messages, query],
+    ).then(
+        engine.chatter.stream,
+        [chatbot, messages, system, tools, max_new_tokens, top_p, temperature],
         [chatbot, messages],
-        show_progress=True,
-    ).then(lambda: "", outputs=[query])
-
-    clear_btn.click(lambda: ([], []), outputs=[chatbot, messages], show_progress=True)
+    )
+    clear_btn.click(lambda: ([], []), outputs=[chatbot, messages])
 
     return (
         chat_box,

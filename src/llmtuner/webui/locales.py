@@ -536,6 +536,20 @@ LOCALES = {
             "info": "使用 LongLoRA 提出的 shift short attention。",
         },
     },
+    "report_to": {
+        "en": {
+            "label": "Enable external logger",
+            "info": "Use TensorBoard or wandb to log experiment.",
+        },
+        "ru": {
+            "label": "Включить внешний регистратор",
+            "info": "Использовать TensorBoard или wandb для ведения журнала экспериментов.",
+        },
+        "zh": {
+            "label": "启用外部记录面板",
+            "info": "使用 TensorBoard 或 wandb 记录实验。",
+        },
+    },
     "freeze_tab": {
         "en": {
             "label": "Freeze tuning configurations",
@@ -755,6 +769,20 @@ LOCALES = {
         "zh": {
             "label": "DPO-ftx 权重",
             "info": "DPO-ftx 中 SFT 损失的权重大小。",
+        },
+    },
+    "orpo_beta": {
+        "en": {
+            "label": "ORPO beta",
+            "info": "Value of the beta parameter in the ORPO loss.",
+        },
+        "ru": {
+            "label": "ORPO бета",
+            "info": "Значение параметра бета в функции потерь ORPO.",
+        },
+        "zh": {
+            "label": "ORPO beta 参数",
+            "info": "ORPO 损失函数中 beta 超参数大小。",
         },
     },
     "reward_model": {
@@ -1315,6 +1343,11 @@ ALERTS = {
         "en": "Arguments have been saved at: ",
         "ru": "Аргументы были сохранены по адресу: ",
         "zh": "训练参数已保存至：",
+    },
+    "info_config_loaded": {
+        "en": "Arguments have been restored.",
+        "ru": "Аргументы были восстановлены.",
+        "zh": "训练参数已载入。",
     },
     "info_loading": {
         "en": "Loading model...",

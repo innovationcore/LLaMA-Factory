@@ -3,7 +3,6 @@ import os
 from collections import defaultdict
 from typing import Any, Dict, Optional
 
-import gradio as gr
 from peft.utils import SAFETENSORS_WEIGHTS_NAME, WEIGHTS_NAME
 
 from ..extras.constants import (
@@ -11,11 +10,17 @@ from ..extras.constants import (
     DEFAULT_MODULE,
     DEFAULT_TEMPLATE,
     PEFT_METHODS,
+    STAGES_USE_PAIR_DATA,
     SUPPORTED_MODELS,
     TRAINING_STAGES,
     DownloadSource,
 )
 from ..extras.misc import use_modelscope
+from ..extras.packages import is_gradio_available
+
+
+if is_gradio_available():
+    import gradio as gr
 
 
 ADAPTER_NAMES = {WEIGHTS_NAME, SAFETENSORS_WEIGHTS_NAME}
@@ -127,7 +132,7 @@ def load_dataset_info(dataset_dir: str) -> Dict[str, Dict[str, Any]]:
 
 def list_dataset(dataset_dir: str = None, training_stage: str = list(TRAINING_STAGES.keys())[0]) -> "gr.Dropdown":
     dataset_info = load_dataset_info(dataset_dir if dataset_dir is not None else DEFAULT_DATA_DIR)
-    ranking = TRAINING_STAGES[training_stage] in ["rm", "dpo"]
+    ranking = TRAINING_STAGES[training_stage] in STAGES_USE_PAIR_DATA
     datasets = [k for k, v in dataset_info.items() if v.get("ranking", False) == ranking]
     return gr.Dropdown(value=[], choices=datasets)
 
