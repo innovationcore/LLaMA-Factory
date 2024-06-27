@@ -236,6 +236,9 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
+    print('Starting ClearML Task')
+    task = Task.init(project_name=args.project_name, task_name=args.task_name, output_uri=True)
+
     training_params = {
 
         "model_name_or_path": args.model,
@@ -276,8 +279,6 @@ if __name__ == '__main__':
     training_params_file = 'training_params.yaml'
     with open(training_params_file, 'w') as f:
         yaml.dump(training_params, f, default_flow_style=False)
-
-    task = Task.init(project_name=args.project_name, task_name=args.task_name, output_uri=True)
 
     if prepare_dataset():
         print('Dataset is prepared successfully. Starting training...')
