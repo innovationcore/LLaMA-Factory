@@ -214,7 +214,7 @@ if __name__ == '__main__':
 
     # General arguments
     parser.add_argument('--project_name', type=str, default='llm_factory_trainer', help='name of project')
-    parser.add_argument('--task_name', type=str, default='dgx_trainer_template_v0', help='name of project')
+    parser.add_argument('--task_name', type=str, default='trainer_template_v0', help='name of project')
     parser.add_argument('--lora_rank', type=int, default=8, help='location of dataset')
     parser.add_argument('--lora_alpha', type=int, default=8, help='location of dataset')
     parser.add_argument('--lora_target', type=str, default='all', help='location of dataset')
