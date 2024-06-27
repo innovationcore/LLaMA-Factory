@@ -163,6 +163,8 @@ def get_custom_dataset_path():
 
 def prepare_dataset():
 
+    StorageManager.set_cache_file_limit(cache_file_limit=1)
+
     is_prepaired = False
 
     custom_dataset_path = get_custom_dataset_path()
@@ -197,8 +199,8 @@ def prepare_dataset():
         else:
             print('Error: tmp_custom_dataset_path:', tmp_custom_dataset_path, 'does not exist!')
 
-        #print('removing tmp_custom_dataset_path:', tmp_custom_dataset_path)
-        #shutil.rmtree(temp_download_dir)
+        print('removing tmp_custom_dataset_path:', tmp_custom_dataset_path)
+        shutil.rmtree(temp_download_dir)
         #print('remove clearml storage cache:')
 
     else:
