@@ -271,10 +271,6 @@ if __name__ == '__main__':
         "fp16": True,
         "ddp_timeout": 180000000,
 
-        "val_size": 0.1,
-        "per_device_eval_batch_size": 1,
-        "eval_strategy": "steps",
-        "eval_steps": 500
     }
 
     training_params_file = 'training_params.yaml'
