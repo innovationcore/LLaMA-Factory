@@ -197,9 +197,9 @@ def prepare_dataset():
         else:
             print('Error: tmp_custom_dataset_path:', tmp_custom_dataset_path, 'does not exist!')
 
-        print('removing tmp_custom_dataset_path:', tmp_custom_dataset_path)
-        shutil.rmtree(temp_download_dir)
-        print('remove clearml storage cache:')
+        #print('removing tmp_custom_dataset_path:', tmp_custom_dataset_path)
+        #shutil.rmtree(temp_download_dir)
+        #print('remove clearml storage cache:')
 
     else:
         print('Error: save_dataset_path:', custom_dataset_path, ' for dataset', args.dataset, ' does not exist!')
