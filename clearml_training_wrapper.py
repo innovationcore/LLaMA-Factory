@@ -303,3 +303,6 @@ if __name__ == '__main__':
     #remove dataset
     if os.path.exists(get_custom_dataset_path()):
         os.remove(get_custom_dataset_path())
+
+    if os.path.exists('/app/training_params.yaml'):
+        os.remove('/app/training_params.yaml')
