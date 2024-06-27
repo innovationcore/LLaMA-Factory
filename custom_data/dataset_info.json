@@ -1,6 +1,6 @@
 {
   "generic_instruct": {
-    "file_name": "/apps/custom_data/generic_instruct.json",
+    "file_name": "/app/custom_data/generic_instruct.json",
     "columns": {
         "prompt": "instruction",
         "response": "output",
@@ -8,7 +8,7 @@
     }
   },
   "generic_instruct_tools": {
-    "file_name": "/apps/custom_data/generic_instruct.json",
+    "file_name": "/app/custom_data/generic_instruct.json",
     "columns": {
         "prompt": "instruction",
         "response": "output",
@@ -17,7 +17,7 @@
     }
   },
   "generic_instruct_system": {
-    "file_name": "/apps/custom_data/generic_instruct.json",
+    "file_name": "/app/custom_data/generic_instruct.json",
     "columns": {
         "prompt": "instruction",
         "response": "output",
@@ -26,7 +26,7 @@
     }
   },
     "generic_instruct_system_tools": {
-    "file_name": "/apps/custom_data/generic_instruct.json",
+    "file_name": "/app/custom_data/generic_instruct.json",
     "columns": {
         "prompt": "instruction",
         "response": "output",
@@ -36,7 +36,7 @@
     }
   },
   "generic_instruct_input": {
-    "file_name": "/apps/custom_data/generic_instruct.json",
+    "file_name": "/app/custom_data/generic_instruct.json",
     "columns": {
         "prompt": "instruction",
         "query": "input",
@@ -45,7 +45,7 @@
     }
   },
   "generic_instruct_input_tools": {
-    "file_name": "/apps/custom_data/generic_instruct.json",
+    "file_name": "/app/custom_data/generic_instruct.json",
     "columns": {
         "prompt": "instruction",
         "query": "input",
@@ -55,7 +55,7 @@
     }
   },
   "generic_instruct_input_system": {
-    "file_name": "/apps/custom_data/generic_instruct.json",
+    "file_name": "/app/custom_data/generic_instruct.json",
     "columns": {
         "prompt": "instruction",
         "query": "input",
@@ -65,7 +65,7 @@
     }
   },
   "generic_instruct_input_system_tools": {
-    "file_name": "/apps/custom_data/generic_instruct.json",
+    "file_name": "/app/custom_data/generic_instruct.json",
     "columns": {
         "prompt": "instruction",
         "query": "input",
@@ -76,7 +76,7 @@
     }
   },
   "generic_text": {
-    "file_name": "/apps/custom_data/generic_text.txt",
+    "file_name": "/app/custom_data/generic_text.txt",
     "columns": {
       "prompt": "text"
     }

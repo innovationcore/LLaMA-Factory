@@ -132,7 +132,7 @@ def get_file_sha1(dataset_path):
 
 def validate_dataset():
     dataset_sha1 = None
-    f = open('/apps/custom_data/dataset_info.json', "r")
+    f = open('/app/custom_data/dataset_info.json', "r")
     dataset_info = json.loads(f.read())
     if args.dataset in dataset_info:
         dataset_path = os.path.join('data', dataset_info[args.dataset]['file_name'])
@@ -146,44 +146,6 @@ def get_dataset_path():
     if args.dataset in dataset_info:
         dataset_path = os.path.join('data', dataset_info[args.dataset]['file_name'])
     return dataset_path
-
-def prepare_dataset_old():
-    new_cache_limit = StorageManager.set_cache_file_limit(cache_file_limit=1)
-    is_prepaired = False
-
-    temp_download_dir = os.path.join(args.dataset_path, str(uuid.uuid4()))
-    print(f'hi: {uuid.uuid4()}')
-
-    local_dataset = Dataset.get(
-        dataset_name=args.dataset_name, dataset_project=args.dataset_project
-    ).get_mutable_local_copy(temp_download_dir)
-
-    print('Downloaded', args.dataset_name, 'to', temp_download_dir)
-
-    custom_dataset_path = "/apps/data/custom_data/generic_instruct.json"
-    custom_dataset_path = os.path.join(args.training_root, custom_dataset_path)
-    print('fixed custom_dataset_path:', custom_dataset_path)
-
-    custom_dataset_dir = os.path.dirname(custom_dataset_path)
-    print('custom_dataset_dir:', custom_dataset_dir)
-
-    if os.path.exists(custom_dataset_dir):
-        shutil.rmtree(custom_dataset_dir)
-    os.makedirs(custom_dataset_dir)
-
-    tmp_custom_dataset_path = os.path.join(temp_download_dir, args.dataset_name, args.dataset_file)
-    if os.path.exists(tmp_custom_dataset_path):
-        shutil.move(tmp_custom_dataset_path, custom_dataset_path)
-        is_prepaired = True
-        print('tmp_custom_dataset_path:', tmp_custom_dataset_path, 'moved to custom_dataset_path:', custom_dataset_path)
-    else:
-        print('Error: tmp_custom_dataset_path:', tmp_custom_dataset_path, 'does not exist!')
-
-    print('removing tmp_custom_dataset_path:', tmp_custom_dataset_path)
-    shutil.rmtree(temp_download_dir)
-    print('remove clearml storage cache:')
-
-    return is_prepaired
 
 def get_custom_dataset_path():
 
@@ -259,9 +221,9 @@ if __name__ == '__main__':
     parser.add_argument('--epoch', type=float, default=1.0, help='location of dataset')
     parser.add_argument('--lr', type=float, default=1e-4, help='location of dataset')
     parser.add_argument('--template', type=str, default='llama3', help='location of dataset')
-    parser.add_argument('--model', type=str, default='/apps/basemodels/Meta-Llama-3-8B', help='location of dataset')
+    parser.add_argument('--model', type=str, default='/app/basemodels/Meta-Llama-3-8B', help='location of dataset')
     parser.add_argument('--stage', type=str, default='sft', help='location of dataset')
-    parser.add_argument('--dataset_path', type=str, default='/apps/custom_data', help='location of dataset')
+    parser.add_argument('--dataset_path', type=str, default='/app/custom_data', help='location of dataset')
     parser.add_argument('--dataset', type=str, default='generic_instruct', help='location of dataset')
     parser.add_argument('--output_model', type=str, default='custom_adapter', help='location of dataset')
 
@@ -269,7 +231,6 @@ if __name__ == '__main__':
     parser.add_argument('--dataset_project', type=str, default='datasets', help='location of dataset')
     parser.add_argument('--dataset_name', type=str, default='example_generic_instruct.json', help='location of dataset')
     parser.add_argument('--dataset_file', type=str, default='example_generic_instruct.json', help='location of dataset')
-    parser.add_argument('--training_root', type=str, default='/apps/', help='location of dataset')
 
     args = parser.parse_args()
 
@@ -283,7 +244,7 @@ if __name__ == '__main__':
         "lora_rank": args.lora_rank,
         "lora_alpha": args.lora_alpha,
         "lora_target": args.lora_target,
-        "deepspeed": "/apps/ds_z3_config.json",
+        "deepspeed": "/app/ds_z3_config.json",
 
         "dataset_dir": args.dataset_path,
         "dataset": args.dataset,
@@ -293,7 +254,7 @@ if __name__ == '__main__':
         "overwrite_cache": True,
         "preprocessing_num_workers": 16,
 
-        "output_dir": "/apps/outputmodels/sft",
+        "output_dir": "/app/outputmodels/sft",
         "logging_steps": 10,
         "save_steps": 500,
         "plot_loss": True,
@@ -307,7 +268,6 @@ if __name__ == '__main__':
         "warmup_ratio": 0.1,
         "fp16": True,
         "ddp_timeout": 180000000,
-
 
         "val_size": 0.1,
         "per_device_eval_batch_size": 1,
