@@ -221,7 +221,7 @@ if __name__ == '__main__':
     parser.add_argument('--epoch', type=float, default=1.0, help='location of dataset')
     parser.add_argument('--lr', type=float, default=1e-4, help='location of dataset')
     parser.add_argument('--template', type=str, default='llama3', help='location of dataset')
-    parser.add_argument('--model', type=str, default='/app/basemodels/Meta-Llama-3-8B', help='location of dataset')
+    parser.add_argument('--model', type=str, default='/app/basemodels/Meta-Llama-3-8B-Instruct', help='location of dataset')
     parser.add_argument('--stage', type=str, default='sft', help='location of dataset')
     parser.add_argument('--dataset_path', type=str, default='/app/custom_data', help='location of dataset')
     parser.add_argument('--dataset', type=str, default='generic_instruct', help='location of dataset')
