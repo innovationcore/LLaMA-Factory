@@ -294,6 +294,9 @@ if __name__ == '__main__':
     if rc != 0:
         raise ValueError(f"Training failed with return code {rc}")
 
+    #do upload here
+
+
     task.close()
 
     #remove dataset
