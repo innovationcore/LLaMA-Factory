@@ -187,7 +187,7 @@ def prepare_dataset():
         #    shutil.rmtree(custom_dataset_dir)
         #os.makedirs(custom_dataset_dir)
 
-        tmp_custom_dataset_path = os.path.join(temp_download_dir, args.dataset_name, args.dataset_file)
+        tmp_custom_dataset_path = os.path.join(temp_download_dir, args.dataset_file)
 
         if os.path.exists(tmp_custom_dataset_path):
             shutil.move(tmp_custom_dataset_path, custom_dataset_path)
