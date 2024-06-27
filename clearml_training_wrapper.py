@@ -183,9 +183,9 @@ def prepare_dataset():
         custom_dataset_dir = os.path.dirname(custom_dataset_path)
         print('custom_dataset_dir:', custom_dataset_dir)
 
-        if os.path.exists(custom_dataset_dir):
-            shutil.rmtree(custom_dataset_dir)
-        os.makedirs(custom_dataset_dir)
+        #if os.path.exists(custom_dataset_dir):
+        #    shutil.rmtree(custom_dataset_dir)
+        #os.makedirs(custom_dataset_dir)
 
         tmp_custom_dataset_path = os.path.join(temp_download_dir, args.dataset_name, args.dataset_file)
 
