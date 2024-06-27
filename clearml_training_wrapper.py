@@ -244,7 +244,7 @@ if __name__ == '__main__':
         "lora_rank": args.lora_rank,
         "lora_alpha": args.lora_alpha,
         "lora_target": args.lora_target,
-        "deepspeed": "/app/ds_z3_config.json",
+        "deepspeed": "/app/config/ds_z3_config.json",
 
         "dataset_dir": args.dataset_path,
         "dataset": args.dataset,
