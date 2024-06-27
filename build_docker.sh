@@ -1,4 +1,7 @@
-docker build -f ./docker/docker-cuda/Dockerfile \
+
+export MAX_JOBS = 40
+
+docker build -f ./Dockerfile_llmfactory \
     --build-arg INSTALL_BNB=true \
     --build-arg INSTALL_VLLM=true \
     --build-arg INSTALL_DEEPSPEED=true \

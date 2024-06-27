@@ -16,12 +16,12 @@ ARG PIP_INDEX=https://pypi.org/simple
 # Set the working directory
 WORKDIR /app
 
-
 # Install the requirements
 COPY requirements.txt /app
 RUN pip config set global.index-url "$PIP_INDEX" && \
     pip config set global.extra-index-url "$PIP_INDEX" && \
     python -m pip install --upgrade pip && \
+    python -m pip install clearml[s3] clearml-agent \
     python -m pip install -r requirements.txt
 
 # Rebuild flash attention
