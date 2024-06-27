@@ -295,3 +295,7 @@ if __name__ == '__main__':
         raise ValueError(f"Training failed with return code {rc}")
 
     task.close()
+
+    #remove dataset
+    if os.path.exists(get_custom_dataset_path()):
+        shutil.rmtree(get_custom_dataset_path())
