@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#--adapter_name_or_path /workspace/models/adapters/med-text-pt \
+#--adapter_name_or_path /apps/models/adapters/med-text-pt \
 #--template vanilla \
 #--template mistral \
 

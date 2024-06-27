@@ -1,0 +1,84 @@
+{
+  "generic_instruct": {
+    "file_name": "/apps/custom_data/generic_instruct.json",
+    "columns": {
+        "prompt": "instruction",
+        "response": "output",
+        "history": "history"
+    }
+  },
+  "generic_instruct_tools": {
+    "file_name": "/apps/custom_data/generic_instruct.json",
+    "columns": {
+        "prompt": "instruction",
+        "response": "output",
+        "history": "history",
+        "tools": "tools"
+    }
+  },
+  "generic_instruct_system": {
+    "file_name": "/apps/custom_data/generic_instruct.json",
+    "columns": {
+        "prompt": "instruction",
+        "response": "output",
+        "history": "history",
+        "system": "system"
+    }
+  },
+    "generic_instruct_system_tools": {
+    "file_name": "/apps/custom_data/generic_instruct.json",
+    "columns": {
+        "prompt": "instruction",
+        "response": "output",
+        "history": "history",
+        "system": "system",
+        "tools": "tools"
+    }
+  },
+  "generic_instruct_input": {
+    "file_name": "/apps/custom_data/generic_instruct.json",
+    "columns": {
+        "prompt": "instruction",
+        "query": "input",
+        "response": "output",
+        "history": "history"
+    }
+  },
+  "generic_instruct_input_tools": {
+    "file_name": "/apps/custom_data/generic_instruct.json",
+    "columns": {
+        "prompt": "instruction",
+        "query": "input",
+        "response": "output",
+        "history": "history",
+        "tools": "tools"
+    }
+  },
+  "generic_instruct_input_system": {
+    "file_name": "/apps/custom_data/generic_instruct.json",
+    "columns": {
+        "prompt": "instruction",
+        "query": "input",
+        "response": "output",
+        "history": "history",
+        "system": "system"
+    }
+  },
+  "generic_instruct_input_system_tools": {
+    "file_name": "/apps/custom_data/generic_instruct.json",
+    "columns": {
+        "prompt": "instruction",
+        "query": "input",
+        "response": "output",
+        "history": "history",
+        "system": "system",
+        "tools": "tools"
+    }
+  },
+  "generic_text": {
+    "file_name": "/apps/custom_data/generic_text.txt",
+    "columns": {
+      "prompt": "text"
+    }
+  }
+}
