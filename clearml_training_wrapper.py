@@ -207,7 +207,7 @@ def prepare_dataset():
         tmp_custom_dataset_path = os.path.join(temp_download_dir, args.dataset_file)
 
         if os.path.exists(tmp_custom_dataset_path):
-            shutil.move(tmp_custom_dataset_path, custom_dataset_path)
+            shutil.copyfile(tmp_custom_dataset_path, custom_dataset_path)
             is_prepaired = True
             print('tmp_custom_dataset_path:', tmp_custom_dataset_path, 'moved to custom_dataset_path:',
                   custom_dataset_path)
