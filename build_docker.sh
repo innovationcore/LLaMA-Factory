@@ -1,5 +1,5 @@
 
-export MAX_JOBS = 40
+export MAX_JOBS=40
 
 docker build -f ./Dockerfile_llmfactory \
     --build-arg INSTALL_BNB=true \
