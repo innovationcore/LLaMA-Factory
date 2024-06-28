@@ -166,7 +166,7 @@ def get_custom_dataset_path():
 
     save_dataset_path = None
 
-    dataset_info_path = os.path.join(args.dataset_path, 'dataset_info.json')
+    dataset_info_path = '/app/config/dataset_info.json'
 
     with open(dataset_info_path) as f:
         dataset_info = json.load(f)
