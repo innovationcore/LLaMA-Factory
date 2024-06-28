@@ -250,6 +250,7 @@ if __name__ == '__main__':
         "lora_alpha": args.lora_alpha,
         "lora_target": args.lora_target,
         "deepspeed": "/app/config/ds_z3_config.json",
+        "flash_attn": "fa2",
 
         "dataset_dir": args.dataset_path,
         "dataset": args.dataset,
