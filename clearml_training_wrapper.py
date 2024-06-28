@@ -256,7 +256,7 @@ if __name__ == '__main__':
         "dataset": args.dataset,
         "template": args.template,
         "cutoff_len": 8096,
-        "max_samples": 100000,
+        "max_samples": 100000000,
         "overwrite_cache": True,
         "preprocessing_num_workers": 16,
 
@@ -272,10 +272,12 @@ if __name__ == '__main__':
         "num_train_epochs": args.epoch,
         "lr_scheduler_type": "cosine",
         "warmup_ratio": 0.1,
-        "fp16": True,
+        "bf16": True,
         "ddp_timeout": 180000000,
 
     }
+
+
 
     training_params_file = 'training_params.yaml'
     with open(training_params_file, 'w') as f:
