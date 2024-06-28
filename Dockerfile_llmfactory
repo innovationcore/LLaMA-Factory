@@ -21,7 +21,6 @@ COPY requirements.txt /app
 RUN pip config set global.index-url "$PIP_INDEX" && \
     pip config set global.extra-index-url "$PIP_INDEX" && \
     python -m pip install --upgrade pip && \
-    python -m pip install clearml[s3] clearml-agent && \
     python -m pip install -r requirements.txt
 
 # Rebuild flash attention
@@ -46,6 +45,8 @@ RUN EXTRA_PACKAGES="metrics"; \
         EXTRA_PACKAGES="${EXTRA_PACKAGES},deepspeed"; \
     fi; \
     pip install -e ".[$EXTRA_PACKAGES]"
+
+RUN python -m pip install clearml[s3] clearml-agent
 
 # Set up volumes
 VOLUME [ "/root/.cache/huggingface", "/root/.cache/modelscope", "/app/data", "/app/output" ]
