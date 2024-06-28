@@ -7,12 +7,14 @@ import shutil
 import traceback
 import hashlib
 import uuid
+from glob import glob
 from os import listdir
 from os.path import isfile, join
 import pandas as pd
 from clearml import Task, Dataset, StorageManager
 from clearml import Logger
 import yaml
+
 
 step_count = 1
 
@@ -139,6 +141,17 @@ def validate_dataset():
         dataset_sha1 = get_file_sha1(dataset_path)
     return dataset_sha1
 
+def clean_custom_adapter():
+
+    pattern = os.path.join(args.output_model, "checkpoint-*")
+
+    for item in glob(pattern):
+        if not os.path.isdir(item):
+            continue
+        shutil.rmtree(item)
+
+    shutil.rmtree(os.path.join(args.output_model, "runs"))
+
 def get_dataset_path():
     dataset_path = None
     f = open(os.path.join(args.dataset_path, 'dataset_info.json'), "r")
@@ -227,17 +240,24 @@ if __name__ == '__main__':
     parser.add_argument('--stage', type=str, default='sft', help='location of dataset')
     parser.add_argument('--dataset_path', type=str, default='/app/custom_data', help='location of dataset')
     parser.add_argument('--dataset', type=str, default='generic_instruct', help='location of dataset')
-    parser.add_argument('--output_model', type=str, default='custom_adapter', help='location of dataset')
+    parser.add_argument('--output_model', type=str, default='/app/custom_adapter', help='location of dataset')
 
     # Dataset parameters
     parser.add_argument('--dataset_project', type=str, default='datasets', help='location of dataset')
     parser.add_argument('--dataset_name', type=str, default='example_generic_instruct.json', help='location of dataset')
     parser.add_argument('--dataset_file', type=str, default='example_generic_instruct.json', help='location of dataset')
+    parser.add_argument('--clearml_cache', type=str, default='/root/.clearml/cache', help='location of dataset')
 
     args = parser.parse_args()
 
     print('Starting ClearML Task')
-    task = Task.init(project_name=args.project_name, task_name=args.task_name, output_uri=True)
+    task = Task.init(project_name=args.project_name, task_name=args.task_name,
+            #output_uri = None,
+            #auto_connect_arg_parser = False,
+            #auto_connect_frameworks = False,
+            #auto_resource_monitoring = False,
+            #auto_connect_streams = False,
+    )
 
     training_params = {
 
@@ -256,13 +276,13 @@ if __name__ == '__main__':
         "dataset": args.dataset,
         "template": args.template,
         "cutoff_len": 8096,
-        "max_samples": 100000000,
+        "max_samples": 1000000000,
         "overwrite_cache": True,
         "preprocessing_num_workers": 16,
 
-        "output_dir": "/app/outputmodels/sft",
+        "output_dir": args.output_model,
         "logging_steps": 10,
-        "save_steps": 500,
+        "save_strategy": "no",
         "plot_loss": True,
         "overwrite_output_dir": True,
 
@@ -277,29 +297,38 @@ if __name__ == '__main__':
 
     }
 
-
-
     training_params_file = 'training_params.yaml'
     with open(training_params_file, 'w') as f:
         yaml.dump(training_params, f, default_flow_style=False)
 
     if prepare_dataset():
         print('Dataset is prepared successfully. Starting training...')
+
+        # Setting environment variables
+        set_env()
+
+        # Call llamafactory-cli with the training parameters file
+        command = ['llamafactory-cli', 'train', training_params_file]
+        rc = execute(command, stdout_callback, stderror_callback)
+
+        if rc != 0:
+            raise ValueError(f"Training failed with return code {rc}")
+
+        #remove checkpoints
+        clean_custom_adapter()
+
+        # do upload here
+        Logger.current_logger().report_text("Uploading adapter.", print_console=True)
+
+        # at this point might as well upload zip, we will want to run directly from S3 at some point
+        task.upload_artifact('adapter', artifact_object=args.output_model)
+
+        Logger.current_logger().report_text("Cleaning up", print_console=True)
+        shutil.rmtree(args.output_model)
+        shutil.rmtree(args.clearml_cache)
+
     else:
         raise Exception('Dataset preparation failed!')
-
-    # Setting environment variables
-    set_env()
-
-    # Call llamafactory-cli with the training parameters file
-    command = ['llamafactory-cli', 'train', training_params_file]
-    rc = execute(command, stdout_callback, stderror_callback)
-
-    if rc != 0:
-        raise ValueError(f"Training failed with return code {rc}")
-
-    #do upload here
-
 
     task.close()
 
