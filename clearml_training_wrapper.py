@@ -156,7 +156,7 @@ def clean_custom_adapter():
 
 def get_dataset_path():
     dataset_path = None
-    f = open(os.path.join(args.dataset_path, 'dataset_info.json'), "r")
+    f = open(os.path.join('/app/config/dataset_info.json'), "r")
     dataset_info = json.loads(f.read())
     if args.dataset in dataset_info:
         dataset_path = os.path.join('data', dataset_info[args.dataset]['file_name'])
