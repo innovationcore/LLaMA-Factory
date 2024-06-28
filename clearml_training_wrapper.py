@@ -14,9 +14,11 @@ import pandas as pd
 from clearml import Task, Dataset, StorageManager
 from clearml import Logger
 import yaml
-
+from pathlib import Path
 
 step_count = 1
+
+user_home = str(Path.home())
 
 def extract_string_between_curly_braces(text):
     match = re.search(r'\{(.*?)\}', text)
@@ -246,18 +248,12 @@ if __name__ == '__main__':
     parser.add_argument('--dataset_project', type=str, default='datasets', help='location of dataset')
     parser.add_argument('--dataset_name', type=str, default='example_generic_instruct.json', help='location of dataset')
     parser.add_argument('--dataset_file', type=str, default='example_generic_instruct.json', help='location of dataset')
-    parser.add_argument('--clearml_cache', type=str, default='/root/.clearml/cache', help='location of dataset')
+    parser.add_argument('--clearml_cache', type=str, default=os.path.join(user_home,'.clearml/cache'), help='location of dataset')
 
     args = parser.parse_args()
 
     print('Starting ClearML Task')
-    task = Task.init(project_name=args.project_name, task_name=args.task_name,
-            #output_uri = None,
-            #auto_connect_arg_parser = False,
-            #auto_connect_frameworks = False,
-            #auto_resource_monitoring = False,
-            #auto_connect_streams = False,
-    )
+    task = Task.init(project_name=args.project_name, task_name=args.task_name)
 
     training_params = {
 
@@ -272,7 +268,7 @@ if __name__ == '__main__':
         "deepspeed": "/app/config/ds_z3_config.json",
         "flash_attn": "fa2",
 
-        "dataset_dir": args.dataset_path,
+        "dataset_dir": '/app/config/',
         "dataset": args.dataset,
         "template": args.template,
         "cutoff_len": 8096,
@@ -324,8 +320,10 @@ if __name__ == '__main__':
         task.upload_artifact('adapter', artifact_object=args.output_model)
 
         Logger.current_logger().report_text("Cleaning up", print_console=True)
-        shutil.rmtree(args.output_model)
-        shutil.rmtree(args.clearml_cache)
+        if os.path.exists(args.output_model):
+            shutil.rmtree(args.output_model)
+        if os.path.exists(args.clearml_cache):
+            shutil.rmtree(args.clearml_cache)
 
     else:
         raise Exception('Dataset preparation failed!')
