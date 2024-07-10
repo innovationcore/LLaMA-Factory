@@ -282,6 +282,7 @@ if __name__ == '__main__':
     parser.add_argument('--dataset_file', type=str, default='example_generic_instruct.json', help='location of dataset')
     #parser.add_argument('--clearml_cache', type=str, default=os.path.join(user_home,'.clearml/cache'), help='location of dataset')
     parser.add_argument('--clearml_cache', type=str, default='/app/cache', help='location of dataset')
+    parser.add_argument('--job_id', type=str, help='id of job')
 
     args = parser.parse_args()
 
@@ -305,51 +306,47 @@ if __name__ == '__main__':
         if rc != 0:
             raise ValueError(f"Training failed with return code {rc}")
 
+        if args.job_id is not None:
 
-        #remove checkpoints
-        print('Cleaning adapter before upload')
-        clean_custom_adapter(custom_adapter_save_path)
+            # remove checkpoints
+            print('Cleaning adapter before upload')
+            clean_custom_adapter(custom_adapter_save_path)
 
-        # do upload here
-        Logger.current_logger().report_text("Uploading adapter.", print_console=True)
+            Logger.current_logger().report_text("Uploading adapter.", print_console=True)
 
-        # at this point might as well upload zip, we will want to run directly from S3 at some point
-        #task.upload_artifact('adapter', artifact_object=custom_adapter_save_path)
-        #Logger.current_logger().report_text("Cleaning up", print_console=True)
+            s3_bucket = 'llmadapters'
+            clearml_config_path = os.path.join(os.path.expanduser('~'), 'clearml.conf')
+            config = pyhocon.ConfigFactory.parse_file(clearml_config_path)
+            for record in config['sdk']['aws']['s3']['credentials']:
+                if record['bucket'] == s3_bucket:
+                    s3_endpoint = 'http://' + record['host']
+                    s3_key = record['key']
+                    s3_secret = record['secret']
 
-        Logger.current_logger().report_text("Uploading adapter.", print_console=True)
+            myconfig = TransferConfig(
 
-        adapter_id = task_id
-        s3_bucket = 'llmadapters'
-        clearml_config_path = os.path.join(os.path.expanduser('~'), 'clearml.conf')
-        config = pyhocon.ConfigFactory.parse_file(clearml_config_path)
-        for record in config['sdk']['aws']['s3']['credentials']:
-            if record['bucket'] == s3_bucket:
-                s3_endpoint = 'http://' + record['host']
-                s3_key = record['key']
-                s3_secret = record['secret']
+                multipart_threshold=9999999999999999,  # workaround for 'disable' auto multipart upload
+                # multipart_threshold=1,  # workaround for 'disable' auto multipart upload
+                max_concurrency=10,
+                num_download_attempts=10,
+            )
 
-        myconfig = TransferConfig(
+            s3_client = boto3.client('s3',
+                                     endpoint_url=s3_endpoint,
+                                     aws_access_key_id=s3_key,
+                                     aws_secret_access_key=s3_secret,
+                                     aws_session_token=None)
 
-            multipart_threshold=9999999999999999,  # workaround for 'disable' auto multipart upload
-            # multipart_threshold=1,  # workaround for 'disable' auto multipart upload
-            max_concurrency=10,
-            num_download_attempts=10,
-        )
+            transfer = S3Transfer(s3_client, myconfig)
 
-        s3_client = boto3.client('s3',
-                                 endpoint_url=s3_endpoint,
-                                 aws_access_key_id=s3_key,
-                                 aws_secret_access_key=s3_secret,
-                                 aws_session_token=None)
+            print('Uploading adapter: ', custom_adapter_save_path)
+            dataset_files = [f for f in os.listdir(custom_adapter_save_path) if isfile(join(custom_adapter_save_path, f))]
+            for dataset_file in dataset_files:
+                local_dataset_path = os.path.join(custom_adapter_save_path, dataset_file)
+                remote_dataset_path = args.job_id + '/' + dataset_file
+                print('Remote dataset path:', remote_dataset_path)
+                response = transfer.upload_file(local_dataset_path, s3_bucket, remote_dataset_path)
 
-        transfer = S3Transfer(s3_client, myconfig)
-
-        dataset_files = [f for f in os.listdir(custom_adapter_save_path) if isfile(join(custom_adapter_save_path, f))]
-        for dataset_file in dataset_files:
-            local_dataset_path = os.path.join(custom_adapter_save_path, dataset_file)
-            remote_dataset_path = adapter_id + '/' + dataset_file
-            response = transfer.upload_file(local_dataset_path, s3_bucket, remote_dataset_path)
 
     else:
         raise Exception('Dataset preparation failed!')
