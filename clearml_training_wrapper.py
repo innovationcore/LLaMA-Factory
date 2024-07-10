@@ -4,21 +4,24 @@ import json
 import os
 import re
 import shutil
-import traceback
 import hashlib
-import uuid
 from glob import glob
-from os import listdir
 from os.path import isfile, join
+
 import pandas as pd
-from clearml import Task, Dataset, StorageManager
+from clearml import Task, Dataset
 from clearml import Logger
 import yaml
 from pathlib import Path
 
+from clearml.utilities import pyhocon
+import boto3
+from s3transfer import TransferConfig, S3Transfer
 step_count = 1
 
 user_home = str(Path.home())
+
+os.environ["CLEARML_CACHE_DIR"] = "/app/cache"
 
 def extract_string_between_curly_braces(text):
     match = re.search(r'\{(.*?)\}', text)
@@ -143,85 +146,114 @@ def validate_dataset():
         dataset_sha1 = get_file_sha1(dataset_path)
     return dataset_sha1
 
-def clean_custom_adapter():
+def clean_custom_adapter(custom_adapter_save_path):
 
-    pattern = os.path.join(args.output_model, "checkpoint-*")
+    pattern = os.path.join(custom_adapter_save_path, "checkpoint-*")
 
     for item in glob(pattern):
         if not os.path.isdir(item):
             continue
         shutil.rmtree(item)
 
-    shutil.rmtree(os.path.join(args.output_model, "runs"))
+    shutil.rmtree(os.path.join(custom_adapter_save_path, "runs"))
 
-def get_dataset_path():
-    dataset_path = None
-    f = open(os.path.join('/app/config/dataset_info.json'), "r")
-    dataset_info = json.loads(f.read())
-    if args.dataset in dataset_info:
-        dataset_path = os.path.join('data', dataset_info[args.dataset]['file_name'])
-    return dataset_path
 
-def get_custom_dataset_path():
+def create_custom_dataset_config(custom_task_data_path, dataset_cache_path):
 
-    save_dataset_path = None
+    custom_dataset_config_path = None
 
-    dataset_info_path = '/app/config/dataset_info.json'
+    dataset_config_template_path = '/app/config/dataset_info.json'
 
-    with open(dataset_info_path) as f:
+    with open(dataset_config_template_path) as f:
         dataset_info = json.load(f)
 
     if args.dataset in dataset_info:
-        save_dataset_path = os.path.join(args.dataset_path, dataset_info[args.dataset]['file_name'])
+        custom_dataset_config = dict()
+        custom_dataset_config[args.dataset] = dataset_info[args.dataset]
+        dataset_path = os.path.join(dataset_cache_path, args.dataset_file, args.dataset_file)
+        custom_dataset_config[args.dataset]['file_name'] = dataset_path
+        if os.path.exists(dataset_path):
+            if os.path.exists(custom_task_data_path):
+                shutil.rmtree(custom_task_data_path)
+            os.makedirs(custom_task_data_path)
 
-    return save_dataset_path
+            custom_dataset_config_path = os.path.join(custom_task_data_path, 'dataset_info.json')
+            print('Saving custom dataset config:', custom_dataset_config_path)
+            with open(custom_dataset_config_path, 'w', encoding='utf-8') as f:
+                json.dump(custom_dataset_config, f, ensure_ascii=False, indent=4)
 
-def prepare_dataset():
+            if not os.path.exists(custom_dataset_config_path):
+                custom_dataset_config_path = None
 
-    StorageManager.set_cache_file_limit(cache_file_limit=1)
-
-    is_prepaired = False
-
-    custom_dataset_path = get_custom_dataset_path()
-
-    if custom_dataset_path is not None:
-
-        temp_download_dir = os.path.join(args.dataset_path, str(uuid.uuid4()))
-        print(f'temp_data_id: {uuid.uuid4()}')
-
-        Dataset.get(
-            dataset_name=args.dataset_name, dataset_project=args.dataset_project
-        ).get_mutable_local_copy(temp_download_dir)
-
-        print('Downloaded', args.dataset_name, 'to', temp_download_dir)
-
-        print('fixed custom_dataset_path:', custom_dataset_path)
-
-        custom_dataset_dir = os.path.dirname(custom_dataset_path)
-        print('custom_dataset_dir:', custom_dataset_dir)
-
-        #if os.path.exists(custom_dataset_dir):
-        #    shutil.rmtree(custom_dataset_dir)
-        #os.makedirs(custom_dataset_dir)
-
-        tmp_custom_dataset_path = os.path.join(temp_download_dir, args.dataset_file)
-
-        if os.path.exists(tmp_custom_dataset_path):
-            shutil.copyfile(tmp_custom_dataset_path, custom_dataset_path)
-            is_prepaired = True
-            print('tmp_custom_dataset_path:', tmp_custom_dataset_path, 'moved to custom_dataset_path:',
-                  custom_dataset_path)
         else:
-            print('Error: tmp_custom_dataset_path:', tmp_custom_dataset_path, 'does not exist!')
+            print('dataset not found:', dataset_path)
 
-        print('removing tmp_custom_dataset_path:', tmp_custom_dataset_path)
-        shutil.rmtree(temp_download_dir)
-        #print('remove clearml storage cache:')
+    return custom_dataset_config_path
 
-    else:
-        print('Error: save_dataset_path:', custom_dataset_path, ' for dataset', args.dataset, ' does not exist!')
+def create_training_params(custom_task_data_path, adapter_save_path):
 
-    return is_prepaired
+    training_params = {
+
+        "model_name_or_path": args.model,
+
+        "stage": args.stage,
+        "do_train": True,
+        "finetuning_type": "lora",
+        "lora_rank": args.lora_rank,
+        "lora_alpha": args.lora_alpha,
+        "lora_target": args.lora_target,
+        "deepspeed": "/app/config/ds_z3_config.json",
+        "flash_attn": "fa2",
+
+        "dataset_dir": custom_task_data_path,
+        "dataset": args.dataset,
+        "template": args.template,
+        "cutoff_len": 8096,
+        "max_samples": 1000000000,
+        "overwrite_cache": True,
+        "preprocessing_num_workers": 16,
+
+        "output_dir": adapter_save_path,
+        "logging_steps": 10,
+        "save_strategy": "no",
+        "plot_loss": True,
+        "overwrite_output_dir": True,
+
+        "per_device_train_batch_size": args.batch_size,
+        "gradient_accumulation_steps": args.gradient_accumulation_steps,
+        "learning_rate": args.lr,
+        "num_train_epochs": args.epoch,
+        "lr_scheduler_type": "cosine",
+        "warmup_ratio": 0.1,
+        "bf16": True,
+        "ddp_timeout": 180000000,
+
+    }
+
+    training_params_path = os.path.join(custom_task_data_path,'training_params.yaml')
+    with open(training_params_path, 'w') as f:
+        yaml.dump(training_params, f, default_flow_style=False)
+
+    return training_params_path
+
+def prepare_dataset(task_id):
+
+    custom_task_data_path = os.path.join(args.dataset_path, task_id)
+
+    train_dataset = Dataset.get(dataset_name=args.dataset_name, dataset_project=args.dataset_project)
+    dataset_cache_path = train_dataset.get_local_copy()
+
+    print('Creating custom dataset config for:', dataset_cache_path)
+    custom_dataset_config_path = create_custom_dataset_config(custom_task_data_path, dataset_cache_path)
+
+    print('custom_dataset_config_path:', custom_dataset_config_path)
+    #custom_dataset_path: /app/custom_data/generic_instruct.json
+
+    custom_adapter_save_path = os.path.join(custom_task_data_path, 'adapter')
+    training_params_path = create_training_params(custom_task_data_path, custom_adapter_save_path)
+    print('training_params_path:', training_params_path)
+
+    return custom_dataset_config_path, training_params_path, custom_task_data_path, dataset_cache_path, custom_adapter_save_path
 
 
 if __name__ == '__main__':
@@ -242,97 +274,92 @@ if __name__ == '__main__':
     parser.add_argument('--stage', type=str, default='sft', help='location of dataset')
     parser.add_argument('--dataset_path', type=str, default='/app/custom_data', help='location of dataset')
     parser.add_argument('--dataset', type=str, default='generic_instruct', help='location of dataset')
-    parser.add_argument('--output_model', type=str, default='/app/custom_adapter', help='location of dataset')
+    #parser.add_argument('--output_model', type=str, default='/app/custom_adapter', help='location of dataset')
 
     # Dataset parameters
     parser.add_argument('--dataset_project', type=str, default='datasets', help='location of dataset')
     parser.add_argument('--dataset_name', type=str, default='example_generic_instruct.json', help='location of dataset')
     parser.add_argument('--dataset_file', type=str, default='example_generic_instruct.json', help='location of dataset')
-    parser.add_argument('--clearml_cache', type=str, default=os.path.join(user_home,'.clearml/cache'), help='location of dataset')
+    #parser.add_argument('--clearml_cache', type=str, default=os.path.join(user_home,'.clearml/cache'), help='location of dataset')
+    parser.add_argument('--clearml_cache', type=str, default='/app/cache', help='location of dataset')
 
     args = parser.parse_args()
 
     print('Starting ClearML Task')
     task = Task.init(project_name=args.project_name, task_name=args.task_name)
+    task_id = str(task.current_task().id)
+    print('Task_id:', task_id)
 
-    training_params = {
+    custom_dataset_config_path, training_params_path, custom_task_data_path, dataset_cache_path, custom_adapter_save_path = prepare_dataset(task_id)
 
-        "model_name_or_path": args.model,
-
-        "stage": args.stage,
-        "do_train": True,
-        "finetuning_type": "lora",
-        "lora_rank": args.lora_rank,
-        "lora_alpha": args.lora_alpha,
-        "lora_target": args.lora_target,
-        "deepspeed": "/app/config/ds_z3_config.json",
-        "flash_attn": "fa2",
-
-        "dataset_dir": '/app/config/',
-        "dataset": args.dataset,
-        "template": args.template,
-        "cutoff_len": 8096,
-        "max_samples": 1000000000,
-        "overwrite_cache": True,
-        "preprocessing_num_workers": 16,
-
-        "output_dir": args.output_model,
-        "logging_steps": 10,
-        "save_strategy": "no",
-        "plot_loss": True,
-        "overwrite_output_dir": True,
-
-        "per_device_train_batch_size": args.batch_size,
-        "gradient_accumulation_steps": args.gradient_accumulation_steps,
-        "learning_rate": args.lr,
-        "num_train_epochs": args.epoch,
-        "lr_scheduler_type": "cosine",
-        "warmup_ratio": 0.1,
-        "bf16": True,
-        "ddp_timeout": 180000000,
-
-    }
-
-    training_params_file = 'training_params.yaml'
-    with open(training_params_file, 'w') as f:
-        yaml.dump(training_params, f, default_flow_style=False)
-
-    if prepare_dataset():
+    if custom_dataset_config_path is not None:
         print('Dataset is prepared successfully. Starting training...')
 
         # Setting environment variables
         set_env()
 
         # Call llamafactory-cli with the training parameters file
-        command = ['llamafactory-cli', 'train', training_params_file]
+        command = ['llamafactory-cli', 'train', training_params_path]
         rc = execute(command, stdout_callback, stderror_callback)
 
         if rc != 0:
             raise ValueError(f"Training failed with return code {rc}")
 
+
         #remove checkpoints
-        clean_custom_adapter()
+        print('Cleaning adapter before upload')
+        clean_custom_adapter(custom_adapter_save_path)
 
         # do upload here
         Logger.current_logger().report_text("Uploading adapter.", print_console=True)
 
         # at this point might as well upload zip, we will want to run directly from S3 at some point
-        task.upload_artifact('adapter', artifact_object=args.output_model)
+        #task.upload_artifact('adapter', artifact_object=custom_adapter_save_path)
+        #Logger.current_logger().report_text("Cleaning up", print_console=True)
 
-        Logger.current_logger().report_text("Cleaning up", print_console=True)
-        if os.path.exists(args.output_model):
-            shutil.rmtree(args.output_model)
-        if os.path.exists(args.clearml_cache):
-            shutil.rmtree(args.clearml_cache)
+        Logger.current_logger().report_text("Uploading adapter.", print_console=True)
+
+        adapter_id = task_id
+        s3_bucket = 'llmadapters'
+        clearml_config_path = os.path.join(os.path.expanduser('~'), 'clearml.conf')
+        config = pyhocon.ConfigFactory.parse_file(clearml_config_path)
+        for record in config['sdk']['aws']['s3']['credentials']:
+            if record['bucket'] == s3_bucket:
+                s3_endpoint = 'http://' + record['host']
+                s3_key = record['key']
+                s3_secret = record['secret']
+
+        myconfig = TransferConfig(
+
+            multipart_threshold=9999999999999999,  # workaround for 'disable' auto multipart upload
+            # multipart_threshold=1,  # workaround for 'disable' auto multipart upload
+            max_concurrency=10,
+            num_download_attempts=10,
+        )
+
+        s3_client = boto3.client('s3',
+                                 endpoint_url=s3_endpoint,
+                                 aws_access_key_id=s3_key,
+                                 aws_secret_access_key=s3_secret,
+                                 aws_session_token=None)
+
+        transfer = S3Transfer(s3_client, myconfig)
+
+        dataset_files = [f for f in os.listdir(custom_adapter_save_path) if isfile(join(custom_adapter_save_path, f))]
+        for dataset_file in dataset_files:
+            local_dataset_path = os.path.join(custom_adapter_save_path, dataset_file)
+            remote_dataset_path = adapter_id + '/' + dataset_file
+            response = transfer.upload_file(local_dataset_path, s3_bucket, remote_dataset_path)
 
     else:
         raise Exception('Dataset preparation failed!')
 
     task.close()
 
-    #remove dataset
-    if os.path.exists(get_custom_dataset_path()):
-        os.remove(get_custom_dataset_path())
-
-    if os.path.exists('/app/training_params.yaml'):
-        os.remove('/app/training_params.yaml')
+    print('Finished Training, cleaning files')
+    clean_paths = [custom_task_data_path, dataset_cache_path]
+    for path in clean_paths:
+        if path is not None:
+            if os.path.exists(path):
+                print('Removing path:', path)
+                shutil.rmtree(path)

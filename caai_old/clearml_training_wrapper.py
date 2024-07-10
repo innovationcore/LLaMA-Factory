@@ -309,8 +309,9 @@ if __name__ == '__main__':
 
         Logger.current_logger().report_text("Uploading adapter.", print_console=True)
 
+
         # at this point might as well upload zip, we will want to run directly from S3 at some point
-        task.upload_artifact('adapter', artifact_object=os.path.join('/workspace/outputmodels/custom_adapter'))
+        #task.upload_artifact('adapter', artifact_object=os.path.join('/workspace/outputmodels/custom_adapter'))
 
         # adapter_config.json
         # "base_model_name_or_path": "/data/llama-2-7b-chat-hf",
