@@ -315,7 +315,9 @@ if __name__ == '__main__':
             Logger.current_logger().report_text("Uploading adapter.", print_console=True)
 
             s3_bucket = 'llmadapters'
-            clearml_config_path = os.path.join(os.path.expanduser('~'), 'clearml.conf')
+            os.environ['CLEARML_CONFIG_FILE']
+            #clearml_config_path = os.path.join(os.path.expanduser('~'), 'clearml.conf')
+            clearml_config_path = os.environ['CLEARML_CONFIG_FILE']
             config = pyhocon.ConfigFactory.parse_file(clearml_config_path)
             for record in config['sdk']['aws']['s3']['credentials']:
                 if record['bucket'] == s3_bucket:
