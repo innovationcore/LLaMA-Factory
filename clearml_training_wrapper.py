@@ -5,6 +5,7 @@ import os
 import re
 import shutil
 import hashlib
+import uuid
 from glob import glob
 from os.path import isfile, join
 
@@ -282,23 +283,38 @@ if __name__ == '__main__':
     parser.add_argument('--dataset_name', type=str, default='example_generic_instruct.json', help='location of dataset')
     parser.add_argument('--dataset_file', type=str, default='example_generic_instruct.json', help='location of dataset')
     #parser.add_argument('--clearml_cache', type=str, default=os.path.join(user_home,'.clearml/cache'), help='location of dataset')
-    parser.add_argument('--clearml_cache', type=str, default='/app/cache', help='location of dataset')
+    #parser.add_argument('--clearml_cache', type=str, default='/app/cache', help='location of dataset')
     parser.add_argument('--job_id', type=str, help='id of job')
 
     args = parser.parse_args()
+
+    tmp_task_id = str(uuid.uuid4())
+    tmp_custom_task_data_path = os.path.join('/app/cache', tmp_task_id)
+    os.mkdir(tmp_custom_task_data_path)
+
+    os.environ["HOME"] = tmp_custom_task_data_path
+    os.environ["OLDPW"] = tmp_custom_task_data_path
+
+    if "PYTHONPATH" in os.environ:
+        print('PYTHONPATH 0:', os.environ["PYTHONPATH"])
+
+    print('Setting HOME as:', os.environ["HOME"])
+    #os.environ["CLEARML_LOG_ENVIRONMENT"] = tmp_custom_task_data_path
+    os.environ["CLEARML_TASK_NO_REUSE"] = '1'
+    os.environ["CLEARML_LOG_LEVEL"] = 'INFO'
 
     print('Starting ClearML Task')
     task = Task.init(project_name=args.project_name, task_name=args.task_name)
     task_id = str(task.current_task().id)
     print('Task_id:', task_id)
 
+    if "PYTHONPATH" in os.environ:
+        print('PYTHONPATH 1:', os.environ["PYTHONPATH"])
+        del os.environ['PYTHONPATH']
+    if "PYTHONPATH" in os.environ:
+        print('PYTHONPATH 2:', os.environ["PYTHONPATH"])
 
     custom_dataset_config_path, training_params_path, custom_task_data_path, dataset_cache_path, custom_adapter_save_path = prepare_dataset(task_id)
-
-    os.environ["CLEARML_CACHE_DIR"] = custom_task_data_path
-    os.environ["CLEARML_LOG_ENVIRONMENT"] = custom_task_data_path
-    os.environ["CLEARML_TASK_NO_REUSE"] = '1'
-    os.environ["CLEARML_LOG_LEVEL"] = 'INFO'
 
     if custom_dataset_config_path is not None:
         print('Dataset is prepared successfully. Starting training...')
@@ -362,6 +378,9 @@ if __name__ == '__main__':
 
     task.close()
 
+    #remove temp
+    shutil.rmtree(tmp_custom_task_data_path)
+
     print('Finished Training, cleaning files')
     clean_paths = [custom_task_data_path, dataset_cache_path]
     for path in clean_paths:
@@ -369,3 +388,6 @@ if __name__ == '__main__':
             if os.path.exists(path):
                 print('Removing path:', path)
                 shutil.rmtree(path)
+
+    for name, value in os.environ.items():
+        print("{0}: {1}".format(name, value))
