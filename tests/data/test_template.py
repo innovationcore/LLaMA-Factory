@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import os
-from typing import TYPE_CHECKING, Sequence
+from typing import TYPE_CHECKING, List, Sequence
 
 import pytest
 from transformers import AutoTokenizer
@@ -39,7 +39,7 @@ MESSAGES = [
 
 def _check_tokenization(
     tokenizer: "PreTrainedTokenizer", batch_input_ids: Sequence[Sequence[int]], batch_text: Sequence[str]
-):
+) -> None:
     for input_ids, text in zip(batch_input_ids, batch_text):
         assert input_ids == tokenizer.encode(text, add_special_tokens=False)
         assert tokenizer.decode(input_ids) == text
@@ -47,7 +47,7 @@ def _check_tokenization(
 
 def _check_single_template(
     model_id: str, template_name: str, prompt_str: str, answer_str: str, extra_str: str, use_fast: bool
-):
+) -> List[str]:
     tokenizer = AutoTokenizer.from_pretrained(model_id, use_fast=use_fast, token=HF_TOKEN)
     content_str = tokenizer.apply_chat_template(MESSAGES, tokenize=False)
     content_ids = tokenizer.apply_chat_template(MESSAGES, tokenize=True)
@@ -59,7 +59,7 @@ def _check_single_template(
     return content_ids
 
 
-def _check_template(model_id: str, template_name: str, prompt_str: str, answer_str: str, extra_str: str = ""):
+def _check_template(model_id: str, template_name: str, prompt_str: str, answer_str: str, extra_str: str = "") -> None:
     """
     Checks template for both the slow tokenizer and the fast tokenizer.
 
@@ -121,7 +121,7 @@ def test_jinja_template(use_fast: bool):
     assert tokenizer.apply_chat_template(MESSAGES) == ref_tokenizer.apply_chat_template(MESSAGES)
 
 
-@pytest.mark.skipif(HF_TOKEN is None, reason="Gated model.")
+@pytest.mark.skipif(not HF_TOKEN, reason="Gated model.")
 def test_gemma_template():
     prompt_str = (
         "<bos><start_of_turn>user\nHow are you<end_of_turn>\n"
@@ -133,7 +133,7 @@ def test_gemma_template():
     _check_template("google/gemma-2-9b-it", "gemma", prompt_str, answer_str, extra_str="<end_of_turn>\n")
 
 
-@pytest.mark.skipif(HF_TOKEN is None, reason="Gated model.")
+@pytest.mark.skipif(not HF_TOKEN, reason="Gated model.")
 def test_llama3_template():
     prompt_str = (
         "<|begin_of_text|><|start_header_id|>user<|end_header_id|>\n\nHow are you<|eot_id|>"
