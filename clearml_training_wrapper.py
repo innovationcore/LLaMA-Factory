@@ -21,8 +21,6 @@ step_count = 1
 
 user_home = str(Path.home())
 
-os.environ["CLEARML_CACHE_DIR"] = "/app/cache"
-
 def extract_string_between_curly_braces(text):
     match = re.search(r'\{(.*?)\}', text)
     if match:
@@ -240,6 +238,9 @@ def prepare_dataset(task_id):
 
     custom_task_data_path = os.path.join(args.dataset_path, task_id)
 
+    #set env
+
+
     train_dataset = Dataset.get(dataset_name=args.dataset_name, dataset_project=args.dataset_project)
     dataset_cache_path = train_dataset.get_local_copy()
 
@@ -291,7 +292,13 @@ if __name__ == '__main__':
     task_id = str(task.current_task().id)
     print('Task_id:', task_id)
 
+
     custom_dataset_config_path, training_params_path, custom_task_data_path, dataset_cache_path, custom_adapter_save_path = prepare_dataset(task_id)
+
+    os.environ["CLEARML_CACHE_DIR"] = custom_task_data_path
+    os.environ["CLEARML_LOG_ENVIRONMENT"] = custom_task_data_path
+    os.environ["CLEARML_TASK_NO_REUSE"] = '1'
+    os.environ["CLEARML_LOG_LEVEL"] = 'INFO'
 
     if custom_dataset_config_path is not None:
         print('Dataset is prepared successfully. Starting training...')
@@ -315,7 +322,7 @@ if __name__ == '__main__':
             Logger.current_logger().report_text("Uploading adapter.", print_console=True)
 
             s3_bucket = 'llmadapters'
-            os.environ['CLEARML_CONFIG_FILE']
+            #os.environ['CLEARML_CONFIG_FILE']
             #clearml_config_path = os.path.join(os.path.expanduser('~'), 'clearml.conf')
             clearml_config_path = os.environ['CLEARML_CONFIG_FILE']
             config = pyhocon.ConfigFactory.parse_file(clearml_config_path)
