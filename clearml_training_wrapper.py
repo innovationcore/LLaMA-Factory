@@ -329,6 +329,9 @@ if __name__ == '__main__':
     if custom_dataset_config_path is not None:
         print('Dataset is prepared successfully. Starting training...')
 
+        #allow script to cleanup on failure
+        os.environ["CLEARML_CUSTOM_TASK_DATA_PATH"] = custom_task_data_path
+
         # Setting environment variables
         set_env()
 

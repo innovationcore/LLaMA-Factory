@@ -20,5 +20,6 @@ mkdir -p $WORKING_DIR
 python clearml_training_wrapper.py --dataset_file=b384e92e-8fe6-4f06-960e-cd7eff15cb8f.json --dataset_name=b384e92e-8fe6-4f06-960e-cd7eff15cb8f --task_name=trainer_template_v23
 
 rm -rf $WORKING_DIR
+rm -rf $CLEARML_CUSTOM_TASK_DATA_PATH
 ~
 ~

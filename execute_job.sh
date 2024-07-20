@@ -20,3 +20,6 @@ mkdir -p $WORKING_DIR
 clearml-agent execute --id $1
 
 rm -rf $WORKING_DIR
+rm -rf $CLEARML_CUSTOM_TASK_DATA_PATH
+
+
