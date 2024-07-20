@@ -17,6 +17,8 @@ export CLEARML_LOG_LEVEL="INFO"
 
 mkdir -p $WORKING_DIR
 
-clearml-agent execute --id $1
+python clearml_training_wrapper.py --dataset_file=b384e92e-8fe6-4f06-960e-cd7eff15cb8f.json --dataset_name=b384e92e-8fe6-4f06-960e-cd7eff15cb8f --task_name=trainer_template_v23
 
 rm -rf $WORKING_DIR
+~
+~
