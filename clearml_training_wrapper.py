@@ -231,7 +231,8 @@ def create_training_params(custom_task_data_path, adapter_save_path):
         "num_train_epochs": args.epoch,
         "lr_scheduler_type": "cosine",
         "warmup_ratio": 0.1,
-        "bf16": True,
+        "bf16": False,
+        "fp16": True,
         "ddp_timeout": 180000000,
     }
 
