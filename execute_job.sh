@@ -6,6 +6,12 @@ export UUID=$(uuidgen)
 export WORKING_DIR=/app/working_dir/$UUID
 export HOME=$WORKING_DIR
 
+echo "WORKING_DIR: $WORKING_DIR"
+
+export RANK=${PMIX_RANK}
+
+echo "RANK: $RANK"
+
 export CLEARML_AGENT_SKIP_PYTHON_ENV_INSTALL=1
 export CLEARML_VENVS_BUILDS=$WORKING_DIR/.clearml/venvs-builds
 export CLEARML_VCS_CACHE=$WORKING_DIR/.clearml/vcs-cache

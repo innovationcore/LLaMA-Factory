@@ -190,6 +190,14 @@ def create_custom_dataset_config(custom_task_data_path, dataset_cache_path):
 
 def create_training_params(custom_task_data_path, adapter_save_path):
 
+    deepseed_config = ''
+    if args.ds_stage is not None:
+        deepseed_config = '/app/config/ds_z' + str(args.ds_stage) + '_config.json'
+
+    flash_attn_config = ''
+    if args.flash_attn_version is not None:
+        flash_attn_config = 'fa' + str(args.flash_attn_version)
+
     training_params = {
 
         "model_name_or_path": args.model,
@@ -200,8 +208,8 @@ def create_training_params(custom_task_data_path, adapter_save_path):
         "lora_rank": args.lora_rank,
         "lora_alpha": args.lora_alpha,
         "lora_target": args.lora_target,
-        "deepspeed": '/app/config/ds_z' + str(args.ds_stage) + '_config.json',
-        "flash_attn": "fa2",
+        "deepspeed": deepseed_config,
+        "flash_attn": flash_attn_config,
 
         "dataset_dir": custom_task_data_path,
         "dataset": args.dataset,
@@ -226,6 +234,12 @@ def create_training_params(custom_task_data_path, adapter_save_path):
         "bf16": True,
         "ddp_timeout": 180000000,
     }
+
+    if len(training_params['deepspeed']) == 0:
+        del training_params['deepspeed']
+
+    if len(training_params['flash_attn']) == 0:
+        del training_params['flash_attn']
 
     training_params_path = os.path.join(custom_task_data_path,'training_params.yaml')
     with open(training_params_path, 'w') as f:
@@ -259,12 +273,13 @@ if __name__ == '__main__':
     # General arguments
     parser.add_argument('--project_name', type=str, default='llm_factory_trainer', help='name of project')
     parser.add_argument('--task_name', type=str, default='trainer_template_v0', help='name of project')
-    parser.add_argument('--ds_stage', type=int, default=0, help='location of dataset')
+    parser.add_argument('--ds_stage', type=int, help='location of dataset')
     parser.add_argument('--lora_rank', type=int, default=8, help='location of dataset')
     parser.add_argument('--lora_alpha', type=int, default=8, help='location of dataset')
     parser.add_argument('--lora_target', type=str, default='all', help='location of dataset')
     parser.add_argument('--batch_size', type=int, default=1, help='location of dataset')
-    parser.add_argument('--gradient_accumulation_steps', type=int, default=2, help='location of dataset')
+    parser.add_argument('--flash_attn_version', type=int, help='location of dataset')
+    parser.add_argument('--gradient_accumulation_steps', type=int, default=8, help='location of dataset')
     parser.add_argument('--epoch', type=float, default=1.0, help='location of dataset')
     parser.add_argument('--lr', type=float, default=1e-4, help='location of dataset')
     parser.add_argument('--template', type=str, default='llama3', help='location of dataset')
