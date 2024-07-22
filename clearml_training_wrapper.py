@@ -195,8 +195,8 @@ def create_training_params(custom_task_data_path, adapter_save_path):
         deepseed_config = '/app/config/ds_z' + str(args.ds_stage) + '_config.json'
 
     flash_attn_config = ''
-    if args.flash_attn_version is not None:
-        flash_attn_config = 'fa' + str(args.flash_attn_version)
+    if args.flash_attn_config is not None:
+        flash_attn_config = args.flash_attn_config
 
     training_params = {
 
@@ -279,7 +279,7 @@ if __name__ == '__main__':
     parser.add_argument('--lora_alpha', type=int, default=8, help='location of dataset')
     parser.add_argument('--lora_target', type=str, default='all', help='location of dataset')
     parser.add_argument('--batch_size', type=int, default=1, help='location of dataset')
-    parser.add_argument('--flash_attn_version', type=int, help='location of dataset')
+    parser.add_argument('--flash_attn_config', type=str, help='location of dataset')
     parser.add_argument('--gradient_accumulation_steps', type=int, default=8, help='location of dataset')
     parser.add_argument('--epoch', type=float, default=1.0, help='location of dataset')
     parser.add_argument('--lr', type=float, default=1e-4, help='location of dataset')
