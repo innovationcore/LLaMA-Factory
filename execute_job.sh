@@ -3,7 +3,7 @@
 cd /app
 
 export UUID=$(uuidgen)
-export WORKING_DIR=/app/working_dir/$UUID
+export WORKING_DIR=/tmp/working_dir/$UUID
 export HOME=$WORKING_DIR
 
 echo "WORKING_DIR: $WORKING_DIR"
@@ -26,6 +26,5 @@ mkdir -p $WORKING_DIR
 clearml-agent execute --id $1
 
 rm -rf $WORKING_DIR
-rm -rf $CLEARML_CUSTOM_TASK_DATA_PATH
 
 

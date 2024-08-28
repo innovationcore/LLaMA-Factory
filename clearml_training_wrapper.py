@@ -135,15 +135,6 @@ def get_file_sha1(dataset_path):
             sha1.update(data)
     return sha1.hexdigest()
 
-def validate_dataset():
-    dataset_sha1 = None
-    f = open('/app/custom_data/dataset_info.json', "r")
-    dataset_info = json.loads(f.read())
-    if args.dataset in dataset_info:
-        dataset_path = os.path.join('data', dataset_info[args.dataset]['file_name'])
-        dataset_sha1 = get_file_sha1(dataset_path)
-    return dataset_sha1
-
 def clean_custom_adapter(custom_adapter_save_path):
 
     pattern = os.path.join(custom_adapter_save_path, "checkpoint-*")
@@ -231,8 +222,8 @@ def create_training_params(custom_task_data_path, adapter_save_path):
         "num_train_epochs": args.epoch,
         "lr_scheduler_type": "cosine",
         "warmup_ratio": 0.1,
-        "bf16": False,
-        "fp16": True,
+        "bf16": True,
+        "fp16": False,
         "ddp_timeout": 180000000,
     }
 
@@ -259,7 +250,6 @@ def prepare_dataset(task_id):
     custom_dataset_config_path = create_custom_dataset_config(custom_task_data_path, dataset_cache_path)
 
     print('custom_dataset_config_path:', custom_dataset_config_path)
-    #custom_dataset_path: /app/custom_data/generic_instruct.json
 
     custom_adapter_save_path = os.path.join(custom_task_data_path, 'adapter')
     training_params_path = create_training_params(custom_task_data_path, custom_adapter_save_path)
@@ -286,42 +276,16 @@ if __name__ == '__main__':
     parser.add_argument('--template', type=str, default='llama3', help='location of dataset')
     parser.add_argument('--model', type=str, default='/app/basemodels/Meta-Llama-3-8B-Instruct', help='location of dataset')
     parser.add_argument('--stage', type=str, default='sft', help='location of dataset')
-    parser.add_argument('--dataset_path', type=str, default='/app/custom_data', help='location of dataset')
+    parser.add_argument('--dataset_path', type=str, default='/tmp/custom_data', help='location of dataset')
     parser.add_argument('--dataset', type=str, default='generic_instruct', help='location of dataset')
-    #parser.add_argument('--output_model', type=str, default='/app/custom_adapter', help='location of dataset')
 
     # Dataset parameters
     parser.add_argument('--dataset_project', type=str, default='datasets', help='location of dataset')
     parser.add_argument('--dataset_name', type=str, default='example_generic_instruct', help='location of dataset')
     parser.add_argument('--dataset_file', type=str, default='example_generic_instruct.json', help='location of dataset')
-    #parser.add_argument('--clearml_cache', type=str, default=os.path.join(user_home,'.clearml/cache'), help='location of dataset')
-    #parser.add_argument('--clearml_cache', type=str, default='/app/cache', help='location of dataset')
     parser.add_argument('--job_id', type=str, help='id of job')
 
     args = parser.parse_args()
-
-    '''
-    tmp_task_id = str(uuid.uuid4())
-    tmp_custom_task_data_path = os.path.join('/app/cache', tmp_task_id)
-    os.mkdir(tmp_custom_task_data_path)
-
-    os.environ["HOME"] = tmp_custom_task_data_path
-    os.environ["OLDPW"] = tmp_custom_task_data_path
-
-    os.environ["CLEARML_VENVS_BUILDS"] = os.path.join(tmp_custom_task_data_path, '.clearml','venvs-builds')
-    os.environ["CLEARML_VCS_CACHE"] = os.path.join(tmp_custom_task_data_path, '.clearml', 'vcs-cache')
-    os.environ["CLEARML_PIP_CACHE"] = os.path.join(tmp_custom_task_data_path, '.clearml', 'pip-download-cache')
-    os.environ["CLEARML_DOCKER_PIP_CACHE"] = os.path.join(tmp_custom_task_data_path, '.clearml', 'pip-cache')
-    os.environ["CLEARML_APT_CACHE"] = os.path.join(tmp_custom_task_data_path, '.clearml', 'apt-cache')
-
-    if "PYTHONPATH" in os.environ:
-        print('PYTHONPATH 0:', os.environ["PYTHONPATH"])
-
-    print('Setting HOME as:', os.environ["HOME"])
-    #os.environ["CLEARML_LOG_ENVIRONMENT"] = tmp_custom_task_data_path
-    os.environ["CLEARML_TASK_NO_REUSE"] = '1'
-    os.environ["CLEARML_LOG_LEVEL"] = 'INFO'
-    '''
 
     print('ENVS:')
     for name, value in os.environ.items():
@@ -340,21 +304,10 @@ if __name__ == '__main__':
     task_id = str(task.current_task().id)
     print('Task_id:', task_id)
 
-    '''
-    if "PYTHONPATH" in os.environ:
-        print('PYTHONPATH 1:', os.environ["PYTHONPATH"])
-        #del os.environ['PYTHONPATH']
-    if "PYTHONPATH" in os.environ:
-        print('PYTHONPATH 2:', os.environ["PYTHONPATH"])
-    '''
-
     custom_dataset_config_path, training_params_path, custom_task_data_path, dataset_cache_path, custom_adapter_save_path = prepare_dataset(task_id)
 
     if custom_dataset_config_path is not None:
         print('Dataset is prepared successfully. Starting training...')
-
-        #allow script to cleanup on failure
-        os.environ["CLEARML_CUSTOM_TASK_DATA_PATH"] = custom_task_data_path
 
         # Setting environment variables
         set_env()
@@ -415,8 +368,6 @@ if __name__ == '__main__':
 
     task.close()
 
-    #remove temp
-    #shutil.rmtree(tmp_custom_task_data_path)
     if control_node:
         print('Finished Training, cleaning files')
         clean_paths = [custom_task_data_path, dataset_cache_path]
@@ -425,6 +376,3 @@ if __name__ == '__main__':
                 if os.path.exists(path):
                     print('Removing path:', path)
                     shutil.rmtree(path)
-
-    #for name, value in os.environ.items():
-    #    print("{0}: {1}".format(name, value))
