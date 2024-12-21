@@ -46,7 +46,6 @@ def save_model(
     finetuning_type: str,
     checkpoint_path: Union[str, List[str]],
     template: str,
-    visual_inputs: bool,
     export_size: int,
     export_quantization_bit: str,
     export_quantization_dataset: str,
@@ -78,7 +77,6 @@ def save_model(
         model_name_or_path=model_path,
         finetuning_type=finetuning_type,
         template=template,
-        visual_inputs=visual_inputs,
         export_dir=export_dir,
         export_hub_model_id=export_hub_model_id or None,
         export_size=export_size,
@@ -86,6 +84,7 @@ def save_model(
         export_quantization_dataset=export_quantization_dataset,
         export_device=export_device,
         export_legacy_format=export_legacy_format,
+        trust_remote_code=True,
     )
 
     if checkpoint_path:
@@ -129,7 +128,6 @@ def create_export_tab(engine: "Engine") -> Dict[str, "Component"]:
             engine.manager.get_elem_by_id("top.finetuning_type"),
             engine.manager.get_elem_by_id("top.checkpoint_path"),
             engine.manager.get_elem_by_id("top.template"),
-            engine.manager.get_elem_by_id("top.visual_inputs"),
             export_size,
             export_quantization_bit,
             export_quantization_dataset,

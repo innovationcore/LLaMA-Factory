@@ -30,15 +30,19 @@ LOCALES = {
     "model_name": {
         "en": {
             "label": "Model name",
+            "info": "Input the name prefix to search for the model.",
         },
         "ru": {
             "label": "Название модели",
+            "info": "Введите префикс имени для поиска модели.",
         },
         "zh": {
             "label": "模型名称",
+            "info": "输入首单词以检索模型。",
         },
         "ko": {
             "label": "모델 이름",
+            "info": "모델을 검색하기 위해 이름 접두어를 입력하세요.",
         },
     },
     "model_path": {
@@ -85,20 +89,6 @@ LOCALES = {
         },
         "ko": {
             "label": "체크포인트 경로",
-        },
-    },
-    "advanced_tab": {
-        "en": {
-            "label": "Advanced configurations",
-        },
-        "ru": {
-            "label": "Расширенные конфигурации",
-        },
-        "zh": {
-            "label": "高级设置",
-        },
-        "ko": {
-            "label": "고급 설정",
         },
     },
     "quantization_bit": {
@@ -148,7 +138,7 @@ LOCALES = {
         },
         "zh": {
             "label": "提示模板",
-            "info": "构建提示词时使用的模板",
+            "info": "构建提示词时使用的模板。",
         },
         "ko": {
             "label": "프롬프트 템플릿",
@@ -181,20 +171,6 @@ LOCALES = {
         },
         "ko": {
             "label": "부스터",
-        },
-    },
-    "visual_inputs": {
-        "en": {
-            "label": "Visual inputs",
-        },
-        "ru": {
-            "label": "визуальные входы",
-        },
-        "zh": {
-            "label": "图像输入",
-        },
-        "ko": {
-            "label": "시각적 입력",
         },
     },
     "training_stage": {
@@ -595,11 +571,11 @@ LOCALES = {
     },
     "neftune_alpha": {
         "en": {
-            "label": "NEFTune Alpha",
+            "label": "NEFTune alpha",
             "info": "Magnitude of noise adding to embedding vectors.",
         },
         "ru": {
-            "label": "NEFTune Alpha",
+            "label": "NEFTune alpha",
             "info": "Величина шума, добавляемого к векторам вложений.",
         },
         "zh": {
@@ -611,22 +587,22 @@ LOCALES = {
             "info": "임베딩 벡터에 추가되는 노이즈의 크기.",
         },
     },
-    "optim": {
+    "extra_args": {
         "en": {
-            "label": "Optimizer",
-            "info": "The optimizer to use: adamw_torch, adamw_8bit or adafactor.",
+            "label": "Extra arguments",
+            "info": "Extra arguments passed to the trainer in JSON format.",
         },
         "ru": {
-            "label": "Оптимизатор",
-            "info": "Оптимизатор для использования: adamw_torch, adamw_8bit или adafactor.",
+            "label": "Дополнительные аргументы",
+            "info": "Дополнительные аргументы, которые передаются тренеру в формате JSON.",
         },
         "zh": {
-            "label": "优化器",
-            "info": "使用的优化器：adamw_torch、adamw_8bit 或 adafactor。",
+            "label": "额外参数",
+            "info": "以 JSON 格式传递给训练器的额外参数。",
         },
         "ko": {
-            "label": "옵티마이저",
-            "info": "사용할 옵티마이저: adamw_torch, adamw_8bit 또는 adafactor 등.",
+            "label": "추가 인수",
+            "info": "JSON 형식으로 트레이너에게 전달할 추가 인수입니다.",
         },
     },
     "packing": {
@@ -1377,6 +1353,121 @@ LOCALES = {
             "info": "비율-BAdam의 업데이트 비율.",
         },
     },
+    "swanlab_tab": {
+        "en": {
+            "label": "SwanLab configurations",
+        },
+        "ru": {
+            "label": "Конфигурации SwanLab",
+        },
+        "zh": {
+            "label": "SwanLab 参数设置",
+        },
+        "ko": {
+            "label": "SwanLab 설정",
+        },
+    },
+    "use_swanlab": {
+        "en": {
+            "label": "Use SwanLab",
+            "info": "Enable SwanLab for experiment tracking and visualization.",
+        },
+        "ru": {
+            "label": "Использовать SwanLab",
+            "info": "Включить SwanLab для отслеживания и визуализации экспериментов.",
+        },
+        "zh": {
+            "label": "使用 SwanLab",
+            "info": "启用 SwanLab 进行实验跟踪和可视化。",
+        },
+        "ko": {
+            "label": "SwanLab 사용",
+            "info": "SwanLab를 사용하여 실험을 추적하고 시각화합니다.",
+        },
+    },
+    "swanlab_api_key": {
+        "en": {
+            "label": "API Key(optional)",
+            "info": "API key for SwanLab. Once logged in, no need to login again in the programming environment.",
+        },
+        "ru": {
+            "label": "API ключ(Необязательный)",
+            "info": "API ключ для SwanLab. После входа в программное окружение, нет необходимости входить снова.",
+        },
+        "zh": {
+            "label": "API密钥(选填)",
+            "info": "用于在编程环境登录SwanLab，已登录则无需填写。",
+        },
+        "ko": {
+            "label": "API 키(선택 사항)",
+            "info": "SwanLab의 API 키. 프로그래밍 환경에 로그인한 후 다시 로그인할 필요가 없습니다.",
+        },
+    },
+    "swanlab_project": {
+        "en": {
+            "label": "Project(optional)",
+        },
+        "ru": {
+            "label": "Проект(Необязательный)",
+        },
+        "zh": {
+            "label": "项目(选填)",
+        },
+        "ko": {
+            "label": "프로젝트(선택 사항)",
+        },
+    },
+    "swanlab_workspace": {
+        "en": {
+            "label": "Workspace(optional)",
+            "info": "Workspace for SwanLab. If not filled, it defaults to the personal workspace.",
+            
+        },
+        "ru": {
+            "label": "Рабочая область(Необязательный)",
+            "info": "Рабочая область SwanLab, если не заполнено, то по умолчанию в личной рабочей области.",
+        },
+        "zh": {
+            "label": "Workspace(选填)",
+            "info": "SwanLab组织的工作区，如不填写则默认在个人工作区下",
+        },
+        "ko": {
+            "label": "작업 영역(선택 사항)",
+            "info": "SwanLab 조직의 작업 영역, 비어 있으면 기본적으로 개인 작업 영역에 있습니다.",
+        },
+    },
+    "swanlab_experiment_name": {
+        "en": {
+            "label": "Experiment name (optional)",
+        },
+        "ru": {
+            "label": "Имя эксперимента(Необязательный)",
+        },
+        "zh": {
+            "label": "实验名(选填)  ",
+        },
+        "ko": {
+            "label": "실험 이름(선택 사항)",
+        },
+    },
+    "swanlab_mode": {
+        "en": {
+            "label": "Mode",
+            "info": "Cloud or offline version.",    
+        },
+        "ru": {
+            "label": "Режим",
+            "info": "Версия в облаке или локальная версия.",
+        },
+        "zh": {
+            "label": "模式",
+            "info": "云端版或离线版",
+        },
+        "ko": {
+            "label": "모드",
+            "info": "클라우드 버전 또는 오프라인 버전.",
+        },
+    },
     "cmd_preview_btn": {
         "en": {
             "value": "Preview command",
@@ -1703,6 +1794,20 @@ LOCALES = {
         },
         "ko": {
             "label": "이미지 (선택 사항)",
+        },
+    },
+    "video": {
+        "en": {
+            "label": "Video (optional)",
+        },
+        "ru": {
+            "label": "Видео (по желанию)",
+        },
+        "zh": {
+            "label": "视频（非必填）",
+        },
+        "ko": {
+            "label": "비디오 (선택 사항)",
         },
     },
     "query": {

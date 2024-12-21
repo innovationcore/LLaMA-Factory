@@ -14,9 +14,7 @@
 
 import json
 import os
-from typing import TYPE_CHECKING, Dict, Generator, List, Optional, Sequence, Tuple
-
-from numpy.typing import NDArray
+from typing import TYPE_CHECKING, Any, Dict, Generator, List, Optional, Sequence, Tuple
 
 from ..chat import ChatModel
 from ..data import Role
@@ -90,10 +88,10 @@ class WebChatModel(ChatModel):
             template=get("top.template"),
             flash_attn="fa2" if get("top.booster") == "flashattn2" else "auto",
             use_unsloth=(get("top.booster") == "unsloth"),
-            visual_inputs=get("top.visual_inputs"),
             rope_scaling=get("top.rope_scaling") if get("top.rope_scaling") in ["linear", "dynamic"] else None,
             infer_backend=get("infer.infer_backend"),
             infer_dtype=get("infer.infer_dtype"),
+            trust_remote_code=True,
         )
 
         if checkpoint_path:
@@ -135,7 +133,8 @@ class WebChatModel(ChatModel):
         messages: Sequence[Dict[str, str]],
         system: str,
         tools: str,
-        image: Optional[NDArray],
+        image: Optional[Any],
+        video: Optional[Any],
         max_new_tokens: int,
         top_p: float,
         temperature: float,
@@ -143,7 +142,14 @@ class WebChatModel(ChatModel):
         chatbot[-1][1] = ""
         response = ""
         for new_text in self.stream_chat(
-            messages, system, tools, image, max_new_tokens=max_new_tokens, top_p=top_p, temperature=temperature
+            messages,
+            system,
+            tools,
+            images=[image] if image else None,
+            videos=[video] if video else None,
+            max_new_tokens=max_new_tokens,
+            top_p=top_p,
+            temperature=temperature,
         ):
             response += new_text
             if tools:
@@ -152,7 +158,7 @@ class WebChatModel(ChatModel):
                 result = response
 
             if isinstance(result, list):
-                tool_calls = [{"name": tool[0], "arguments": json.loads(tool[1])} for tool in result]
+                tool_calls = [{"name": tool.name, "arguments": json.loads(tool.arguments)} for tool in result]
                 tool_calls = json.dumps(tool_calls, indent=4, ensure_ascii=False)
                 output_messages = messages + [{"role": Role.FUNCTION.value, "content": tool_calls}]
                 bot_text = "```json\n" + tool_calls + "\n```"

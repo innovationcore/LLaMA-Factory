@@ -23,22 +23,24 @@ from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
 import numpy as np
 import torch
 from transformers import Seq2SeqTrainer
+from typing_extensions import override
 
+from ...extras import logging
 from ...extras.constants import IGNORE_INDEX
-from ...extras.logging import get_logger
+from ...extras.packages import is_transformers_version_equal_to_4_46, is_transformers_version_greater_than
 from ..callbacks import PissaConvertCallback, SaveProcessorCallback
-from ..trainer_utils import create_custom_optimizer, create_custom_scheduler
+from ..trainer_utils import create_custom_optimizer, create_custom_scheduler, get_swanlab_callback
 
 
 if TYPE_CHECKING:
     from torch.utils.data import Dataset
-    from transformers import ProcessorMixin
+    from transformers import PreTrainedModel, PreTrainedTokenizer, ProcessorMixin
     from transformers.trainer import PredictionOutput
 
     from ...hparams import FinetuningArguments
 
 
-logger = get_logger(__name__)
+logger = logging.get_logger(__name__)
 
 
 class CustomSeq2SeqTrainer(Seq2SeqTrainer):
@@ -49,6 +51,11 @@ class CustomSeq2SeqTrainer(Seq2SeqTrainer):
     def __init__(
         self, finetuning_args: "FinetuningArguments", processor: Optional["ProcessorMixin"], **kwargs
     ) -> None:
+        if is_transformers_version_greater_than("4.46"):
+            kwargs["processing_class"] = kwargs.pop("tokenizer")
+        else:
+            self.processing_class: "PreTrainedTokenizer" = kwargs.get("tokenizer")
+
         super().__init__(**kwargs)
         self.finetuning_args = finetuning_args
 
@@ -59,37 +66,69 @@ class CustomSeq2SeqTrainer(Seq2SeqTrainer):
             self.add_callback(PissaConvertCallback)
 
         if finetuning_args.use_badam:
-            from badam import BAdamCallback, clip_grad_norm_old_version
+            from badam import BAdamCallback, clip_grad_norm_old_version  # type: ignore
 
             self.accelerator.clip_grad_norm_ = MethodType(clip_grad_norm_old_version, self.accelerator)
             self.add_callback(BAdamCallback)
 
+        if finetuning_args.use_swanlab:
+            self.add_callback(get_swanlab_callback(finetuning_args))
+
+    @override
     def create_optimizer(self) -> "torch.optim.Optimizer":
         if self.optimizer is None:
             self.optimizer = create_custom_optimizer(self.model, self.args, self.finetuning_args)
         return super().create_optimizer()
 
+    @override
     def create_scheduler(
         self, num_training_steps: int, optimizer: Optional["torch.optim.Optimizer"] = None
     ) -> "torch.optim.lr_scheduler.LRScheduler":
         create_custom_scheduler(self.args, num_training_steps, optimizer)
         return super().create_scheduler(num_training_steps, optimizer)
 
+    @override
+    def _get_train_sampler(self) -> Optional["torch.utils.data.Sampler"]:
+        if self.finetuning_args.disable_shuffling:
+            return torch.utils.data.SequentialSampler(self.train_dataset)
+
+        return super()._get_train_sampler()
+
+    @override
+    def compute_loss(
+        self, model: "PreTrainedModel", inputs: Dict[str, "torch.Tensor"], return_outputs: bool = False, **kwargs
+    ) -> Union["torch.Tensor", Tuple["torch.Tensor", List["torch.Tensor"]]]:
+        r"""
+        Fixes the loss value for transformers 4.46.0.
+        https://github.com/huggingface/transformers/blob/v4.46.0/src/transformers/trainer.py#L3605
+        """
+        loss = super().compute_loss(model, inputs, return_outputs, **kwargs)
+        if is_transformers_version_equal_to_4_46() and not getattr(self, "model_accepts_loss_kwargs", False):
+            # other model should not scale the loss
+            if return_outputs:
+                return (loss[0] / self.args.gradient_accumulation_steps, *loss[1:])
+            else:
+                return loss / self.args.gradient_accumulation_steps
+
+        return loss
+
+    @override
     def prediction_step(
         self,
         model: "torch.nn.Module",
-        inputs: Dict[str, Union[torch.Tensor, Any]],
+        inputs: Dict[str, Union["torch.Tensor", Any]],
         prediction_loss_only: bool,
         ignore_keys: Optional[List[str]] = None,
-    ) -> Tuple[Optional[float], Optional[torch.Tensor], Optional[torch.Tensor]]:
+    ) -> Tuple[Optional[float], Optional["torch.Tensor"], Optional["torch.Tensor"]]:
         r"""
         Removes the prompt part in the generated tokens.
 
         Subclass and override to inject custom behavior.
         """
-        labels = inputs["labels"].detach().clone() if "labels" in inputs else None  # backup labels
+        labels = inputs["labels"] if "labels" in inputs else None
         if self.args.predict_with_generate:
-            assert self.tokenizer.padding_side == "left", "This method only accepts left-padded tensor."
+            assert self.processing_class.padding_side == "left", "This method only accepts left-padded tensor."
+            labels = labels.detach().clone() if labels is not None else None  # backup labels
             prompt_len, label_len = inputs["input_ids"].size(-1), inputs["labels"].size(-1)
             if prompt_len > label_len:
                 inputs["labels"] = self._pad_tensors_to_target_len(inputs["labels"], inputs["input_ids"])
@@ -100,21 +139,23 @@ class CustomSeq2SeqTrainer(Seq2SeqTrainer):
             model, inputs, prediction_loss_only=prediction_loss_only, ignore_keys=ignore_keys
         )
         if generated_tokens is not None and self.args.predict_with_generate:
-            generated_tokens[:, :prompt_len] = self.tokenizer.pad_token_id
+            generated_tokens[:, :prompt_len] = self.processing_class.pad_token_id
             generated_tokens = generated_tokens.contiguous()
 
         return loss, generated_tokens, labels
 
-    def _pad_tensors_to_target_len(self, src_tensor: torch.Tensor, tgt_tensor: torch.Tensor) -> torch.Tensor:
+    def _pad_tensors_to_target_len(self, src_tensor: "torch.Tensor", tgt_tensor: "torch.Tensor") -> "torch.Tensor":
         r"""
         Pads the tensor to the same length as the target tensor.
         """
-        assert self.tokenizer.pad_token_id is not None, "Pad token is required."
-        padded_tensor = self.tokenizer.pad_token_id * torch.ones_like(tgt_tensor)
+        assert self.processing_class.pad_token_id is not None, "Pad token is required."
+        padded_tensor = self.processing_class.pad_token_id * torch.ones_like(tgt_tensor)
         padded_tensor[:, -src_tensor.shape[-1] :] = src_tensor  # adopt left-padding
         return padded_tensor.contiguous()  # in contiguous memory
 
-    def save_predictions(self, dataset: "Dataset", predict_results: "PredictionOutput") -> None:
+    def save_predictions(
+        self, dataset: "Dataset", predict_results: "PredictionOutput", skip_special_tokens: bool = True
+    ) -> None:
         r"""
         Saves model predictions to `output_dir`.
 
@@ -124,27 +165,26 @@ class CustomSeq2SeqTrainer(Seq2SeqTrainer):
             return
 
         output_prediction_file = os.path.join(self.args.output_dir, "generated_predictions.jsonl")
-        logger.info(f"Saving prediction results to {output_prediction_file}")
+        logger.info_rank0(f"Saving prediction results to {output_prediction_file}")
 
         labels = np.where(
-            predict_results.label_ids != IGNORE_INDEX, predict_results.label_ids, self.tokenizer.pad_token_id
+            predict_results.label_ids != IGNORE_INDEX, predict_results.label_ids, self.processing_class.pad_token_id
         )
         preds = np.where(
-            predict_results.predictions != IGNORE_INDEX, predict_results.predictions, self.tokenizer.pad_token_id
+            predict_results.predictions != IGNORE_INDEX,
+            predict_results.predictions,
+            self.processing_class.pad_token_id,
         )
 
         for i in range(len(preds)):
-            pad_len = np.nonzero(preds[i] != self.tokenizer.pad_token_id)[0]
+            pad_len = np.nonzero(preds[i] != self.processing_class.pad_token_id)[0]
             if len(pad_len):  # move pad token to last
                 preds[i] = np.concatenate((preds[i][pad_len[0] :], preds[i][: pad_len[0]]), axis=-1)
 
-        decoded_inputs = self.tokenizer.batch_decode(dataset["input_ids"], skip_special_tokens=True)
-        decoded_labels = self.tokenizer.batch_decode(labels, skip_special_tokens=True)
-        decoded_preds = self.tokenizer.batch_decode(preds, skip_special_tokens=True)
+        decoded_inputs = self.processing_class.batch_decode(dataset["input_ids"], skip_special_tokens=False)
+        decoded_preds = self.processing_class.batch_decode(preds, skip_special_tokens=skip_special_tokens)
+        decoded_labels = self.processing_class.batch_decode(labels, skip_special_tokens=skip_special_tokens)
 
-        with open(output_prediction_file, "w", encoding="utf-8") as writer:
-            res: List[str] = []
-            for text, label, pred in zip(decoded_inputs, decoded_labels, decoded_preds):
-                res.append(json.dumps({"prompt": text, "label": label, "predict": pred}, ensure_ascii=False))
-
-            writer.write("\n".join(res))
+        with open(output_prediction_file, "w", encoding="utf-8") as f:
+            for text, pred, label in zip(decoded_inputs, decoded_preds, decoded_labels):
+                f.write(json.dumps({"prompt": text, "predict": pred, "label": label}, ensure_ascii=False) + "\n")

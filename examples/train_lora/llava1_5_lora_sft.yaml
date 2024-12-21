@@ -1,6 +1,6 @@
 ### model
 model_name_or_path: llava-hf/llava-1.5-7b-hf
-visual_inputs: true
+trust_remote_code: true
 
 ### method
 stage: sft
@@ -10,8 +10,8 @@ lora_target: all
 
 ### dataset
 dataset: mllm_demo
-template: vicuna
-cutoff_len: 1024
+template: llava
+cutoff_len: 2048
 max_samples: 1000
 overwrite_cache: true
 preprocessing_num_workers: 16

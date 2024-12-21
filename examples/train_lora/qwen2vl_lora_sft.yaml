@@ -1,22 +1,23 @@
 ### model
-model_name_or_path: meta-llama/Meta-Llama-3-8B-Instruct
+model_name_or_path: Qwen/Qwen2-VL-7B-Instruct
+trust_remote_code: true
 
 ### method
 stage: sft
 do_train: true
-finetuning_type: full
-deepspeed: examples/deepspeed/ds_z3_config.json
+finetuning_type: lora
+lora_target: all
 
 ### dataset
-dataset: identity,alpaca_en_demo
-template: llama3
-cutoff_len: 1024
+dataset: mllm_demo,identity,alpaca_en_demo  # video: mllm_video_demo
+template: qwen2_vl
+cutoff_len: 2048
 max_samples: 1000
 overwrite_cache: true
 preprocessing_num_workers: 16
 
 ### output
-output_dir: saves/llama3-8b/full/sft
+output_dir: saves/qwen2_vl-7b/lora/sft
 logging_steps: 10
 save_steps: 500
 plot_loss: true
@@ -24,8 +25,8 @@ overwrite_output_dir: true
 
 ### train
 per_device_train_batch_size: 1
-gradient_accumulation_steps: 2
-learning_rate: 1.0e-5
+gradient_accumulation_steps: 8
+learning_rate: 1.0e-4
 num_train_epochs: 3.0
 lr_scheduler_type: cosine
 warmup_ratio: 0.1
